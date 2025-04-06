@@ -1,4 +1,21 @@
 #!/usr/bin/env python3
+#
+# Copyright 2025 ROBOTIS CO., LTD.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Wonho Yun
+
 import sys
 import termios
 import tty
@@ -12,6 +29,7 @@ import rclpy
 from rclpy.node import Node
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
+
 
 class KeyboardController(Node):
     def __init__(self):
@@ -27,7 +45,8 @@ class KeyboardController(Node):
                 'labels': [None] * 7,
                 'limits': [(-3.14, 3.14)] * 7,
                 'position_step': [0.1] * 7,
-                'publisher': self.create_publisher(JointTrajectory, '/leader/joint_trajectory_left/joint_trajectory', 10)
+                'publisher': self.create_publisher(
+                    JointTrajectory, '/leader/joint_trajectory_left/joint_trajectory', 10)
             },
             'arm_r': {
                 'joints': [
@@ -38,7 +57,8 @@ class KeyboardController(Node):
                 'labels': [None] * 7,
                 'limits': [(-3.14, 3.14)] * 7,
                 'position_step': [0.1] * 7,
-                'publisher': self.create_publisher(JointTrajectory, '/leader/joint_trajectory_right/joint_trajectory', 10)
+                'publisher': self.create_publisher(
+                    JointTrajectory, '/leader/joint_trajectory_right/joint_trajectory', 10)
             },
             'neck': {
                 'joints': ['neck_joint1', 'neck_joint2'],
@@ -46,7 +66,8 @@ class KeyboardController(Node):
                 'labels': [None] * 2,
                 'limits': [(-1.0, 1.0)] * 2,
                 'position_step': [0.1] * 2,
-                'publisher': self.create_publisher(JointTrajectory, '/neck_controller/joint_trajectory', 10)
+                'publisher': self.create_publisher(
+                    JointTrajectory, '/neck_controller/joint_trajectory', 10)
             },
             'body': {
                 'joints': ['linear_joint'],
@@ -54,7 +75,8 @@ class KeyboardController(Node):
                 'labels': [None],
                 'limits': [(-1.0, 0.0)],
                 'position_step': [0.1],
-                'publisher': self.create_publisher(JointTrajectory, '/body_controller/joint_trajectory', 10)
+                'publisher': self.create_publisher(
+                    JointTrajectory, '/body_controller/joint_trajectory', 10)
             }
         }
 
@@ -66,7 +88,7 @@ class KeyboardController(Node):
         self.running = True
 
         self.root = tk.Tk()
-        self.root.title("Joint Controller GUI")
+        self.root.title('Joint Controller GUI')
         self.hold_buttons = set()
         self.build_gui()
         self.root.after(100, self.process_held_buttons)
@@ -81,7 +103,7 @@ class KeyboardController(Node):
                     ctrl['positions'][i] = msg.position[idx]
                     if ctrl['labels'][i]:
                         value = msg.position[idx]
-                        ctrl['labels'][i].config(text=f"{value:.2f}")
+                        ctrl['labels'][i].config(text=f'{value:.2f}')
         self.joint_received = True
 
     def send_command(self, ctrl_key):
@@ -93,7 +115,7 @@ class KeyboardController(Node):
         point.time_from_start.sec = 0
         msg.points.append(point)
         ctrl['publisher'].publish(msg)
-        self.get_logger().info(f'{ctrl_key} command: {ctrl["positions"]}')
+        self.get_logger().info(f'{ctrl_key} command: {ctrl['positions']}')
 
     def change_joint(self, ctrl_key, joint_index, direction):
         ctrl = self.controllers[ctrl_key]
@@ -105,10 +127,11 @@ class KeyboardController(Node):
         ctrl['positions'][joint_index] = clamped_pos
 
         if ctrl['labels'][joint_index]:
-            ctrl['labels'][joint_index].config(text=f"{clamped_pos:.2f}")
+            ctrl['labels'][joint_index].config(text=f'{clamped_pos:.2f}')
 
+        joint_name = ctrl['joints'][joint_index]
         self.get_logger().info(
-            f"[{ctrl_key}] Joint {joint_index}: {before:.3f} -> {clamped_pos:.3f} (delta={delta:.3f})"
+            f'Joint [{ctrl_key}/{joint_name}]: {before:.3f} → {clamped_pos:.3f} (delta={delta:.3f}'
         )
         self.send_command(ctrl_key)
 
@@ -126,21 +149,28 @@ class KeyboardController(Node):
     def build_gui(self):
         row = 0
         for ctrl_key, ctrl in self.controllers.items():
-            tk.Label(self.root, text=ctrl_key.upper(), font=('Arial', 12, 'bold')).grid(row=row, column=0, columnspan=4)
+            tk.Label(
+                self.root,
+                text=ctrl_key.upper(),
+                font=('Arial', 12, 'bold')).grid(row=row, column=0, columnspan=4)
             row += 1
             for i, joint in enumerate(ctrl['joints']):
                 tk.Label(self.root, text=joint).grid(row=row, column=0)
                 btn_minus = tk.Button(self.root, text='-', width=3)
                 btn_plus = tk.Button(self.root, text='+', width=3)
-                label = tk.Label(self.root, text=f"{ctrl['positions'][i]:.2f}", width=6)
+                label = tk.Label(self.root, text=f'{ctrl['positions'][i]:.2f}', width=6)
                 ctrl['labels'][i] = label
                 btn_minus.grid(row=row, column=1)
                 btn_plus.grid(row=row, column=2)
                 label.grid(row=row, column=3)
-                btn_minus.bind('<ButtonPress-1>', lambda e, c=ctrl_key, j=i: self.press_and_hold(c, j, -1))
-                btn_minus.bind('<ButtonRelease-1>', lambda e, c=ctrl_key, j=i: self.release_button(c, j, -1))
-                btn_plus.bind('<ButtonPress-1>', lambda e, c=ctrl_key, j=i: self.press_and_hold(c, j, +1))
-                btn_plus.bind('<ButtonRelease-1>', lambda e, c=ctrl_key, j=i: self.release_button(c, j, +1))
+                btn_minus.bind(
+                    '<ButtonPress-1>', lambda e, c=ctrl_key, j=i: self.press_and_hold(c, j, -1))
+                btn_minus.bind(
+                    '<ButtonRelease-1>', lambda e, c=ctrl_key, j=i: self.release_button(c, j, -1))
+                btn_plus.bind(
+                    '<ButtonPress-1>', lambda e, c=ctrl_key, j=i: self.press_and_hold(c, j, +1))
+                btn_plus.bind(
+                    '<ButtonRelease-1>', lambda e, c=ctrl_key, j=i: self.release_button(c, j, +1))
                 row += 1
 
     def run(self):

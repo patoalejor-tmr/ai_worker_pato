@@ -1,4 +1,20 @@
 #!/usr/bin/env python3
+#
+# Copyright 2025 ROBOTIS CO., LTD.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Wonho Yun
 
 from pymodbus.client import ModbusSerialClient
 import time
@@ -6,12 +22,13 @@ import time
 PORT = '/dev/left_hand'
 BAUDRATE = 115200
 
+
 def scan_ids():
-    print("🔍 Modbus ID 스캔 중...")
+    print("Modbus ID Scannings ...")
 
     client = ModbusSerialClient(port=PORT, baudrate=BAUDRATE, timeout=0.2)
     if not client.connect():
-        print(f"❌ 시리얼 포트 {PORT} 연결 실패")
+        print(f"Serial port {PORT} connection failed")
         return
 
     found_ids = []
@@ -28,9 +45,9 @@ def scan_ids():
     client.close()
 
     if found_ids:
-        print(f"\n🎯 사용 가능한 ID 리스트: {found_ids}")
+        print(f"\nAvailable ID List: {found_ids}")
     else:
-        print("⚠️ 연결된 장치가 없습니다.")
+        print("No connected devices found.")
 
 if __name__ == '__main__':
     scan_ids()

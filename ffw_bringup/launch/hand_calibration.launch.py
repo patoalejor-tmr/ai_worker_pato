@@ -1,7 +1,24 @@
 #!/usr/bin/env python3
+#
+# Copyright 2025 ROBOTIS CO., LTD.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, TimerAction, ExecuteProcess, RegisterEventHandler, Shutdown, LogInfo
+from launch.actions import IncludeLaunchDescription, TimerAction, ExecuteProcess
+from launch.actions import RegisterEventHandler, Shutdown, LogInfo
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
@@ -14,18 +31,18 @@ def generate_launch_description():
         get_package_share_directory('ffw_bringup')
     )
 
-    # 👉 상태 저장 변수
+    # State variables
     left_done_flag = {'value': False}
     right_done_flag = {'value': False}
 
-    # 1️⃣ hardware bringup
+    # Step 1: Hardware bringup
     hardware_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(ffw_bringup_path, 'launch', 'hardware_leader_change.launch.py')
         )
     )
 
-    # 2️⃣ 토크 disable (3초 뒤)
+    # Step 2: Disable torque (after 3 seconds)
     disable_torque = TimerAction(
         period=3.0,
         actions=[
@@ -41,7 +58,7 @@ def generate_launch_description():
         ]
     )
 
-    # 3️⃣ 캘리브레이터 노드 (5초 뒤)
+    # Step 3: Calibrator nodes (after 5 seconds)
     calibrator_left = Node(
         package='ffw_bringup',
         executable='hand_calibrator_left.py',
@@ -60,7 +77,7 @@ def generate_launch_description():
         actions=[calibrator_left, calibrator_right]
     )
 
-    # 4️⃣ 캘리브레이터 종료 감시 → 둘 다 끝나면 shutdown
+    # Step 4: Monitor calibrator exit → Shutdown when both are done
     def check_and_shutdown(context, flag_dict, other_flag, shutdown_msg):
         flag_dict['value'] = True
         if other_flag['value']:
@@ -70,13 +87,19 @@ def generate_launch_description():
     left_exit_handler = RegisterEventHandler(
         OnProcessExit(
             target_action=calibrator_left,
-            on_exit=lambda context: check_and_shutdown(context, left_done_flag, right_done_flag, "✅ Both hands calibrated. Shutting down.")
+            on_exit=lambda context: check_and_shutdown(
+                context, left_done_flag, right_done_flag,
+                'Both hands calibrated. Shutting down.'
+            )
         )
     )
     right_exit_handler = RegisterEventHandler(
         OnProcessExit(
             target_action=calibrator_right,
-            on_exit=lambda context: check_and_shutdown(context, right_done_flag, left_done_flag, "✅ Both hands calibrated. Shutting down.")
+            on_exit=lambda context: check_and_shutdown(
+                context, right_done_flag, left_done_flag,
+                'Both hands calibrated. Shutting down.'
+            )
         )
     )
 

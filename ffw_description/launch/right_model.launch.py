@@ -32,7 +32,6 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def is_valid_to_launch():
-    # Path includes model name of Raspberry Pi series
     path = '/sys/firmware/devicetree/base/model'
     if os.path.exists(path):
         return False
@@ -42,7 +41,7 @@ def is_valid_to_launch():
 
 def generate_launch_description():
     if not is_valid_to_launch():
-        print('Can not launch fake robot in Raspberry Pi')
+        print('Can not launch fake robot')
         return LaunchDescription([])
 
     use_gui = LaunchConfiguration('use_gui')

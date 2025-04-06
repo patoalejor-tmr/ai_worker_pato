@@ -1,4 +1,20 @@
 #!/usr/bin/env python3
+#
+# Copyright 2025 ROBOTIS CO., LTD.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 import rclpy
 from rclpy.node import Node
@@ -8,10 +24,14 @@ import os
 from ament_index_python.packages import get_package_share_directory
 import time
 
+
 class HandCalibrator(Node):
     def __init__(self):
         super().__init__('hand_calibrator_right')
-        self.sub = self.create_subscription(JointTrajectory, '/leader/joint_trajectory_right_hand/joint_trajectory', self.callback, 10)
+        self.sub = self.create_subscription(
+            JointTrajectory,
+            '/leader/joint_trajectory_right_hand/joint_trajectory',
+            self.callback, 10)
 
         self.target_order = [
             'right_little_1_joint',
@@ -29,10 +49,11 @@ class HandCalibrator(Node):
         self.done = False
 
         install_path = get_package_share_directory('ffw_bringup')
-        src_bringup_path = install_path.replace('/install/ffw_bringup/share/ffw_bringup', '/src/ffw/ffw_bringup')
+        src_bringup_path = install_path.replace(
+            '/install/ffw_bringup/share/ffw_bringup', '/src/ffw/ffw_bringup')
         self.output_file = os.path.join(src_bringup_path, 'config', 'hand_joint_range_right.yaml')
-        time.sleep(0.5)  # 잠시 대기
-        self.get_logger().info("📡 오른손 calibration 시작 중... (움직이세요!)")
+        time.sleep(0.5)  # Wait briefly
+        self.get_logger().info('Starting right hand calibration... (Move your hand!)')
 
     def callback(self, msg: JointTrajectory):
         if self.done or not msg.points:
@@ -52,13 +73,13 @@ class HandCalibrator(Node):
         if self.sample_count >= self.max_samples:
             self.save()
             self.done = True
-            self.get_logger().info("🎯 오른손 샘플링 완료. 노드를 종료합니다.")
+            self.get_logger().info('Right hand sampling complete. Shutting down the node.')
 
     def save(self):
         data = {'min': self.joint_min, 'max': self.joint_max}
         with open(self.output_file, 'w') as f:
             yaml.dump(data, f)
-        self.get_logger().info(f"✅ Calibration 완료! 저장됨: {self.output_file}")
+        self.get_logger().info(f'Calibration complete! Saved to: {self.output_file}')
 
 def main(args=None):
     rclpy.init(args=args)

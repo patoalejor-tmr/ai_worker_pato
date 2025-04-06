@@ -1,4 +1,21 @@
-# Inspire Robot Hand 리팩토링 버전 (Multi-hand 지원 + 동작 확인 기반 구조)
+#!/usr/bin/env python3
+#
+# Copyright 2025 ROBOTIS CO., LTD.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Wonho Yun
+
 import serial
 
 class InspireHand:
@@ -30,7 +47,7 @@ class InspireHand:
 
     def set_6val(self, addr, values, label="set_6val"):
         if len(values) != 6 or any(v < -1 or v > 2000 for v in values):
-            print(f"❌ {label} - invalid input")
+            print(f"{label} - invalid input")
             return
         datanum = 0x0F
         b = [0] * (datanum + 5)
@@ -65,7 +82,6 @@ class InspireHand:
             values.append(-1 if (l == 0xFF and h == 0xFF) else l + (h << 8))
         return values
 
-    # ===== 고수준 API =====
     def setpos(self, *vals): return self.set_6val(0x05C2, vals, "setpos")
     def setangle(self, *vals): return self.set_6val(0x05CE, vals, "setangle")
     def setspeed(self, *vals): return self.set_6val(0x05F2, vals, "setspeed")
@@ -84,7 +100,6 @@ class InspireHand:
     def get_status(self): return self.get_6val(0x064C, "get_status")
     def get_temp(self): return self.get_6val(0x0652, "get_temp")
 
-    # ===== 단일 쓰기 명령 =====
     def set_clear_error(self): return self._set_simple(0x03EC, "set_clear_error")
     def set_save_flash(self): return self._set_simple(0x03ED, "set_save_flash")
     def gesture_force_clb(self): return self._set_simple(0x03F1, "gesture_force_clb")

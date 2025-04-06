@@ -31,6 +31,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+
 def generate_launch_description():
 
     ffw_description_path = os.path.join(
@@ -171,5 +172,3 @@ def generate_launch_description():
         gz_spawn_entity,
         rviz,
     ])
-
-
