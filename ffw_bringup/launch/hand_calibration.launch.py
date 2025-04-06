@@ -31,18 +31,15 @@ def generate_launch_description():
         get_package_share_directory('ffw_bringup')
     )
 
-    # State variables
     left_done_flag = {'value': False}
     right_done_flag = {'value': False}
 
-    # Step 1: Hardware bringup
     hardware_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(ffw_bringup_path, 'launch', 'hardware_leader_with_inspire_hand.launch.py')
         )
     )
 
-    # Step 2: Disable torque (after 3 seconds)
     disable_torque = TimerAction(
         period=3.0,
         actions=[
@@ -58,7 +55,6 @@ def generate_launch_description():
         ]
     )
 
-    # Step 3: Calibrator nodes (after 5 seconds)
     calibrator_left = Node(
         package='ffw_bringup',
         executable='hand_calibrator_left.py',
@@ -77,7 +73,6 @@ def generate_launch_description():
         actions=[calibrator_left, calibrator_right]
     )
 
-    # Step 4: Monitor calibrator exit → Shutdown when both are done
     def check_and_shutdown(context, flag_dict, other_flag, shutdown_msg):
         flag_dict['value'] = True
         if other_flag['value']:
