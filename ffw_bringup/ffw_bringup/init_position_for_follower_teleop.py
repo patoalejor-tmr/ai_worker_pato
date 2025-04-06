@@ -80,7 +80,7 @@ class MoveToHome(Node):
             traj.points.append(point)
 
             self.joint_publishers[controller_name].publish(traj)
-            self.get_logger().info(f'🚀 Sending command to {controller_name}')
+            self.get_logger().info(f'Sending command to {controller_name}')
 
     def joint_state_callback(self, msg):
         if not set(self.target_positions.keys()).issubset(set(msg.name)):
@@ -90,7 +90,7 @@ class MoveToHome(Node):
 
         if all(abs(current_positions[j] - self.target_positions[j]) < self.epsilon for j in self.target_positions):
             if not self.reached_target:
-                self.get_logger().info("🎯 All joints reached target positions. Shutting down node.")
+                self.get_logger().info('All joints reached target positions. Shutting down node.')
                 self.reached_target = True
                 self.shutdown_node()
 

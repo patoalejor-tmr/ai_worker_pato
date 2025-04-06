@@ -29,28 +29,28 @@ def generate_launch_description():
     # Declare launch arguments
     declared_arguments = [
         DeclareLaunchArgument(
-            "prefix",
+            'prefix',
             default_value='""',
-            description="Prefix of the joint names, useful for multi-robot setup. "
-                        "If changed, then also joint names in the controllers' configuration "
-                        "must be updated.",
+            description='Prefix of the joint names, useful for multi-robot setup. '
+                        'If changed, then also joint names in the controllers configuration '
+                        'must be updated.',
         ),
         DeclareLaunchArgument(
-            "description_file",
-            default_value="hand_left_standalone.urdf.xacro",
-            description="URDF/XACRO description file with the robot.",
+            'description_file',
+            default_value='hand_left_standalone.urdf.xacro',
+            description='URDF/XACRO description file with the robot.',
         ),
     ]
 
     # Launch configurations
-    description_file = LaunchConfiguration("description_file")
+    description_file = LaunchConfiguration('description_file')
 
     # Robot controllers config file path
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("ffw_bringup"),
-            "config",
-            "hand_left_hardware_controller_manager.yaml",
+            FindPackageShare('ffw_bringup'),
+            'config',
+            'hand_left_hardware_controller_manager.yaml',
         ]
     )
 
@@ -67,42 +67,40 @@ def generate_launch_description():
 
     # ros2_control Node
     control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
+        package='controller_manager',
+        executable='ros2_control_node',
         parameters=[robot_controllers],
-        output="both",
+        output='both',
     )
 
     # Robot description from Xacro
     robot_description_content = Command(
         [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
+            PathJoinSubstitution([FindExecutable(name='xacro')]),
+            ' ',
             PathJoinSubstitution(
-                [FindPackageShare("ffw_description"), "urdf", "", description_file]
+                [FindPackageShare('ffw_description'), 'urdf', '', description_file]
             ),
         ]
     )
-    robot_description = {"robot_description": robot_description_content}
+    robot_description = {'robot_description': robot_description_content}
 
     # Controller spawner node
     robot_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
+        package='controller_manager',
+        executable='spawner',
         arguments=[
-            # "gravity_compensation_controller",
-            # "spring_actuator_controller",
-            "joint_state_broadcaster",
-            "joint_trajectory_command_broadcaster",
+            'joint_state_broadcaster',
+            'joint_trajectory_command_broadcaster',
         ],
         parameters=[robot_description],
     )
 
     # Robot State Publisher
     robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="both",
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='both',
         parameters=[robot_description],
     )
 

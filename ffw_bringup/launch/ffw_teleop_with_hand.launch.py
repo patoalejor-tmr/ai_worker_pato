@@ -26,45 +26,44 @@ from launch_ros.actions import Node
 def generate_launch_description():
     # Step 1: Start follower
     start_follower = ExecuteProcess(
-        cmd=["ros2", "launch", "ffw_bringup", "hardware_follower_teleop_with_hand.launch.py"],
-        output="screen"
+        cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_follower_teleop_with_hand.launch.py'],
+        output='screen'
     )
 
     # Step 2: Init follower position
     init_follower = ExecuteProcess(
-        cmd=["ros2", "run", "ffw_bringup", "init_position_for_follower_teleop"],
-        output="screen"
+        cmd=['ros2', 'run', 'ffw_bringup', 'init_position_for_follower_teleop'],
+        output='screen'
     )
 
     # Step 3: Start leader
     start_leader = ExecuteProcess(
-        cmd=["ros2", "launch", "ffw_bringup", "hardware_leader_with_inspire_hand.launch.py"],
-        output="screen"
+        cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_with_inspire_hand.launch.py'],
+        output='screen'
     )
-
 
     # Step 5: Start hand controllers (left + right)
     start_hand_controllers = ExecuteProcess(
-        cmd=["ros2", "launch", "ffw_bringup", "hand_controller_two.launch.py"],
-        output="screen"
+        cmd=['ros2', 'launch', 'ffw_bringup', 'hand_controller_two.launch.py'],
+        output='screen'
     )
 
     # Step 6: Start keyboard GUI teleop
     start_keyboard_gui = ExecuteProcess(
-        cmd=["ros2", "run", "ffw_teleop", "keyboard_control_standalone"],
+        cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone'],
         shell=True,
-        output="screen"
+        output='screen'
     )
 
     return LaunchDescription([
-        LogInfo(msg="🚀 Starting Follower Launch"),
+        LogInfo(msg='Starting Follower Launch'),
         start_follower,
 
         RegisterEventHandler(
             OnProcessStart(
                 target_action=start_follower,
                 on_start=[
-                    LogInfo(msg="✅ Follower started. Initializing position..."),
+                    LogInfo(msg='Follower started. Initializing position...'),
                     init_follower
                 ]
             )
@@ -74,7 +73,7 @@ def generate_launch_description():
             OnProcessExit(
                 target_action=init_follower,
                 on_exit=[
-                    LogInfo(msg="✅ Init complete. Starting Leader Launch..."),
+                    LogInfo(msg='Init complete. Starting Leader Launch...'),
                     start_leader
                 ]
             )
@@ -84,9 +83,8 @@ def generate_launch_description():
             OnProcessStart(
                 target_action=start_leader,
                 on_start=[
-                    LogInfo(msg="✋ Starting Hand Controllers..."),
+                    LogInfo(msg='Starting Hand Controllers...'),
                     start_hand_controllers,
-
                 ]
             )
         ),
@@ -94,7 +92,7 @@ def generate_launch_description():
             OnProcessExit(
                 target_action=start_hand_controllers,
                 on_exit=[
-                    LogInfo(msg="⌨️ Launching Keyboard GUI..."),
+                    LogInfo(msg='Launching Keyboard GUI...'),
                     start_keyboard_gui
                 ]
             )

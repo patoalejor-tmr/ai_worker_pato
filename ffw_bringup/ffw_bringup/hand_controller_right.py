@@ -16,35 +16,35 @@
 #
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
-from trajectory_msgs.msg import JointTrajectory  # 기존 JointState 대신 이걸 추가
+from trajectory_msgs.msg import JointTrajectory  # Add this instead of the existing JointState
 from std_msgs.msg import Int32MultiArray
 from ffw_hand_library.library import InspireHand
 import rclpy
 from rclpy.node import Node
 import serial
-import yaml  # <-- 새로 추가
+import yaml  # <-- Newly added
 import os
-from ament_index_python.packages import get_package_share_directory  # 유지
+from ament_index_python.packages import get_package_share_directory  # Keep
 
 
 class LeaderFollowerHand(Node):
     def __init__(self):
         super().__init__('leader_follower_right_hand')
 
-        # === 파라미터 ===
+        # Parameters
         self.declare_parameter('serial_port', '/dev/right_hand')
         self.declare_parameter('hand_id', 1)
         self.serial_port = self.get_parameter('serial_port').get_parameter_value().string_value
         self.hand_id = self.get_parameter('hand_id').get_parameter_value().integer_value
 
-        # === Inspire Hand ===
+        # Inspire Hand
         self.hand = InspireHand(self.serial_port, self.hand_id)
-        self.get_logger().info(f"✅ InspireHand 연결 완료: {self.serial_port}, ID {self.hand_id}")
+        self.get_logger().info(f'InspireHand connected: {self.serial_port}, ID {self.hand_id}')
 
-        # === Subscriber ===
+        # Subscriber
         self.sub = self.create_subscription(JointTrajectory, '/leader/joint_trajectory_right_hand/joint_trajectory', self.leader_callback, 10)
 
-        # === 상태 퍼블리셔 (옵션) ===
+        # State publisher (optional)
         self.hand_pub = self.create_publisher(Int32MultiArray, '/follower/right_hand_angles', 10)
         self.joint_range = self.load_joint_range()
         self.joint_map = {
@@ -52,9 +52,8 @@ class LeaderFollowerHand(Node):
             'right_ring_1_joint': 1,
             'right_middle_1_joint': 2,
             'right_index_1_joint': 3,
-            'right_thumb_2_joint': 4,  # palm으로 쓰고 1000 고정
+            'right_thumb_2_joint': 4,  # Fixed at 1000 for palm
             'right_thumb_1_joint': 5
-
         }
 
     def get_src_config_path(self, filename):
@@ -68,14 +67,14 @@ class LeaderFollowerHand(Node):
     def load_joint_range(self):
         self.output_file = self.get_src_config_path('hand_joint_range_right.yaml')
         if not os.path.exists(self.output_file):
-            self.get_logger().warn("⚠️ joint_range YAML 파일 없음! 기본값 사용")
+            self.get_logger().warn('joint_range YAML file not found! Using default values')
             return {
                 'min': [0.0] * 6,
                 'max': [6.28] * 6
             }
         with open(self.output_file, 'r') as f:
             data = yaml.safe_load(f)
-        self.get_logger().info("📥 joint_range.yaml 불러옴")
+        self.get_logger().info('Loaded joint_range.yaml')
         return data
 
     def scale(self, val, index):
@@ -83,38 +82,37 @@ class LeaderFollowerHand(Node):
         rad_max = self.joint_range['max'][index]
 
         if rad_max - rad_min == 0:
-            self.get_logger().warn(f"⚠️ Index {index}에서 min과 max가 같음: {rad_min}. 기본값 0 반환")
+            self.get_logger().warn(f'Index {index} has min and max equal: {rad_min}. Returning default value 0')
             return 0
 
         val = max(min(val, rad_max), rad_min)
         norm = (val - rad_min) / (rad_max - rad_min)
         scaled = int(norm * 1000)
-        return 1000 - scaled  # 뒤집기
+        return 1000 - scaled  # Reverse
 
 
     def leader_callback(self, msg: JointTrajectory):
         if not msg.points:
-            self.get_logger().warn("⚠️ Trajectory 메시지에 points가 없음")
+            self.get_logger().warn('Trajectory message has no points')
             return
 
         joint_names = msg.joint_names
-        positions = msg.points[0].positions  # 첫 번째 trajectory point 기준
+        positions = msg.points[0].positions  # Based on the first trajectory point
 
         name_to_position = dict(zip(joint_names, positions))
 
-        # 각 손가락에 해당하는 index 위치로 스케일링된 값 저장
+        # Store scaled values for each finger at the corresponding index position
         scaled = [0] * 6
         for joint_name, target_index in self.joint_map.items():
             val = name_to_position.get(joint_name, 0.0)
             scaled[target_index] = self.scale(val, target_index)
 
-        self.get_logger().info(f"[Leader ➝ Follower] Scaled: {scaled}")
+        self.get_logger().info(f'[Leader ➝ Follower] Scaled: {scaled}')
 
         self.hand.setangle(*scaled)
 
         angles = self.hand.get_actangle()
         self.hand_pub.publish(Int32MultiArray(data=angles))
-
 
 
     def destroy_node(self):

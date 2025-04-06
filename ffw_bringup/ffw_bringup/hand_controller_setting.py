@@ -23,47 +23,47 @@ from ffw_hand_library.library import InspireHand
 
 Speed = 500         # 0~1000
 Power = 500         # 0~1000
-start_angle = 1000  # 0~1000 (펼친 상태)
+start_angle = 1000  # 0~1000 (open state)
 
 
 class HandControllerSetting(Node):
     def __init__(self):
         super().__init__('hand_controller_setting')
 
-        # 👉 양손 초기화
+        # Initialize both hands
         self.hands = {
             'right': InspireHand('/dev/right_hand', 1),
             'left': InspireHand('/dev/left_hand', 2)
         }
 
-        time.sleep(0.5)  # 안정화 대기
+        time.sleep(0.5)  # Wait for stabilization
 
         for side, hand in self.hands.items():
-            self.get_logger().info(f"🔧 {side.upper()} 손 설정 시작")
+            self.get_logger().info(f'{side.upper()} hand configuration started')
             self.apply_settings(hand)
-            self.get_logger().info(f"✅ {side.upper()} 손 설정 완료\n")
+            self.get_logger().info(f'{side.upper()} hand configuration completed\n')
 
     def apply_settings(self, hand):
-        # 에러 초기화
+        # Clear errors
         hand.set_clear_error()
         time.sleep(0.1)
 
-        # 포스 센서 보정 (원할 경우 주석 해제)
+        # Force sensor calibration (uncomment if needed)
         hand.gesture_force_clb()
-        self.get_logger().info("🧪 포스 센서 보정 완료")
+        self.get_logger().info('Force sensor calibration completed')
 
-        # 기본 속도 설정
+        # Set default speed
         hand.setdefaultspeed(Speed, Speed, Speed, Speed, Speed, Speed)
         hand.setspeed(Speed, Speed, Speed, Speed, Speed, Speed)
 
-        # 기본 힘 설정
+        # Set default power
         hand.setdefaultpower(Power, Power, Power, Power, Power, Power)
         hand.setpower(Power, Power, Power, Power, Power, Power)
 
-        # 초기 각도 설정 (펼친 상태)
+        # Set initial angle (open state)
         hand.setangle(start_angle, start_angle, start_angle, start_angle, start_angle, start_angle)
 
-        # Flash 저장
+        # Save to flash
         hand.set_save_flash()
 
 

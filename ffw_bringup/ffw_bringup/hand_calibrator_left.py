@@ -47,8 +47,8 @@ class HandCalibrator(Node):
         install_path = get_package_share_directory('ffw_bringup')
         src_bringup_path = install_path.replace('/install/ffw_bringup/share/ffw_bringup', '/src/ffw/ffw_bringup')
         self.output_file = os.path.join(src_bringup_path, 'config', 'hand_joint_range_left.yaml')
-        time.sleep(0.5)  # 잠시 대기
-        self.get_logger().info("📡 왼손 calibration 시작 중... (움직이세요!)")
+        time.sleep(0.5)  # Wait briefly
+        self.get_logger().info('Starting left hand calibration... (Move your hand!)')
 
     def callback(self, msg: JointTrajectory):
         if self.done or not msg.points:
@@ -68,13 +68,13 @@ class HandCalibrator(Node):
         if self.sample_count >= self.max_samples:
             self.save()
             self.done = True
-            self.get_logger().info("🎯 왼손 샘플링 완료. 노드를 종료합니다.")
+            self.get_logger().info('Left hand sampling complete. Shutting down the node.')
 
     def save(self):
         data = {'min': self.joint_min, 'max': self.joint_max}
         with open(self.output_file, 'w') as f:
             yaml.dump(data, f)
-        self.get_logger().info(f"✅ Calibration 완료! 저장됨: {self.output_file}")
+        self.get_logger().info(f'Calibration complete! Saved to: {self.output_file}')
 
 def main(args=None):
     rclpy.init(args=args)
