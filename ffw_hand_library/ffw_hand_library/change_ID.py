@@ -21,16 +21,14 @@ import time
 
 CURRENT_ID = 1      # Currently set ID
 NEW_ID = 2          # New ID to be set
-PORT = '/dev/left_hand'  # Serial port path (modify as needed)
+PORT = '/dev/left_hand'  # Serial port path
 
 def change_hand_id(current_id, new_id, port):
     print(f"Attempting to change ID {current_id} ➜ {new_id}...")
 
-    # Create object with the current ID
     hand = InspireHand(port=port, hand_id=current_id)
 
-    # 1. Send ID change command (RAM)
-    data = [new_id] + [-1] * 5  # Only the first value is the new ID
+    data = [new_id] + [-1] * 5
     res = hand.set_6val(addr=0x03E8, values=data, label="set_ID_RAM")
     if not res:
         print("Failed to change ID (RAM)")
@@ -38,11 +36,9 @@ def change_hand_id(current_id, new_id, port):
 
     print("ID changed (RAM applied). Current ID is now", new_id)
 
-    # 2. Wait for stabilization
-    print("⏳ Waiting for stabilization...")
+    print("Waiting for stabilization...")
     time.sleep(0.2)
 
-    # 3. Save to Flash (reconnect with the new ID)
     hand = InspireHand(port=port, hand_id=new_id)
     res = hand.set_save_flash()
     if res:

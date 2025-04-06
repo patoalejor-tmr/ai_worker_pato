@@ -26,7 +26,6 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    # Declare launch arguments
     declared_arguments = [
         DeclareLaunchArgument('start_rviz', default_value='true', description='Whether to execute rviz2'),
         DeclareLaunchArgument('use_sim', default_value='false', description='Start robot in Gazebo simulation.'),
@@ -35,14 +34,12 @@ def generate_launch_description():
         DeclareLaunchArgument('port_name', default_value='/dev/follower', description='Port name for hardware connection.'),
     ]
 
-    # Launch configurations
     start_rviz = LaunchConfiguration('start_rviz')
     use_sim = LaunchConfiguration('use_sim')
     use_fake_hardware = LaunchConfiguration('use_fake_hardware')
     fake_sensor_commands = LaunchConfiguration('fake_sensor_commands')
     port_name = LaunchConfiguration('port_name')
 
-    # Generate URDF file using xacro
     urdf_file = Command([
         PathJoinSubstitution([FindExecutable(name='xacro')]),
         ' ',
@@ -57,7 +54,6 @@ def generate_launch_description():
         'port_name:=', port_name,
     ])
 
-    # Paths for configuration files
     controller_manager_config = PathJoinSubstitution([
         FindPackageShare('ffw_bringup'), 'config', 'follower_with_hand_hardware_controller.yaml'
     ])
@@ -65,7 +61,6 @@ def generate_launch_description():
         FindPackageShare('ffw_description'), 'rviz', 'ffw.rviz'
     ])
 
-    # Define nodes
     control_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
@@ -144,7 +139,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Event handlers to ensure order of execution
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,

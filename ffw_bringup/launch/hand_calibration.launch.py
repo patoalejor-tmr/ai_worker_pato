@@ -38,7 +38,7 @@ def generate_launch_description():
     # Step 1: Hardware bringup
     hardware_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(ffw_bringup_path, 'launch', 'hardware_leader_change.launch.py')
+            os.path.join(ffw_bringup_path, 'launch', 'hardware_leader_with_inspire_hand.launch.py')
         )
     )
 

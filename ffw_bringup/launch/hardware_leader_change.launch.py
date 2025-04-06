@@ -34,7 +34,6 @@ def generate_launch_description():
 
     description_file = LaunchConfiguration('description_file')
 
-    # URDF ➝ robot_description
     robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name='xacro')]),
         ' ',
@@ -44,14 +43,12 @@ def generate_launch_description():
     ])
     robot_description = {'robot_description': robot_description_content}
 
-    # Controller config YAML
     controller_config = PathJoinSubstitution([
         FindPackageShare('ffw_bringup'),
         'config',
         'leader_with_hand_hardware_controller.yaml',
     ])
 
-    # /leader/ros2_control_node
     control_node = GroupAction([
         PushRosNamespace('leader'),
         Node(
@@ -62,7 +59,6 @@ def generate_launch_description():
         )
     ])
 
-    # /leader/joint_state_broadcaster
     joint_state_spawner = Node(
         package='controller_manager',
         executable='spawner',
