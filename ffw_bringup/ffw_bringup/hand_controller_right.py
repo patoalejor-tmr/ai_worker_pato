@@ -16,14 +16,15 @@
 #
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
-from trajectory_msgs.msg import JointTrajectory  # Add this instead of the existing JointState
+import serial
+import yaml
+import os
+
+from trajectory_msgs.msg import JointTrajectory
 from std_msgs.msg import Int32MultiArray
 from ffw_hand_library.library import InspireHand
 import rclpy
 from rclpy.node import Node
-import serial
-import yaml  # <-- Newly added
-import os
 from ament_index_python.packages import get_package_share_directory  # Keep
 
 
@@ -42,10 +43,17 @@ class LeaderFollowerHand(Node):
         self.get_logger().info(f'InspireHand connected: {self.serial_port}, ID {self.hand_id}')
 
         # Subscriber
-        self.sub = self.create_subscription(JointTrajectory, '/leader/joint_trajectory_right_hand/joint_trajectory', self.leader_callback, 10)
+        self.sub = self.create_subscription(
+            JointTrajectory,
+            '/leader/joint_trajectory_right_hand/joint_trajectory',
+            self.leader_callback,
+            10
+        )
 
         # State publisher (optional)
-        self.hand_pub = self.create_publisher(Int32MultiArray, '/follower/right_hand_angles', 10)
+        self.hand_pub = self.create_publisher(
+            Int32MultiArray, '/follower/right_hand_angles', 10)
+
         self.joint_range = self.load_joint_range()
         self.joint_map = {
             'right_little_1_joint': 0,
@@ -82,7 +90,8 @@ class LeaderFollowerHand(Node):
         rad_max = self.joint_range['max'][index]
 
         if rad_max - rad_min == 0:
-            self.get_logger().warn(f'Index {index} has min and max equal: {rad_min}. Returning default value 0')
+            self.get_logger().warn(
+                f'Index {index} has min and max equal: {rad_min}. Returning default value 0')
             return 0
 
         val = max(min(val, rad_max), rad_min)

@@ -31,7 +31,8 @@ def generate_launch_description():
         'share/ffw_bringup'
     )
 
-    teleop_launch = os.path.join(bringup_dir, 'launch', 'hardware_follower_teleop_with_hand.launch.py')
+    teleop_launch = os.path.join(
+        bringup_dir, 'launch', 'hardware_follower_teleop_with_hand.launch.py')
     leader_launch = os.path.join(bringup_dir, 'launch', 'hardware_leader_change.launch.py')
     hand_ctrl_launch = os.path.join(bringup_dir, 'launch', 'hand_controller_two.launch.py')
 

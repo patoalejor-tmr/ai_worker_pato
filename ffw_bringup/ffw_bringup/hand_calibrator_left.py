@@ -27,7 +27,11 @@ import time
 class HandCalibrator(Node):
     def __init__(self):
         super().__init__('hand_calibrator_left')
-        self.sub = self.create_subscription(JointTrajectory, '/leader/joint_trajectory_left_hand/joint_trajectory', self.callback, 10)
+        self.sub = self.create_subscription(
+            JointTrajectory,
+            '/leader/joint_trajectory_left_hand/joint_trajectory',
+            self.callback,
+            10)
 
         self.target_order = [
             'left_little_1_joint',
@@ -45,7 +49,8 @@ class HandCalibrator(Node):
         self.done = False
 
         install_path = get_package_share_directory('ffw_bringup')
-        src_bringup_path = install_path.replace('/install/ffw_bringup/share/ffw_bringup', '/src/ffw/ffw_bringup')
+        src_bringup_path = install_path.replace(
+            '/install/ffw_bringup/share/ffw_bringup', '/src/ffw/ffw_bringup')
         self.output_file = os.path.join(src_bringup_path, 'config', 'hand_joint_range_left.yaml')
         time.sleep(0.5)  # Wait briefly
         self.get_logger().info('Starting left hand calibration... (Move your hand!)')

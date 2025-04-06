@@ -42,7 +42,10 @@ class LeaderFollowerHand(Node):
         self.get_logger().info(f'InspireHand connected: {self.serial_port}, ID {self.hand_id}')
 
         # Subscriber
-        self.sub = self.create_subscription(JointTrajectory, '/leader/joint_trajectory_left_hand/joint_trajectory', self.leader_callback, 10)
+        self.sub = self.create_subscription(
+            JointTrajectory,
+            '/leader/joint_trajectory_left_hand/joint_trajectory',
+            self.leader_callback, 10)
 
         # Publisher
         self.hand_pub = self.create_publisher(Int32MultiArray, '/follower/left_hand_angles', 10)
@@ -83,7 +86,8 @@ class LeaderFollowerHand(Node):
         rad_max = self.joint_range['max'][index]
 
         if rad_max - rad_min == 0:
-            self.get_logger().warn(f'Index {index} has min and max equal: {rad_min}. Returning default value 0')
+            self.get_logger().warn(
+                f'Index {index} has min and max equal: {rad_min}. Returning default value 0')
             return 0
 
         val = max(min(val, rad_max), rad_min)
