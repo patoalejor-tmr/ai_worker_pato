@@ -2,6 +2,13 @@
 Changelog for package ffw_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.1 (2025-04-07)
+------------------
+* Modified the profile velocity parameters for enhanced arm and hand teleoperation performance
+* Modified the README file to reflect usage instructions for this package
+* Removed unused files and redundant comments to streamline the codebase
+* Contributors: Wonho Yun, Pyo
+
 1.0.0 (2025-04-06)
 ------------------
 * Added the initial version of the FFW ROS package
