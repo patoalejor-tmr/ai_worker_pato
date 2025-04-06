@@ -131,7 +131,7 @@ class KeyboardController(Node):
 
         joint_name = ctrl['joints'][joint_index]
         self.get_logger().info(
-            f'Joint [{ctrl_key}/{joint_name}]: {before:.2f} → {clamped_pos:.2f}'
+            f'Joint [{ctrl_key}/{joint_name}]: {before:.3f} → {clamped_pos:.3f} (delta={delta:.3f}'
         )
         self.send_command(ctrl_key)
 
