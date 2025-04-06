@@ -16,12 +16,12 @@
 #
 # Authors: Wonho Yun
 
+import tkinter as tk
+
 import rclpy
 from rclpy.node import Node
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
-
-import tkinter as tk
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 
 class KeyboardController(Node):
