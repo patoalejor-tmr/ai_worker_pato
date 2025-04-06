@@ -104,7 +104,6 @@ class LeaderFollowerHand(Node):
             val = name_to_position.get(joint_name, 0.0)
             scaled[target_index] = self.scale(val, target_index)
 
-        self.get_logger().info(f'[Leader ➝ Follower LEFT] Scaled: {scaled}')
         self.hand.setangle(*scaled)
 
         angles = self.hand.get_actangle()
