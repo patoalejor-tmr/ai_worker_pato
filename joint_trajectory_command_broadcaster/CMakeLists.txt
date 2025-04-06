@@ -1,3 +1,6 @@
+################################################################################
+# Set minimum required version of cmake, project name and compile options
+################################################################################
 cmake_minimum_required(VERSION 3.16)
 project(joint_trajectory_command_broadcaster LANGUAGES CXX)
 
@@ -21,6 +24,9 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   trajectory_msgs
 )
 
+################################################################################
+# Find and load build settings from external packages
+################################################################################
 find_package(ament_cmake REQUIRED)
 find_package(backward_ros REQUIRED)
 foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
@@ -48,10 +54,14 @@ ament_target_dependencies(joint_trajectory_command_broadcaster PUBLIC ${THIS_PAC
 target_compile_definitions(joint_trajectory_command_broadcaster PRIVATE "JOINT_TRAJECTORY_COMMAND_BROADCASTER_BUILDING_DLL")
 pluginlib_export_plugin_description_file(controller_interface joint_trajectory_command_plugin.xml)
 
+################################################################################
+# Install
+################################################################################
 install(
   DIRECTORY include/
   DESTINATION include/joint_trajectory_command_broadcaster
 )
+
 install(
   TARGETS
     joint_trajectory_command_broadcaster
@@ -62,6 +72,9 @@ install(
   LIBRARY DESTINATION lib
 )
 
+################################################################################
+# Macro for ament package
+################################################################################
 ament_export_targets(export_joint_trajectory_command_broadcaster HAS_LIBRARY_TARGET)
 ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 ament_package()

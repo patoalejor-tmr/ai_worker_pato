@@ -1,8 +1,18 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Changelog for package joint_trajectory_command_broadcaster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-3.1.0 (2025-03-17)
+1.0.0 (2025-04-06)
 ------------------
-* Compensated for gravity in a robot arm. It uses the KDL library to compute the torques required to maintain the arm in a desired position.
-* Contributors: Woojin Wie
+* Added the initial version of the FFW ROS package
+* Added arm and hand teleoperation support for FFW
+* Added integrated controller compatibility for Inspire Robot Hand
+* Contributors: Sungho Woo, Woojin Wie, Wonho Yun, Pyo
+
+0.1.0 (2025-03-27)
+------------------
+* Added bringup scripts for system initialization
+* Added robot description files for visualization and planning
+* Added base controller functionalities
+* Added MoveIt for motion planning support
+* Contributors: Sungho Woo, Woojin Wie

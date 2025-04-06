@@ -2,16 +2,16 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>joint_trajectory_command_broadcaster</name>
-  <version>3.1.0</version>
+  <version>1.0.0</version>
   <description>
     Joint Trajectory Command Broadcaster ROS 2 package.
   </description>
-  <maintainer email="pyo@robotis.com">pyo</maintainer>
+  <maintainer email="pyo@robotis.com">Pyo</maintainer>
   <license>Apache 2.0</license>
   <author email="wwj@robotis.com">Woojin Wie</author>
-
+  <author email="wsh@robotis.com">Sungho Woo</author>
+  <author email="ywh@robotis.com">Wonho Yun</author>
   <buildtool_depend>ament_cmake</buildtool_depend>
-
   <depend>backward_ros</depend>
   <depend>builtin_interfaces</depend>
   <depend>control_msgs</depend>
@@ -30,7 +30,6 @@
   <test_depend>hardware_interface</test_depend>
   <test_depend>rclcpp</test_depend>
   <test_depend>ros2_control_test_assets</test_depend>
-
   <export>
     <build_type>ament_cmake</build_type>
   </export>
