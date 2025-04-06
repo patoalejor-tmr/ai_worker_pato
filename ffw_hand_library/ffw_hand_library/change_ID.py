@@ -1,36 +1,54 @@
+#!/usr/bin/env python3
+#
+# Copyright 2025 ROBOTIS CO., LTD.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Wonho Yun
+
 from library import InspireHand
 import time
 
-CURRENT_ID = 1      # 현재 설정된 ID
-NEW_ID = 2          # 변경하고자 하는 새 ID
-PORT = '/dev/left_hand'  # 시리얼 포트 경로 (환경에 맞게 변경)
+CURRENT_ID = 1      # Currently set ID
+NEW_ID = 2          # New ID to be set
+PORT = '/dev/left_hand'  # Serial port path (modify as needed)
 
 def change_hand_id(current_id, new_id, port):
-    print(f"🔧 ID {current_id} ➜ {new_id} 변경 시도 중...")
+    print(f"Attempting to change ID {current_id} ➜ {new_id}...")
 
-    # 현재 ID로 객체 생성
+    # Create object with the current ID
     hand = InspireHand(port=port, hand_id=current_id)
 
-    # 1. ID 변경 명령 전송 (RAM)
-    data = [new_id] + [-1] * 5  # 첫 번째 값만 새 ID
+    # 1. Send ID change command (RAM)
+    data = [new_id] + [-1] * 5  # Only the first value is the new ID
     res = hand.set_6val(addr=0x03E8, values=data, label="set_ID_RAM")
     if not res:
-        print("❌ ID 변경 실패 (RAM)")
+        print("Failed to change ID (RAM)")
         return
 
-    print("✅ ID 변경됨 (RAM 적용). 현재 ID는 이제", new_id)
+    print("ID changed (RAM applied). Current ID is now", new_id)
 
-    # 2. 안정화 시간 대기
-    print("⏳ 안정화 대기 중...")
+    # 2. Wait for stabilization
+    print("⏳ Waiting for stabilization...")
     time.sleep(0.2)
 
-    # 3. Flash 저장 명령 (새 ID로 다시 연결)
+    # 3. Save to Flash (reconnect with the new ID)
     hand = InspireHand(port=port, hand_id=new_id)
     res = hand.set_save_flash()
     if res:
-        print("💾 Flash 저장 완료 — ID가 영구 변경되었습니다!")
+        print("Flash save completed — ID permanently changed!")
     else:
-        print("❌ Flash 저장 실패 — 재부팅 시 ID가 원래대로 돌아갈 수 있습니다.")
+        print("Flash save failed — ID may revert after reboot.")
 
 if __name__ == '__main__':
     change_hand_id(CURRENT_ID, NEW_ID, PORT)
