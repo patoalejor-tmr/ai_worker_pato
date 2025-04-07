@@ -4,7 +4,7 @@
 
 This is the **FFW (Freedom From Work)** project repository. It supports the control of the **Follower** device (hand, lift, and neck) as well as the **Leader** device (arms and hands).
 
-This package supports **ROS 2 Jazzy** and **Gazebo Harmonic** on Ubuntu 24.04 **OpenMANIPULATOR User Guide**
+This package supports **ROS 2 Jazzy** and **Gazebo Harmonic** on Ubuntu 24.04.
 
 
 
