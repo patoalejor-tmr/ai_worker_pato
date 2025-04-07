@@ -64,7 +64,7 @@ class LeaderFollowerHand(Node):
         install_path = get_package_share_directory('ffw_bringup')
         src_bringup_path = install_path.replace(
             '/install/ffw_bringup/share/ffw_bringup',
-            '/src/ffw/ffw_bringup'
+            '/src/ai_worker/ffw_bringup'
         )
         return os.path.join(src_bringup_path, 'config', filename)
 

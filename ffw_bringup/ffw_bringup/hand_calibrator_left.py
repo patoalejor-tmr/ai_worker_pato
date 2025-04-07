@@ -50,7 +50,7 @@ class HandCalibrator(Node):
 
         install_path = get_package_share_directory('ffw_bringup')
         src_bringup_path = install_path.replace(
-            '/install/ffw_bringup/share/ffw_bringup', '/src/ffw/ffw_bringup')
+            '/install/ffw_bringup/share/ffw_bringup', '/src/ai_worker/ffw_bringup')
         self.output_file = os.path.join(src_bringup_path, 'config', 'hand_joint_range_left.yaml')
         time.sleep(0.5)
         self.get_logger().info('Starting left hand calibration... (Move your hand!)')
