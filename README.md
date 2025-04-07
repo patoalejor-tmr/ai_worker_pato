@@ -4,7 +4,7 @@
 
 This is the **FFW (Freedom From Work)** project repository. It supports the control of the **Follower** device (hand, lift, and neck) as well as the **Leader** device (arms and hands).
 
-This package supports **ROS 2 Jazzy** and **Gazebo Harmonic** on Ubuntu 24.04**OpenMANIPULATOR User Guide**
+This package supports **ROS 2 Jazzy** and **Gazebo Harmonic** on Ubuntu 24.04 **OpenMANIPULATOR User Guide**
 
 
 
@@ -76,20 +76,18 @@ colcon build --symlink-install
 source ~/${WORKSPACE}/install/setup.bash
 ```
 
-Create and apply `udev` rules:
-
-```bash
-TODO**: ADD MANUAL @WONHO
-```
-
 
 ## **4. Execution Commands**
 
 ### **Step 1: Choose Your Operating Mode**
 
-- Calibration* (**TODO**: ADD MANUAL @WONHO)
+#### **0️⃣ Calibration**
+When using it for the first time, wear the leader device and perform calibration to check the range of motion.
+This process is done only once initially.
 
-
+```bash
+ros2 launch ffw_bringup hand_calibration.launch.py
+```
 
 #### **1️⃣ Leader-Follower Mode**
 
@@ -112,7 +110,7 @@ Ensure proper connection and detection of leader and follower devices.
 For **standalone mode**, launch:
 
 ```bash
-ros2 launch ffw_bringup hardware_follower_teleop_with_hand.launch.py 
+ros2 launch ffw_bringup hardware_follower_teleop_with_hand.launch.py
 ```
 
 *Only the follower is connected to the hardware interface.
@@ -160,7 +158,7 @@ Move interactive markers to position the robotic arm, then click **Plan** and **
 #### **2. GUI Teleop**
 
 ```bash
-ros2 launch ffw_teleop keyboard_control_teleop_with_hand.launch.py 
+ros2 launch ffw_teleop keyboard_control_teleop_with_hand.launch.py
 ```
 
 This is for `hardware_follower_teleop_with_hand.launch.py` and `hardware_follower_teleop_without_hand.launch.py`
@@ -168,7 +166,7 @@ This is for `hardware_follower_teleop_with_hand.launch.py` and `hardware_followe
 
 
 ```
-ros2 launch ffw_teleop keyboard_control_standalone.launch.py 
+ros2 launch ffw_teleop keyboard_control_standalone.launch.py
 ```
 
 This is for `hardware_follower_standalone.launch.py`
