@@ -25,7 +25,7 @@ def generate_launch_description():
         Node(
             package='ffw_bringup',
             executable='hand_controller_right',
-            name='right_hand_controller',
+            name='right_hand_controller_follower',
             output='screen',
             parameters=[
                 {'serial_port': '/dev/right_hand'},
@@ -35,7 +35,7 @@ def generate_launch_description():
         Node(
             package='ffw_bringup',
             executable='hand_controller_left',
-            name='left_hand_controller',
+            name='left_hand_controller_follower',
             output='screen',
             parameters=[
                 {'serial_port': '/dev/left_hand'},

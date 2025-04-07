@@ -70,8 +70,8 @@ def generate_launch_description():
         remappings=[
             ('/arm_l_controller/joint_trajectory', '/leader/joint_trajectory_left/joint_trajectory'),
             ('/arm_r_controller/joint_trajectory', '/leader/joint_trajectory_right/joint_trajectory'),
-            ('/left_hand_controller/joint_trajectory', '/leader/left_hand_trajectory_right/joint_trajectory'),
-            ('/right_hand_controller/joint_trajectory', '/leader/right_hand_trajectory_right/joint_trajectory')
+            ('/left_hand_controller/joint_trajectory', '/leader/joint_trajectory_left_hand/joint_trajectory'),
+            ('/right_hand_controller/joint_trajectory', '/leader/joint_trajectory_right_hand/joint_trajectory')
         ]
     )
 
