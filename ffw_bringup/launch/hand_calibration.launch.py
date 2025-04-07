@@ -42,13 +42,13 @@ def generate_launch_description():
 
     calibrator_left = Node(
         package='ffw_bringup',
-        executable='hand_calibrator_left.py',
+        executable='hand_calibrator_left',
         name='hand_calibrator_left',
         output='screen',
     )
     calibrator_right = Node(
         package='ffw_bringup',
-        executable='hand_calibrator_right.py',
+        executable='hand_calibrator_right',
         name='hand_calibrator_right',
         output='screen',
     )
