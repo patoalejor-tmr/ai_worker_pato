@@ -39,20 +39,6 @@ def generate_launch_description():
         shell=True
     )
 
-    disable_leader_torque = TimerAction(
-        period=5.0,
-        actions=[ExecuteProcess(
-            cmd=[
-                'ros2', 'service', 'call',
-                '/leader/dynamixel_hardware_interface/set_dxl_torque',
-                'std_srvs/srv/SetBool',
-                'data:\ false'
-            ],
-            output='screen',
-            shell=True
-        )]
-    )
-
     run_keyboard_control = ExecuteProcess(
         cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone.py'],
         output='screen',
@@ -89,8 +75,6 @@ def generate_launch_description():
             OnProcessStart(
                 target_action=start_leader,
                 on_start=[
-                    LogInfo(msg='Disabling torque on leader...'),
-                    disable_leader_torque,
                     LogInfo(msg='Starting keyboard_control_standalone.py...'),
                     run_keyboard_control
                 ]
