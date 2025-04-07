@@ -45,7 +45,7 @@ def generate_launch_description():
     )
 
     start_keyboard_gui = ExecuteProcess(
-        cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone'],
+        cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone.py'],
         shell=True,
         output='screen'
     )
