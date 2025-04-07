@@ -76,12 +76,6 @@ colcon build --symlink-install
 source ~/${WORKSPACE}/install/setup.bash
 ```
 
-Create and apply `udev` rules:
-
-```bash
-ros2 run ffw_bringup ffw_create_udev_rules
-```
-
 
 ## **4. Execution Commands**
 

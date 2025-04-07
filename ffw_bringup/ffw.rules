@@ -1,8 +1,1 @@
-SUBSYSTEM=="tty", ENV{ID_VENDOR_ID}=="0403", ENV{ID_MODEL_ID}=="6014", ENV{ID_SERIAL}=="FTDI_USB__-__Serial_Converter_FTA7NRM8", SYMLINK+="follower", MODE="0666", ATTR{device/latency_timer}="1"
-
-SUBSYSTEM=="tty", ENV{ID_SERIAL}=="FTDI_FT232R_USB_UART_BG00VU7X", SYMLINK+="left_hand", MODE="0666", ATTR{device/latency_timer}="1"
-SUBSYSTEM=="tty", ENV{ID_SERIAL}=="FTDI_FT232R_USB_UART_BG00VUIS", SYMLINK+="right_hand", MODE="0666", ATTR{device/latency_timer}="1"
-
-SUBSYSTEM=="tty", ENV{ID_SERIAL}=="FTDI_USB__-__Serial_Converter_FTA7NRU5", SYMLINK+="left_leader", MODE="0666", ATTR{device/latency_timer}="1"
-SUBSYSTEM=="tty", ENV{ID_SERIAL}=="FTDI_USB__-__Serial_Converter_FTA7NRM6", SYMLINK+="right_leader", MODE="0666", ATTR{device/latency_timer}="1"
-
+KERNEL=="ttyUSB*", DRIVERS=="ftdi_sio", MODE="0666", ATTR{device/latency_timer}="1"
