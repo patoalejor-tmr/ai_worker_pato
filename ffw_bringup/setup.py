@@ -17,6 +17,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name, ['ffw.rules']),
         ('share/' + package_name + '/launch', glob.glob('launch/*.launch.py')),
         ('share/' + package_name + '/config', glob.glob('config/*.yaml')),
         ('share/' + package_name + '/worlds', glob.glob('worlds/*.sdf')),
@@ -44,6 +45,7 @@ setup(
             'hand_calibratior_right = ffw_bringup.hand_calibrator_right:main',
             'hand_calibratior_left = ffw_bringup.hand_calibrator_left:main',
             'init_position_for_follower_teleop = ffw_bringup.init_position_for_follower_teleop:main',
+            'ffw_create_udev_rules = ffw_bringup.ffw_create_udev_rules:main',
         ],
     },
 )

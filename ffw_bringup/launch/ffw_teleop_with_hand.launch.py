@@ -35,7 +35,7 @@ def generate_launch_description():
     )
 
     start_leader = ExecuteProcess(
-        cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_with_inspire_hand.launch.py'],
+        cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_with_hand.launch.py'],
         output='screen'
     )
 
