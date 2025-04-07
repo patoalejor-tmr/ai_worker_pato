@@ -4,7 +4,7 @@
 
 This is the **FFW (Freedom From Work)** project repository. It supports the control of the **Follower** device (hand, lift, and neck) as well as the **Leader** device (arms and hands).
 
-This package supports **ROS 2 Jazzy** and **Gazebo Harmonic** on Ubuntu 24.04**OpenMANIPULATOR User Guide**
+This package supports **ROS 2 Jazzy** and **Gazebo Harmonic** on Ubuntu 24.04 **OpenMANIPULATOR User Guide**
 
 
 
@@ -87,7 +87,7 @@ ros2 run ffw_bringup ffw_create_udev_rules
 
 ### **Step 1: Choose Your Operating Mode**
 
-#### **0️⃣. Calibration**
+#### **0️⃣ Calibration**
 When using it for the first time, wear the leader device and perform calibration to check the range of motion.
 This process is done only once initially.
 
