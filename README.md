@@ -79,7 +79,7 @@ source ~/${WORKSPACE}/install/setup.bash
 Create and apply `udev` rules:
 
 ```bash
-TODO**: ADD MANUAL @WONHO
+ros2 run ffw_bringup ffw_create_udev_rules
 ```
 
 
