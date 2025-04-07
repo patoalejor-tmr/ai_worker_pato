@@ -27,7 +27,7 @@ def generate_launch_description():
     declared_arguments = [
         DeclareLaunchArgument(
             'description_file',
-            default_value='ffw_leader.urdf.xacro',
+            default_value='ffw_leader_without_hand.urdf.xacro',
             description='URDF/XACRO file for the robot model.',
         ),
     ]

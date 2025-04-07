@@ -17,8 +17,10 @@
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess, LogInfo, RegisterEventHandler, TimerAction
+from launch.actions import ExecuteProcess, LogInfo, RegisterEventHandler
+from launch.actions import TimerAction
 from launch.event_handlers import OnProcessStart, OnProcessExit
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -28,47 +30,30 @@ def generate_launch_description():
     )
 
     init_follower = ExecuteProcess(
-        cmd=['ros2', 'run', 'ffw_bringup', 'init_position_for_follower_teleop.py'],
-        output='screen',
-        shell=True
+        cmd=['ros2', 'run', 'ffw_bringup', 'init_position_for_follower_teleop'],
+        output='screen'
     )
 
     start_leader = ExecuteProcess(
         cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_without_hand.launch.py'],
-        output='screen',
-        shell=True
+        output='screen'
     )
 
-    disable_leader_torque = TimerAction(
-        period=5.0,
-        actions=[ExecuteProcess(
-            cmd=[
-                'ros2', 'service', 'call',
-                '/leader/dynamixel_hardware_interface/set_dxl_torque',
-                'std_srvs/srv/SetBool',
-                'data:\ false'
-            ],
-            output='screen',
-            shell=True
-        )]
-    )
-
-    run_keyboard_control = ExecuteProcess(
+    start_keyboard_gui = ExecuteProcess(
         cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone.py'],
-        output='screen',
-        shell=True
+        shell=True,
+        output='screen'
     )
 
     return LaunchDescription([
-        LogInfo(msg='Starting hardware_follower.launch.py...'),
+        LogInfo(msg='Starting Follower Launch'),
         start_follower,
 
         RegisterEventHandler(
             OnProcessStart(
                 target_action=start_follower,
                 on_start=[
-                    LogInfo(msg='hardware_follower.launch.py has fully started. '
-                                'Running init_position_for_follower.py...'),
+                    LogInfo(msg='Follower started. Initializing position...'),
                     init_follower
                 ]
             )
@@ -78,8 +63,7 @@ def generate_launch_description():
             OnProcessExit(
                 target_action=init_follower,
                 on_exit=[
-                    LogInfo(msg='init_position_for_follower.py has fully executed and exited. '
-                                'Starting hardware_leader.launch.py...'),
+                    LogInfo(msg='Init complete. Starting Leader Launch...'),
                     start_leader
                 ]
             )
@@ -89,10 +73,8 @@ def generate_launch_description():
             OnProcessStart(
                 target_action=start_leader,
                 on_start=[
-                    LogInfo(msg='Disabling torque on leader...'),
-                    disable_leader_torque,
-                    LogInfo(msg='Starting keyboard_control_standalone.py...'),
-                    run_keyboard_control
+                    LogInfo(msg='Launching Keyboard GUI...'),
+                    start_keyboard_gui
                 ]
             )
         ),

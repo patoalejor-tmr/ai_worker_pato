@@ -40,21 +40,6 @@ def generate_launch_description():
         )
     )
 
-    disable_torque = TimerAction(
-        period=3.0,
-        actions=[
-            ExecuteProcess(
-                cmd=[
-                    'ros2', 'service', 'call',
-                    '/leader/dynamixel_hardware_interface/set_dxl_torque',
-                    'std_srvs/srv/SetBool',
-                    '{"data": false}'
-                ],
-                output='screen'
-            )
-        ]
-    )
-
     calibrator_left = Node(
         package='ffw_bringup',
         executable='hand_calibrator_left.py',
@@ -100,7 +85,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         hardware_launch,
-        disable_torque,
         run_calibrators,
         left_exit_handler,
         right_exit_handler
