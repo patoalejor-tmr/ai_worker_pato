@@ -39,15 +39,11 @@ class InspireHand:
         for i in range(1, datanum + 6):
             putdata += self.num2str(b[i-1])
         self.ser.write(putdata)
-        print(f"[TX][ID {self.hand_id}]", putdata.hex())
-
         res = self.ser.read(read_len)
-        print(f"[RX][ID {self.hand_id}]", res.hex() if res else "(no response)")
         return res
 
     def set_6val(self, addr, values, label="set_6val"):
         if len(values) != 6 or any(v < -1 or v > 2000 for v in values):
-            print(f"{label} - invalid input")
             return
         datanum = 0x0F
         b = [0] * (datanum + 5)

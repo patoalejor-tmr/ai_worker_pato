@@ -29,7 +29,6 @@
       action_monitor_rate: 20.0
       use_local_topics: true
 
-
   joint_trajectory_right:
     ros__parameters:
       joints:
@@ -43,4 +42,3 @@
       interfaces:
         - position
       use_local_topics: true
-

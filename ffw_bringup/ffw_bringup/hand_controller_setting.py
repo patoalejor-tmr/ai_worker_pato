@@ -30,13 +30,12 @@ class HandControllerSetting(Node):
     def __init__(self):
         super().__init__('hand_controller_setting')
 
-        # Initialize both hands
         self.hands = {
             'right': InspireHand('/dev/right_hand', 1),
             'left': InspireHand('/dev/left_hand', 2)
         }
 
-        time.sleep(0.5)  # Wait for stabilization
+        time.sleep(0.5)
 
         for side, hand in self.hands.items():
             self.get_logger().info(f'{side.upper()} hand configuration started')
@@ -44,26 +43,20 @@ class HandControllerSetting(Node):
             self.get_logger().info(f'{side.upper()} hand configuration completed\n')
 
     def apply_settings(self, hand):
-        # Clear errors
         hand.set_clear_error()
         time.sleep(0.1)
 
-        # Force sensor calibration (uncomment if needed)
         hand.gesture_force_clb()
         self.get_logger().info('Force sensor calibration completed')
 
-        # Set default speed
         hand.setdefaultspeed(Speed, Speed, Speed, Speed, Speed, Speed)
         hand.setspeed(Speed, Speed, Speed, Speed, Speed, Speed)
 
-        # Set default power
         hand.setdefaultpower(Power, Power, Power, Power, Power, Power)
         hand.setpower(Power, Power, Power, Power, Power, Power)
 
-        # Set initial angle (open state)
         hand.setangle(start_angle, start_angle, start_angle, start_angle, start_angle, start_angle)
 
-        # Save to flash
         hand.set_save_flash()
 
 

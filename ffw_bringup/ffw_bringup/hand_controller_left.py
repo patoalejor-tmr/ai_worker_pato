@@ -31,26 +31,21 @@ class LeaderFollowerHand(Node):
     def __init__(self):
         super().__init__('leader_follower_left_hand')
 
-        # Parameters
         self.declare_parameter('serial_port', '/dev/left_hand')
         self.declare_parameter('hand_id', 2)
         self.serial_port = self.get_parameter('serial_port').get_parameter_value().string_value
         self.hand_id = self.get_parameter('hand_id').get_parameter_value().integer_value
 
-        # Connect Inspire Hand
         self.hand = InspireHand(self.serial_port, self.hand_id)
         self.get_logger().info(f'InspireHand connected: {self.serial_port}, ID {self.hand_id}')
 
-        # Subscriber
         self.sub = self.create_subscription(
             JointTrajectory,
             '/leader/joint_trajectory_left_hand/joint_trajectory',
             self.leader_callback, 10)
 
-        # Publisher
         self.hand_pub = self.create_publisher(Int32MultiArray, '/follower/left_hand_angles', 10)
 
-        # Load settings
         self.joint_range = self.load_joint_range()
         self.joint_map = {
             'left_little_1_joint': 0,
@@ -93,7 +88,7 @@ class LeaderFollowerHand(Node):
         val = max(min(val, rad_max), rad_min)
         norm = (val - rad_min) / (rad_max - rad_min)
         scaled = int(norm * 1000)
-        return 1000 - scaled  # Reverse
+        return 1000 - scaled
 
     def leader_callback(self, msg: JointTrajectory):
         if not msg.points:
@@ -109,7 +104,6 @@ class LeaderFollowerHand(Node):
             val = name_to_position.get(joint_name, 0.0)
             scaled[target_index] = self.scale(val, target_index)
 
-        self.get_logger().info(f'[Leader ➝ Follower LEFT] Scaled: {scaled}')
         self.hand.setangle(*scaled)
 
         angles = self.hand.get_actangle()

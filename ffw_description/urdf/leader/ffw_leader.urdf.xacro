@@ -12,23 +12,17 @@
   <xacro:include filename="$(find ffw_description)/urdf/urdf_right.xacro" />
   <xacro:include filename="$(find ffw_description)/urdf/urdf_left.xacro" />
 
-<!-- 손 장착 -->
 <xacro:mount_left_hand parent_link="arm_l_link7"/>
 <xacro:mount_right_hand parent_link="arm_r_link7"/>
-
 
   <!-- World -->
   <link name="world"/>
 
-  <!-- Used for fixing OpenManipulator-Y -->
   <joint name="world_fixed" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </joint>
-
-  
-
 
 <xacro:ffw_leader_left_system 
     use_sim="$(arg use_sim)" 

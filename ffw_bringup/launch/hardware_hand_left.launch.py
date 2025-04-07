@@ -26,7 +26,6 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    # Declare launch arguments
     declared_arguments = [
         DeclareLaunchArgument(
             'prefix',
@@ -42,10 +41,8 @@ def generate_launch_description():
         ),
     ]
 
-    # Launch configurations
     description_file = LaunchConfiguration('description_file')
 
-    # Robot controllers config file path
     robot_controllers = PathJoinSubstitution(
         [
             FindPackageShare('ffw_bringup'),
@@ -65,7 +62,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # ros2_control Node
     control_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
@@ -73,7 +69,6 @@ def generate_launch_description():
         output='both',
     )
 
-    # Robot description from Xacro
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name='xacro')]),
@@ -85,7 +80,6 @@ def generate_launch_description():
     )
     robot_description = {'robot_description': robot_description_content}
 
-    # Controller spawner node
     robot_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
@@ -96,7 +90,6 @@ def generate_launch_description():
         parameters=[robot_description],
     )
 
-    # Robot State Publisher
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -104,7 +97,6 @@ def generate_launch_description():
         parameters=[robot_description],
     )
 
-    # Wrap everything in a namespace 'leader'
     leader_with_namespace = GroupAction(
         actions=[
             PushRosNamespace('leader'),
@@ -114,5 +106,4 @@ def generate_launch_description():
         ]
     )
 
-    # Return combined LaunchDescription
     return LaunchDescription(declared_arguments + [leader_with_namespace, rviz_node])

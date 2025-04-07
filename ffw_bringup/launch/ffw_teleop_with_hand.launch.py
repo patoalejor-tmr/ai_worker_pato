@@ -24,31 +24,26 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    # Step 1: Start follower
     start_follower = ExecuteProcess(
         cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_follower_teleop_with_hand.launch.py'],
         output='screen'
     )
 
-    # Step 2: Init follower position
     init_follower = ExecuteProcess(
         cmd=['ros2', 'run', 'ffw_bringup', 'init_position_for_follower_teleop'],
         output='screen'
     )
 
-    # Step 3: Start leader
     start_leader = ExecuteProcess(
         cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_with_inspire_hand.launch.py'],
         output='screen'
     )
 
-    # Step 5: Start hand controllers (left + right)
     start_hand_controllers = ExecuteProcess(
         cmd=['ros2', 'launch', 'ffw_bringup', 'hand_controller_two.launch.py'],
         output='screen'
     )
 
-    # Step 6: Start keyboard GUI teleop
     start_keyboard_gui = ExecuteProcess(
         cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone'],
         shell=True,

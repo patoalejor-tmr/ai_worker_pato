@@ -52,7 +52,7 @@ class HandCalibrator(Node):
         src_bringup_path = install_path.replace(
             '/install/ffw_bringup/share/ffw_bringup', '/src/ffw/ffw_bringup')
         self.output_file = os.path.join(src_bringup_path, 'config', 'hand_joint_range_right.yaml')
-        time.sleep(0.5)  # Wait briefly
+        time.sleep(0.5)
         self.get_logger().info('Starting right hand calibration... (Move your hand!)')
 
     def callback(self, msg: JointTrajectory):

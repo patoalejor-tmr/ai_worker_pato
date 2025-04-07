@@ -45,7 +45,7 @@ arm_l_controller:
     allow_integration_in_goal_trajectories: true
     constraints:
       stopped_velocity_tolerance: 0.01
-      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+      goal_time: 0.0
 arm_r_controller:
   ros__parameters:
     joints:
@@ -69,7 +69,7 @@ arm_r_controller:
     allow_integration_in_goal_trajectories: true
     constraints:
       stopped_velocity_tolerance: 0.01
-      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+      goal_time: 0.0
 neck_controller:
   ros__parameters:
     joints:
@@ -88,7 +88,7 @@ neck_controller:
     allow_integration_in_goal_trajectories: true
     constraints:
       stopped_velocity_tolerance: 0.01
-      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+      goal_time: 0.0
 body_controller:
   ros__parameters:
     joints:
@@ -106,4 +106,4 @@ body_controller:
     allow_integration_in_goal_trajectories: true
     constraints:
       stopped_velocity_tolerance: 0.01
-      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+      goal_time: 0.0

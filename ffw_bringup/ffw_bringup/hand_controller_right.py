@@ -32,17 +32,14 @@ class LeaderFollowerHand(Node):
     def __init__(self):
         super().__init__('leader_follower_right_hand')
 
-        # Parameters
         self.declare_parameter('serial_port', '/dev/right_hand')
         self.declare_parameter('hand_id', 1)
         self.serial_port = self.get_parameter('serial_port').get_parameter_value().string_value
         self.hand_id = self.get_parameter('hand_id').get_parameter_value().integer_value
 
-        # Inspire Hand
         self.hand = InspireHand(self.serial_port, self.hand_id)
         self.get_logger().info(f'InspireHand connected: {self.serial_port}, ID {self.hand_id}')
 
-        # Subscriber
         self.sub = self.create_subscription(
             JointTrajectory,
             '/leader/joint_trajectory_right_hand/joint_trajectory',
@@ -50,7 +47,6 @@ class LeaderFollowerHand(Node):
             10
         )
 
-        # State publisher (optional)
         self.hand_pub = self.create_publisher(
             Int32MultiArray, '/follower/right_hand_angles', 10)
 
@@ -60,7 +56,7 @@ class LeaderFollowerHand(Node):
             'right_ring_1_joint': 1,
             'right_middle_1_joint': 2,
             'right_index_1_joint': 3,
-            'right_thumb_2_joint': 4,  # Fixed at 1000 for palm
+            'right_thumb_2_joint': 4,
             'right_thumb_1_joint': 5
         }
 
@@ -97,7 +93,7 @@ class LeaderFollowerHand(Node):
         val = max(min(val, rad_max), rad_min)
         norm = (val - rad_min) / (rad_max - rad_min)
         scaled = int(norm * 1000)
-        return 1000 - scaled  # Reverse
+        return 1000 - scaled
 
 
     def leader_callback(self, msg: JointTrajectory):
@@ -106,17 +102,14 @@ class LeaderFollowerHand(Node):
             return
 
         joint_names = msg.joint_names
-        positions = msg.points[0].positions  # Based on the first trajectory point
+        positions = msg.points[0].positions
 
         name_to_position = dict(zip(joint_names, positions))
 
-        # Store scaled values for each finger at the corresponding index position
         scaled = [0] * 6
         for joint_name, target_index in self.joint_map.items():
             val = name_to_position.get(joint_name, 0.0)
             scaled[target_index] = self.scale(val, target_index)
-
-        self.get_logger().info(f'[Leader ➝ Follower] Scaled: {scaled}')
 
         self.hand.setangle(*scaled)
 

@@ -22,20 +22,17 @@ from launch.event_handlers import OnProcessStart, OnProcessExit
 
 
 def generate_launch_description():
-    # Step 1: Start follower launch file
     start_follower = ExecuteProcess(
         cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_follower_teleop_without_hand.launch.py'],
         output='screen'
     )
 
-    # Step 2: Run the initialization script for the follower
     init_follower = ExecuteProcess(
         cmd=['ros2', 'run', 'ffw_bringup', 'init_position_for_follower_teleop.py'],
         output='screen',
         shell=True
     )
 
-    # Step 3: Start leader launch file
     start_leader = ExecuteProcess(
         cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_without_hand.launch.py'],
         output='screen',
@@ -56,8 +53,6 @@ def generate_launch_description():
         )]
     )
 
-
-    # Step 5: Run keyboard control node
     run_keyboard_control = ExecuteProcess(
         cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone.py'],
         output='screen',
@@ -68,7 +63,6 @@ def generate_launch_description():
         LogInfo(msg='Starting hardware_follower.launch.py...'),
         start_follower,
 
-        # Step 2: Ensure init_follower starts after follower is launched
         RegisterEventHandler(
             OnProcessStart(
                 target_action=start_follower,
@@ -80,7 +74,6 @@ def generate_launch_description():
             )
         ),
 
-        # Step 3: Start leader after follower initialization completes
         RegisterEventHandler(
             OnProcessExit(
                 target_action=init_follower,
@@ -92,7 +85,6 @@ def generate_launch_description():
             )
         ),
 
-        # Step 4: Disable torque and run keyboard control after leader launch starts
         RegisterEventHandler(
             OnProcessStart(
                 target_action=start_leader,
