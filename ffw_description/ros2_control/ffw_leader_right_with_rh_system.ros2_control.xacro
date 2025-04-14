@@ -193,7 +193,7 @@
         <state_interface name="Present Velocity"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
-        <param name="Drive Mode">0</param>
+        <param name="Drive Mode">1</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
       </gpio>

@@ -97,8 +97,8 @@ class KeyboardController(Node):
         for ctrl_key, ctrl in self.controllers.items():
             for i, joint in enumerate(ctrl['joints']):
                 if joint in msg.name:
-                    if joint == 'arm_r_joint7' or joint == 'arm_l_joint7':
-                        continue
+                    # if joint == 'arm_r_joint7' or joint == 'arm_l_joint7':
+                    #     continue
                     idx = msg.name.index(joint)
                     ctrl['positions'][i] = msg.position[idx]
                     if ctrl['labels'][i]:
