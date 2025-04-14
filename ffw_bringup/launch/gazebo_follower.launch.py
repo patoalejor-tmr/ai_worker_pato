@@ -70,7 +70,7 @@ def generate_launch_description():
     xacro_file = os.path.join(ffw_description_path,
                               "urdf",
                               "follower",
-                              "ffw_follower.urdf.xacro")
+                              "ffw_follower_with_rh.urdf.xacro")
 
     doc = xacro.process_file(xacro_file, mappings={'use_sim' : 'true'})
 
@@ -96,7 +96,7 @@ def generate_launch_description():
                    '-R', '0.0',
                    '-P', '0.0',
                    '-Y', '0.0',
-                   '-name', 'om',
+                   '-name', 'ffw',
                    '-allow_renaming', 'true'
                    '-use_sim','true'],
     )

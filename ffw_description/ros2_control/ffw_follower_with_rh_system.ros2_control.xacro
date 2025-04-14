@@ -69,7 +69,6 @@
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
             </param>
-            <param name="ros_update_freq">200</param>
             <param name="dynamixel_state_pub_msg_name">dynamixel_hardware_interface/dxl_state</param>
             <param name="get_dynamixel_data_srv_name">dynamixel_hardware_interface/get_dxl_data</param>
             <param name="set_dynamixel_data_srv_name">dynamixel_hardware_interface/set_dxl_data</param>
@@ -202,11 +201,11 @@
         <state_interface name="torque_enable"/>
         <state_interface name="hardware_state"/>
       </joint>
-
+<!-- 
       <xacro:if value="$(arg use_sim)">
         <joint name="r_rh_r2">
           <param name="mimic">r_rh_r1_joint</param>
-          <param name="multiplier">1</param>
+          <param name="multiplier">1.0</param>
           <state_interface name="position"/>
           <state_interface name="velocity"/>
           <state_interface name="effort"/>
@@ -215,7 +214,7 @@
         </joint>
         <joint name="r_rh_l1">
           <param name="mimic">r_rh_r1_joint</param>
-          <param name="multiplier">1</param>
+          <param name="multiplier">1.0</param>
           <state_interface name="position"/>
           <state_interface name="velocity"/>
           <state_interface name="effort"/>
@@ -224,14 +223,14 @@
         </joint>
         <joint name="r_rh_l2">
           <param name="mimic">r_rh_r1_joint</param>
-          <param name="multiplier">1</param>
+          <param name="multiplier">1.0</param>
           <state_interface name="position"/>
           <state_interface name="velocity"/>
           <state_interface name="effort"/>
           <state_interface name="torque_enable"/>
           <state_interface name="hardware_state"/>
         </joint>
-      </xacro:if>
+      </xacro:if> -->
 
       <joint name="l_rh_r1_joint">
         <command_interface name="position"/>
@@ -241,7 +240,7 @@
         <state_interface name="torque_enable"/>
         <state_interface name="hardware_state"/>
       </joint>
-
+<!-- 
       <xacro:if value="$(arg use_sim)">
         <joint name="l_rh_r2">
           <param name="mimic">l_rh_r1_joint</param>
@@ -270,7 +269,7 @@
           <state_interface name="torque_enable"/>
           <state_interface name="hardware_state"/>
         </joint>
-      </xacro:if>
+      </xacro:if> -->
 
 
       <!-- RIGHT ARM -->
@@ -413,8 +412,8 @@
         <param name="Return Delay Time">0</param>
         <param name="Profile Velocity">804</param>
         <param name="Profile Acceleration">400</param>
-        <param name="Max Position Limit">151875</param>
-        <param name="Min Position Limit">-151875</param>
+        <param name="Max Position Limit">101249</param>
+        <param name="Min Position Limit">-101249</param>
       </gpio>
 
       <gpio name="dxl8">
@@ -570,8 +569,8 @@
         <param name="Return Delay Time">0</param>
         <param name="Profile Velocity">804</param>
         <param name="Profile Acceleration">400</param>
-        <param name="Max Position Limit">151875</param>
-        <param name="Min Position Limit">-151875</param>
+        <param name="Max Position Limit">101249</param>
+        <param name="Min Position Limit">-101249</param>
       </gpio>
 
       <gpio name="dxl38">
