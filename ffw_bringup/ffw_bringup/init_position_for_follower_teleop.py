@@ -41,10 +41,10 @@ class MoveToHome(Node):
         self.joint_groups = {
             'arm_l_controller': [
                 'arm_l_joint1', 'arm_l_joint2', 'arm_l_joint3', 'arm_l_joint4',
-                'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7'],
+                'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7', 'l_rh_r1_joint'],
             'arm_r_controller': [
                 'arm_r_joint1', 'arm_r_joint2', 'arm_r_joint3', 'arm_r_joint4',
-                'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7'],
+                'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7', 'r_rh_r1_joint'],
             'neck_controller': ['neck_joint1', 'neck_joint2'],
             'body_controller': ['linear_joint']
         }
@@ -55,7 +55,8 @@ class MoveToHome(Node):
             'arm_l_joint7': 0.0, 'arm_r_joint1': 0.0, 'arm_r_joint2': 0.0,
             'arm_r_joint3': 0.0, 'arm_r_joint4': 0.0, 'arm_r_joint5': 0.0,
             'arm_r_joint6': 0.0, 'arm_r_joint7': 0.0, 'neck_joint1': 0.0,
-            'neck_joint2': 0.0, 'linear_joint': 0.0
+            'neck_joint2': 0.0, 'linear_joint': 0.0, 'l_rh_r1_joint': 0.0,
+            'r_rh_r1_joint': 0.0
         }
 
         self.epsilon = 0.05

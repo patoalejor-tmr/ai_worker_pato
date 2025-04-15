@@ -32,6 +32,15 @@
         - l_rh_r1_joint
       interfaces:
         - position
+      offsets:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.2
       action_monitor_rate: 20.0
       use_local_topics: true
 
@@ -48,5 +57,14 @@
         - r_rh_r1_joint
       interfaces:
         - position
+      offsets:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.2
       action_monitor_rate: 20.0
       use_local_topics: true
