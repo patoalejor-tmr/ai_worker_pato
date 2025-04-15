@@ -26,14 +26,14 @@
   </joint>
 
   <joint name="left_hand_fixed" type="fixed">
-    <origin xyz="0 0 -0.05" rpy="0 3.14 0"/>
+    <origin xyz="0 0 -0.05" rpy="0 3.14 -1.57"/>
     <parent link="arm_l_link7"/>
     <axis xyz="0 0 0"/>
     <child link="l_rh_p12_rn_base"/>
   </joint>
 
   <joint name="right_hand_fixed" type="fixed">
-    <origin xyz="0 0 -0.05" rpy="0 3.14 0"/>
+    <origin xyz="0 0 -0.05" rpy="0 3.14 1.57"/>
     <parent link="arm_r_link7"/>
     <axis xyz="0 0 0"/>
     <child link="r_rh_p12_rn_base"/>
