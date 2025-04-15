@@ -126,7 +126,7 @@ class MoveToHomeSmooth(Node):
             return traj
 
     def move_all_to_home_smooth(self):
-        """Publishes smooth JointTrajectory messages to move all joint groups to their home positions."""
+        """Publish smooth JointTrajectory messages to move all joint groups to their home positions."""
         if not self.current_positions:
             self.get_logger().warn("Current joint positions not yet received.")
             return
@@ -138,7 +138,7 @@ class MoveToHomeSmooth(Node):
             self.get_logger().info(f'Sending smooth command to {controller_name}')
 
     def joint_state_callback(self, msg):
-        """Callback function to process incoming JointState messages."""
+        """Process incoming JointState messages."""
         for i, name in enumerate(msg.name):
             if name in self.target_positions:
                 self.current_positions[name] = msg.position[i]
