@@ -285,8 +285,8 @@
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">804</param>
         <param name="Profile Acceleration">40</param>
-        <param name="Max Position Limit">131072</param>
-        <param name="Min Position Limit">-131072</param>
+        <param name="Max Position Limit">160199</param>
+        <param name="Min Position Limit">-160199</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
         <param name="Velocity I Gain">1085331</param>
@@ -442,8 +442,8 @@
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">804</param>
         <param name="Profile Acceleration">40</param>
-        <param name="Max Position Limit">131072</param>
-        <param name="Min Position Limit">-131072</param>
+        <param name="Max Position Limit">160199</param>
+        <param name="Min Position Limit">-160199</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
         <param name="Velocity I Gain">1085331</param>
