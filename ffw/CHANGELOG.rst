@@ -4,10 +4,10 @@ Changelog for package ffw
 
 1.0.2 (2025-04-16)
 ------------------
-* Modified the profile velocity parameters for enhanced arm and hand teleoperation performance
-* Modified the README file to reflect usage instructions for this package
-* Removed unused files and redundant comments to streamline the codebase
-* Contributors: Wonho Yun, Pyo
+* Added support for ROBOTIS RH Gripper
+* Added differentiation between slow and fast versions
+* Updated codebase to comply with flake8 linting standards
+* Contributors: Wonho Yun
 
 1.0.1 (2025-04-07)
 ------------------
