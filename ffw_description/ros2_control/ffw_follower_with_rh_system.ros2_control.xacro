@@ -341,11 +341,11 @@
         <state_interface name="Present Velocity"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
-        <param name="Drive Mode">1</param>
+        <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
-        <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Velocity">2500</param>
+        <param name="Profile Acceleration">1000</param>
         <param name="Max Position Limit">101249</param>
         <param name="Min Position Limit">-101249</param>
       </gpio>
@@ -498,11 +498,11 @@
         <state_interface name="Present Velocity"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
-        <param name="Drive Mode">1</param>
+        <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
-        <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Velocity">2500</param>
+        <param name="Profile Acceleration">1000</param>
         <param name="Max Position Limit">101249</param>
         <param name="Min Position Limit">-101249</param>
       </gpio>
