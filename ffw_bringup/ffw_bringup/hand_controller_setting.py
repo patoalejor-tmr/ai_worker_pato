@@ -28,6 +28,7 @@ start_angle = 1000  # 0~1000 (open state)
 
 
 class HandControllerSetting(Node):
+
     def __init__(self):
         super().__init__('hand_controller_setting')
 

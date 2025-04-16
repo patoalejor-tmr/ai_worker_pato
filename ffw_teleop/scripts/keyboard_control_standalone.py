@@ -26,6 +26,7 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 
 class KeyboardController(Node):
+
     def __init__(self):
         super().__init__('keyboard_joint_controller')
 

@@ -28,6 +28,7 @@ import yaml
 
 
 class LeaderFollowerHand(Node):
+
     def __init__(self):
         super().__init__('leader_follower_left_hand')
 

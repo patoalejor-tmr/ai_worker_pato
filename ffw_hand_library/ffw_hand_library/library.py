@@ -20,6 +20,7 @@ import serial
 
 
 class InspireHand:
+
     def __init__(self, port, hand_id=1):
         self.hand_id = hand_id
         self.ser = serial.Serial(port, 115200, timeout=1)

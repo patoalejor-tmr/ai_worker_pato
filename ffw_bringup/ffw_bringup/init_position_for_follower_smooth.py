@@ -26,6 +26,7 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 
 class MoveToHomeSmooth(Node):
+
     def __init__(self):
         super().__init__('move_to_home_smooth')
 

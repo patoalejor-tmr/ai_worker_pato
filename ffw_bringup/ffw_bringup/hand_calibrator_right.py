@@ -27,6 +27,7 @@ import yaml
 
 
 class HandCalibrator(Node):
+
     def __init__(self):
         super().__init__('hand_calibrator_right')
         self.sub = self.create_subscription(
