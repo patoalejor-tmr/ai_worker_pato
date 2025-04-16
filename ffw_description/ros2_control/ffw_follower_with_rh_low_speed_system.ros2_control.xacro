@@ -409,7 +409,7 @@
       <gpio name="dxl33">
         <param name="type">dxl</param>
         <param name="ID">33</param>
-        <command_interface name="Goal Position"/> 
+        <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
         <state_interface name="Torque Enable"/>
