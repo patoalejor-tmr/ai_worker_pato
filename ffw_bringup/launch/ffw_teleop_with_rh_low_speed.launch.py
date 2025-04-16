@@ -18,14 +18,13 @@
 
 from launch import LaunchDescription
 from launch.actions import ExecuteProcess, LogInfo, RegisterEventHandler
-from launch.actions import TimerAction
-from launch.event_handlers import OnProcessStart, OnProcessExit
-from launch_ros.actions import Node
+from launch.event_handlers import OnProcessExit, OnProcessStart
 
 
 def generate_launch_description():
     start_follower = ExecuteProcess(
-        cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_follower_teleop_with_rh_low_speed.launch.py'],
+        cmd=['ros2', 'launch', 'ffw_bringup',
+             'hardware_follower_teleop_with_rh_low_speed.launch.py'],
         output='screen'
     )
 

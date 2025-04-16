@@ -16,15 +16,15 @@
 #
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
-from trajectory_msgs.msg import JointTrajectory
-from std_msgs.msg import Int32MultiArray
+import os
+
+from ament_index_python.packages import get_package_share_directory
 from ffw_hand_library.library import InspireHand
 import rclpy
 from rclpy.node import Node
-import serial
+from std_msgs.msg import Int32MultiArray
+from trajectory_msgs.msg import JointTrajectory
 import yaml
-import os
-from ament_index_python.packages import get_package_share_directory
 
 
 class LeaderFollowerHand(Node):
@@ -113,6 +113,7 @@ class LeaderFollowerHand(Node):
         self.hand.ser.close()
         super().destroy_node()
 
+
 def main(args=None):
     rclpy.init(args=args)
     node = LeaderFollowerHand()
@@ -123,6 +124,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

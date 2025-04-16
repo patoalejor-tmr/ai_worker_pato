@@ -17,11 +17,13 @@
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 import sys
+
+import numpy as np
 import rclpy
 from rclpy.node import Node
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
-import numpy as np
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+
 
 class MoveToHomeSmooth(Node):
     def __init__(self):
@@ -71,64 +73,69 @@ class MoveToHomeSmooth(Node):
         self.timer = self.create_timer(1.0, self.move_all_to_home_smooth)
 
     def create_smooth_trajectory(self, controller_name, start_positions):
-            joint_names = self.joint_groups[controller_name]
-            end_positions = [self.target_positions[joint] for joint in joint_names]
+        joint_names = self.joint_groups[controller_name]
+        end_positions = [self.target_positions[joint] for joint in joint_names]
 
-            traj = JointTrajectory()
-            traj.joint_names = joint_names
-            times = np.linspace(0, self.duration, self.num_points)
+        traj = JointTrajectory()
+        traj.joint_names = joint_names
+        times = np.linspace(0, self.duration, self.num_points)
 
-            for i in range(self.num_points):
-                point = JointTrajectoryPoint()
-                t_norm = times[i] / self.duration
+        for i in range(self.num_points):
+            point = JointTrajectoryPoint()
+            t_norm = times[i] / self.duration
 
-                positions = []
-                velocities = []
-                accelerations = []
+            positions = []
+            velocities = []
+            accelerations = []
 
-                for j in range(len(joint_names)):
-                    start_pos = start_positions[j]
-                    end_pos = end_positions[j]
+            for j in range(len(joint_names)):
+                start_pos = start_positions[j]
+                end_pos = end_positions[j]
 
-                    # Quintic polynomial interpolation for smooth motion
-                    coeffs = [
-                        start_pos,
-                        0.0,
-                        0.0,
-                        10 * end_pos - 10 * start_pos - 4 * self.duration * 0.0 - 6 * self.duration * 0.0,
-                        -15 * end_pos + 15 * start_pos + 7 * self.duration * 0.0 + 8 * self.duration * 0.0,
-                        6 * end_pos - 6 * start_pos - 3 * self.duration * 0.0 - 3 * self.duration * 0.0,
-                    ]
+                # Quintic polynomial interpolation for smooth motion
+                coeffs = [
+                    start_pos,
+                    0.0,
+                    0.0,
+                    10 * end_pos - 10 * start_pos - 4 *
+                    self.duration * 0.0 - 6 * self.duration * 0.0,
+                    -15 * end_pos + 15 * start_pos + 7 *
+                    self.duration * 0.0 + 8 * self.duration * 0.0,
+                    6 * end_pos - 6 * start_pos - 3 *
+                    self.duration * 0.0 - 3 * self.duration * 0.0,
+                ]
 
-                    position = (
-                        coeffs[0] + coeffs[1] * t_norm + coeffs[2] * t_norm**2 +
-                        coeffs[3] * t_norm**3 + coeffs[4] * t_norm**4 + coeffs[5] * t_norm**5
-                    )
-                    velocity = (
-                        coeffs[1] / self.duration + 2 * coeffs[2] * t_norm / self.duration +
-                        3 * coeffs[3] * t_norm**2 / self.duration + 4 * coeffs[4] * t_norm**3 / self.duration +
-                        5 * coeffs[5] * t_norm**4 / self.duration
-                    )
-                    acceleration = (
-                        2 * coeffs[2] / (self.duration**2) + 6 * coeffs[3] * t_norm / (self.duration**2) +
-                        12 * coeffs[4] * t_norm**2 / (self.duration**2) + 20 * coeffs[5] * t_norm**3 / (self.duration**2)
-                    )
-                    positions.append(position)
-                    velocities.append(velocity)
-                    accelerations.append(acceleration)
+                position = (
+                    coeffs[0] + coeffs[1] * t_norm + coeffs[2] * t_norm**2 +
+                    coeffs[3] * t_norm**3 + coeffs[4] * t_norm**4 + coeffs[5] * t_norm**5
+                )
+                velocity = (
+                    coeffs[1] / self.duration + 2 * coeffs[2] * t_norm / self.duration +
+                    3 * coeffs[3] * t_norm**2 / self.duration +
+                    4 * coeffs[4] * t_norm**3 / self.duration +
+                    5 * coeffs[5] * t_norm**4 / self.duration
+                )
+                acceleration = (
+                    2 * coeffs[2] / (self.duration**2) +
+                    6 * coeffs[3] * t_norm / (self.duration**2) +
+                    12 * coeffs[4] * t_norm**2 / (self.duration**2) +
+                    20 * coeffs[5] * t_norm**3 / (self.duration**2)
+                )
+                positions.append(position)
+                velocities.append(velocity)
+                accelerations.append(acceleration)
 
-                point.positions = positions
-                point.velocities = velocities
-                point.accelerations = accelerations
-                point.time_from_start.sec = int(times[i])
-                point.time_from_start.nanosec = int((times[i] % 1) * 1e9)
-                traj.points.append(point)
-            return traj
+            point.positions = positions
+            point.velocities = velocities
+            point.accelerations = accelerations
+            point.time_from_start.sec = int(times[i])
+            point.time_from_start.nanosec = int((times[i] % 1) * 1e9)
+            traj.points.append(point)
+        return traj
 
     def move_all_to_home_smooth(self):
-        """Publish smooth JointTrajectory messages to move all joint groups to their home positions."""
         if not self.current_positions:
-            self.get_logger().warn("Current joint positions not yet received.")
+            self.get_logger().warn('Current joint positions not yet received.')
             return
 
         for controller_name, joint_names in self.joint_groups.items():
@@ -138,7 +145,6 @@ class MoveToHomeSmooth(Node):
             self.get_logger().info(f'Sending smooth command to {controller_name}')
 
     def joint_state_callback(self, msg):
-        """Process incoming JointState messages."""
         for i, name in enumerate(msg.name):
             if name in self.target_positions:
                 self.current_positions[name] = msg.position[i]
@@ -154,15 +160,16 @@ class MoveToHomeSmooth(Node):
                 self.shutdown_node()
 
     def shutdown_node(self):
-        """Shuts down the ROS 2 node."""
         self.destroy_node()
         rclpy.shutdown()
         sys.exit(0)
+
 
 def main(args=None):
     rclpy.init(args=args)
     node = MoveToHomeSmooth()
     rclpy.spin(node)
+
 
 if __name__ == '__main__':
     main()

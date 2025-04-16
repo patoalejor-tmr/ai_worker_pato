@@ -17,10 +17,11 @@
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 import sys
+
 import rclpy
 from rclpy.node import Node
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 
 class MoveToHome(Node):
@@ -103,10 +104,12 @@ class MoveToHome(Node):
         rclpy.shutdown()
         sys.exit(0)
 
+
 def main(args=None):
     rclpy.init(args=args)
     node = MoveToHome()
     rclpy.spin(node)
+
 
 if __name__ == '__main__':
     main()

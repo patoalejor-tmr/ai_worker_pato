@@ -1,5 +1,7 @@
-from setuptools import find_packages, setup
 import glob
+
+from setuptools import find_packages, setup
+
 package_name = 'ffw_bringup'
 authors_info = [
     ('Sungho Woo', 'wsh@robotis.com'),
@@ -45,8 +47,10 @@ setup(
             'hand_calibrator_right = ffw_bringup.hand_calibrator_right:main',
             'hand_calibrator_left = ffw_bringup.hand_calibrator_left:main',
             'hand_controller_setting = ffw_bringup.hand_controller_setting:main',
-            'init_position_for_follower_teleop = ffw_bringup.init_position_for_follower_teleop:main',
-            'init_position_for_follower_smooth = ffw_bringup.init_position_for_follower_smooth:main',
+            'init_position_for_follower_teleop = '
+            'ffw_bringup.init_position_for_follower_teleop:main',
+            'init_position_for_follower_smooth = '
+            'ffw_bringup.init_position_for_follower_smooth:main',
             'ffw_create_udev_rules = ffw_bringup.ffw_create_udev_rules:main',
         ],
     },

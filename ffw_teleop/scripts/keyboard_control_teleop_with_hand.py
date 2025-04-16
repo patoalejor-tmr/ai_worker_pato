@@ -131,7 +131,7 @@ class KeyboardController(Node):
         point.time_from_start.sec = 0
         msg.points.append(point)
         ctrl['publisher'].publish(msg)
-        self.get_logger().info(f'{ctrl_key} command: {ctrl['positions']}')
+        self.get_logger().info(f"{ctrl_key} command: {ctrl['positions']}")
 
     def change_joint(self, ctrl_key, joint_index, direction):
         ctrl = self.controllers[ctrl_key]
@@ -174,7 +174,7 @@ class KeyboardController(Node):
                 tk.Label(self.root, text=joint).grid(row=row, column=0)
                 btn_minus = tk.Button(self.root, text='-', width=3)
                 btn_plus = tk.Button(self.root, text='+', width=3)
-                label = tk.Label(self.root, text=f'{ctrl['positions'][i]:.2f}', width=6)
+                label = tk.Label(self.root, text=f"{ctrl['positions'][i]:.2f}", width=6)
                 ctrl['labels'][i] = label
                 btn_minus.grid(row=row, column=1)
                 btn_plus.grid(row=row, column=2)
