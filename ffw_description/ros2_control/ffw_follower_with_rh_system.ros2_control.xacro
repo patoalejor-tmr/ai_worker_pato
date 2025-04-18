@@ -23,7 +23,6 @@
             <plugin>dynamixel_hardware_interface/DynamixelHardware</plugin>
             <param name="port_name">/dev/follower</param>
             <param name="baud_rate">4000000</param>
-            <param name="error_timeout_sec">0.2</param>
             <param name="dynamixel_model_folder">/param/dxl_model</param>
             <param name="number_of_joints">19</param>
             <param name="number_of_transmissions">19</param>
@@ -88,122 +87,120 @@
       </xacro:unless>
 
       <joint name="arm_r_joint1">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_r_joint2">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_r_joint3">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_r_joint4">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_r_joint5">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_r_joint6">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_r_joint7">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="r_rh_r1_joint">
         <command_interface name="position"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
-        <state_interface name="torque_enable"/>
-        <state_interface name="hardware_state"/>
       </joint>
+
       <joint name="arm_l_joint1">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_l_joint2">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_l_joint3">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_l_joint4">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_l_joint5">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_l_joint6">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="arm_l_joint7">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="l_rh_r1_joint">
         <command_interface name="position"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
-        <state_interface name="torque_enable"/>
-        <state_interface name="hardware_state"/>
       </joint>
+
       <joint name="neck_joint1">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="neck_joint2">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="linear_joint">
-          <command_interface name="position"/>
-          <state_interface name="position">
-          </state_interface>
-          <state_interface name="velocity"/>
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
 
       <!-- RIGHT ARM -->
@@ -213,6 +210,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">1</param>
@@ -221,7 +219,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">131072</param>
         <param name="Min Position Limit">-131072</param>
         <param name="Position P Gain">1583185</param>
@@ -234,6 +232,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">1</param>
@@ -242,7 +241,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">131072</param>
         <param name="Min Position Limit">0</param>
         <param name="Position P Gain">1583185</param>
@@ -255,6 +254,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -263,7 +263,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">262144</param>
         <param name="Min Position Limit">-262144</param>
         <param name="Position P Gain">1583185</param>
@@ -276,6 +276,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">1</param>
@@ -284,7 +285,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">160199</param>
         <param name="Min Position Limit">-160199</param>
         <param name="Position P Gain">1583185</param>
@@ -297,6 +298,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -305,7 +307,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">262144</param>
         <param name="Min Position Limit">-262144</param>
         <param name="Position P Gain">1583185</param>
@@ -318,6 +320,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">1</param>
@@ -326,7 +329,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">131072</param>
         <param name="Min Position Limit">-131072</param>
         <param name="Position P Gain">1583185</param>
@@ -339,17 +342,17 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
-        <param name="Profile Velocity">2500</param>
-        <param name="Profile Acceleration">1000</param>
+        <param name="Profile Velocity">2020</param>
+        <param name="Profile Acceleration">3000</param>
         <param name="Max Position Limit">101249</param>
         <param name="Min Position Limit">-101249</param>
       </gpio>
-
       <gpio name="dxl8">
         <param name="type">dxl</param>
         <param name="ID">8</param>
@@ -370,6 +373,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -378,7 +382,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">131072</param>
         <param name="Min Position Limit">-131072</param>
         <param name="Position P Gain">1583185</param>
@@ -391,6 +395,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -399,7 +404,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">131072</param>
         <param name="Min Position Limit">0</param>
         <param name="Position P Gain">1583185</param>
@@ -412,6 +417,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">1</param>
@@ -420,7 +426,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">262144</param>
         <param name="Min Position Limit">-262144</param>
         <param name="Position P Gain">1583185</param>
@@ -433,6 +439,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -441,7 +448,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">160199</param>
         <param name="Min Position Limit">-160199</param>
         <param name="Position P Gain">1583185</param>
@@ -454,6 +461,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">1</param>
@@ -462,7 +470,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">262144</param>
         <param name="Min Position Limit">-262144</param>
         <param name="Position P Gain">1583185</param>
@@ -475,6 +483,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -483,7 +492,7 @@
         <param name="Velocity Limit">2020</param>
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">161</param>
+        <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">131072</param>
         <param name="Min Position Limit">-131072</param>
         <param name="Position P Gain">1583185</param>
@@ -496,17 +505,17 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
-        <param name="Profile Velocity">2500</param>
-        <param name="Profile Acceleration">1000</param>
+        <param name="Profile Velocity">2020</param>
+        <param name="Profile Acceleration">3000</param>
         <param name="Max Position Limit">101249</param>
         <param name="Min Position Limit">-101249</param>
       </gpio>
-
       <gpio name="dxl38">
         <param name="type">dxl</param>
         <param name="ID">38</param>
@@ -527,6 +536,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">1</param>
@@ -542,6 +552,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -559,6 +570,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
+        <state_interface name="Present Current"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
         <param name="Drive Mode">0</param>
@@ -570,7 +582,6 @@
       </gpio>
 
     </ros2_control>
-
 
   </xacro:macro>
 

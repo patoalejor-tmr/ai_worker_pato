@@ -7,19 +7,20 @@
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
 
-      joint_trajectory_left:
+      joint_trajectory_command_broadcaster_left:
         type: joint_trajectory_command_broadcaster/JointTrajectoryCommandBroadcaster
 
-      joint_trajectory_right:
+      joint_trajectory_command_broadcaster_right:
         type: joint_trajectory_command_broadcaster/JointTrajectoryCommandBroadcaster
 
-      joint_trajectory_left_hand:
-        type: joint_trajectory_command_broadcaster/JointTrajectoryCommandBroadcaster
+      spring_actuator_controller_left:
+        type: spring_actuator_controller/SpringActuatorController
 
-      joint_trajectory_right_hand:
-        type: joint_trajectory_command_broadcaster/JointTrajectoryCommandBroadcaster
+      spring_actuator_controller_right:
+        type: spring_actuator_controller/SpringActuatorController
 
-  joint_trajectory_left:
+/**:
+  joint_trajectory_command_broadcaster_left:
     ros__parameters:
       joints:
         - arm_l_joint1
@@ -44,7 +45,8 @@
       action_monitor_rate: 20.0
       use_local_topics: true
 
-  joint_trajectory_right:
+/**:
+  joint_trajectory_command_broadcaster_right:
     ros__parameters:
       joints:
         - arm_r_joint1
@@ -68,3 +70,25 @@
         - 0.2
       action_monitor_rate: 20.0
       use_local_topics: true
+
+/**:
+  spring_actuator_controller_left:
+    ros__parameters:
+      joints:
+        - l_rh_r1_joint
+      command_interfaces:
+        - effort
+      state_interfaces:
+        - position
+        - velocity
+
+/**:
+  spring_actuator_controller_right:
+    ros__parameters:
+      joints:
+        - r_rh_r1_joint
+      command_interfaces:
+        - effort
+      state_interfaces:
+        - position
+        - velocity

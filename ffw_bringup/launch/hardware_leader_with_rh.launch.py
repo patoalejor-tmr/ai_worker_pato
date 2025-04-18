@@ -34,94 +34,63 @@ def generate_launch_description():
 
     description_file = LaunchConfiguration('description_file')
 
-    robot_description_content = Command([
-        PathJoinSubstitution([FindExecutable(name='xacro')]),
-        ' ',
-        PathJoinSubstitution([
-            FindPackageShare('ffw_description'), 'urdf', 'leader', description_file
-        ]),
-    ])
-    robot_description = {'robot_description': robot_description_content}
-
-    controller_config = PathJoinSubstitution([
-        FindPackageShare('ffw_bringup'),
-        'config',
-        'leader_with_rh_hardware_controller.yaml',
-    ])
-
-    control_node = GroupAction([
-        PushRosNamespace('leader'),
-        Node(
-            package='controller_manager',
-            executable='ros2_control_node',
-            parameters=[robot_description, controller_config],
-            output='screen'
-        )
-    ])
-
-    joint_state_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster', '-c', '/leader/controller_manager'],
-        output='screen'
+    # Robot controllers config file path
+    robot_controllers = PathJoinSubstitution(
+        [
+            FindPackageShare("ffw_bringup"),
+            "config",
+            "leader_with_rh_hardware_controller.yaml",
+        ]
     )
 
-    left_arm_spawner = GroupAction([
-        PushRosNamespace('leader_left'),
-        Node(
-            package='controller_manager',
-            executable='spawner',
-            arguments=['joint_trajectory_left', '-c', '/leader/controller_manager'],
-            output='screen'
-        )
-    ])
+    # ros2_control Node
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_controllers],
+        output="both",
+    )
 
-    right_arm_spawner = GroupAction([
-        PushRosNamespace('leader_right'),
-        Node(
-            package='controller_manager',
-            executable='spawner',
-            arguments=['joint_trajectory_right', '-c', '/leader/controller_manager'],
-            output='screen'
-        )
-    ])
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name='xacro')]),
+            ' ',
+            PathJoinSubstitution(
+                [FindPackageShare('ffw_description'), 'urdf', 'leader', description_file]
+            ),
+        ]
+    )
+    robot_description = {'robot_description': robot_description_content}
 
-    left_hand_spawner = GroupAction([
-        PushRosNamespace('leader_left_hand'),
-        Node(
-            package='controller_manager',
-            executable='spawner',
-            arguments=['joint_trajectory_left_hand', '-c', '/leader/controller_manager'],
-            output='screen'
-        )
-    ])
+    robot_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "joint_trajectory_command_broadcaster_left",
+            "joint_trajectory_command_broadcaster_right",
+            "spring_actuator_controller_left",
+            "spring_actuator_controller_right",
+            "joint_state_broadcaster",
+        ],
+        parameters=[robot_description],
+    )
 
-    right_hand_spawner = GroupAction([
-        PushRosNamespace('leader_right_hand'),
-        Node(
-            package='controller_manager',
-            executable='spawner',
-            arguments=['joint_trajectory_right_hand', '-c', '/leader/controller_manager'],
-            output='screen'
-        )
-    ])
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[robot_description],
+    )
 
-    state_publisher = GroupAction([
-        PushRosNamespace('leader'),
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            parameters=[robot_description],
-            output='screen'
-        )
-    ])
+    # Wrap everything in a namespace 'leader'
+    leader_with_namespace = GroupAction(
+        actions=[
+            PushRosNamespace('leader'),
+            control_node,
+            robot_controller_spawner,
+            robot_state_publisher_node,
+        ]
+    )
 
-    return LaunchDescription(declared_arguments + [
-        control_node,
-        joint_state_spawner,
-        left_arm_spawner,
-        right_arm_spawner,
-        left_hand_spawner,
-        right_hand_spawner,
-        state_publisher
-    ])
+    # Return combined LaunchDescription
+    return LaunchDescription(declared_arguments + [leader_with_namespace])

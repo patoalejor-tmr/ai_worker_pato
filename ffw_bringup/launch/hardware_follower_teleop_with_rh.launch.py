@@ -77,9 +77,9 @@ def generate_launch_description():
         condition=UnlessCondition(use_sim),
         remappings=[
             ('/arm_l_controller/joint_trajectory',
-             '/leader/joint_trajectory_left/joint_trajectory'),
+             '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory'),
             ('/arm_r_controller/joint_trajectory',
-             '/leader/joint_trajectory_right/joint_trajectory')
+             '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory')
         ]
     )
 
