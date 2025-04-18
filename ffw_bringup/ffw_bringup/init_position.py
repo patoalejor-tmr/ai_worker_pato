@@ -17,16 +17,18 @@
 # Author: Sungho Woo
 
 import sys
-import rclpy
-from rclpy.node import Node
-from rclpy.action import ActionClient
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from sensor_msgs.msg import JointState
+
 from control_msgs.action import FollowJointTrajectory
-import math
 import numpy as np
+import rclpy
+from rclpy.action import ActionClient
+from rclpy.node import Node
+from sensor_msgs.msg import JointState
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+
 
 class MoveToHome(Node):
+
     def __init__(self):
         super().__init__('move_to_home')
 
@@ -36,9 +38,9 @@ class MoveToHome(Node):
 
         # Define joint groups and their controllers
         arm_l_joints = ['arm_l_joint1', 'arm_l_joint2', 'arm_l_joint3', 'arm_l_joint4',
-                       'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7']
+                        'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7']
         arm_r_joints = ['arm_r_joint1', 'arm_r_joint2', 'arm_r_joint3', 'arm_r_joint4',
-                       'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7']
+                        'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7']
 
         if self.include_hand:
             arm_l_joints.append('l_rh_r1_joint')
@@ -76,7 +78,8 @@ class MoveToHome(Node):
                 f'/{controller}/follow_joint_trajectory'
             )
 
-        self.subscription = self.create_subscription(JointState, '/joint_states', self.joint_state_callback, 10)
+        self.subscription = self.create_subscription(
+            JointState, '/joint_states', self.joint_state_callback, 10)
 
         self.current_positions = {}
         self.current_velocities = {}
@@ -116,10 +119,12 @@ class MoveToHome(Node):
             pos_coeff = 10 * t_norm3 - 15 * t_norm4 + 6 * t_norm5
 
             # Velocity coefficients (derivative of position)
-            vel_coeff = (30 * t_norm2 - 60 * t_norm3 + 30 * t_norm4) / self.duration
+            vel_coeff = (
+                30 * t_norm2 - 60 * t_norm3 + 30 * t_norm4) / self.duration
 
             # Acceleration coefficients (derivative of velocity)
-            acc_coeff = (60 * t_norm - 180 * t_norm2 + 120 * t_norm3) / (self.duration * self.duration)
+            acc_coeff = (
+                60 * t_norm - 180 * t_norm2 + 120 * t_norm3) / (self.duration * self.duration)
 
             positions = []
             velocities = []
@@ -127,7 +132,8 @@ class MoveToHome(Node):
 
             for j in range(len(traj.joint_names)):
                 joint_name = traj.joint_names[j]
-                pos = start_pos[joint_name] + (end_pos[joint_name] - start_pos[joint_name]) * pos_coeff
+                pos = start_pos[joint_name] + (
+                    end_pos[joint_name] - start_pos[joint_name]) * pos_coeff
                 vel = (end_pos[joint_name] - start_pos[joint_name]) * vel_coeff
                 acc = (end_pos[joint_name] - start_pos[joint_name]) * acc_coeff
 
@@ -174,8 +180,11 @@ class MoveToHome(Node):
         if all(handle is None for handle in self.goal_handles.values()):
             if self.current_step < 2:  # We have two steps: initial and final positions
                 for controller, joint_names in self.joint_groups.items():
-                    if controller not in self.goal_handles or self.goal_handles[controller] is None:
-                        self.get_logger().info(f'Moving {controller} to step {self.current_step} positions')
+                    if (controller not in self.goal_handles or
+                            self.goal_handles[controller] is None):
+                        self.get_logger().info(
+                            f'Moving {controller} to step {self.current_step} positions'
+                        )
 
                         goal_msg = FollowJointTrajectory.Goal()
                         goal_msg.trajectory = self.create_smooth_trajectory(
@@ -192,13 +201,15 @@ class MoveToHome(Node):
                         self.get_logger().info(f'Sending goal to {controller}...')
                         self._send_goal_future = self.action_clients[controller].send_goal_async(
                             goal_msg,
-                            feedback_callback=lambda msg, c=controller: self.feedback_callback(msg, c)
+                            feedback_callback=lambda msg, c=controller: self.feedback_callback(
+                                msg, c
+                            )
                         )
                         self._send_goal_future.add_done_callback(
                             lambda future, c=controller: self.goal_response_callback(future, c)
                         )
             else:
-                self.get_logger().info("All steps completed!")
+                self.get_logger().info('All steps completed!')
                 self.shutdown_node()
                 return
 
@@ -206,7 +217,7 @@ class MoveToHome(Node):
         if self.check_step_completion():
             if not self.reached_target:
                 self.reached_target = True
-                self.get_logger().info(f"🎯 Step {self.current_step} completed!")
+                self.get_logger().info(f'🎯 Step {self.current_step} completed!')
                 self.goal_handles = {k: None for k in self.goal_handles}
                 self.current_step += 1
                 self.reached_target = False
@@ -215,9 +226,9 @@ class MoveToHome(Node):
         current_time = self.get_clock().now().nanoseconds / 1e9
         if current_time - self.last_status_time >= self.status_interval:
             self.last_status_time = current_time
-            self.get_logger().info(f"Current positions: {self.current_positions}")
-            self.get_logger().info(f"Target positions: {self.target_positions}")
-            self.get_logger().info(f"Current step: {self.current_step}")
+            self.get_logger().info(f'Current positions: {self.current_positions}')
+            self.get_logger().info(f'Target positions: {self.target_positions}')
+            self.get_logger().info(f'Current step: {self.current_step}')
 
     def shutdown_node(self):
         for handle in self.goal_handles.values():
@@ -227,10 +238,12 @@ class MoveToHome(Node):
         rclpy.shutdown()
         sys.exit(0)
 
+
 def main(args=None):
     rclpy.init(args=args)
     node = MoveToHome()
     rclpy.spin(node)
+
 
 if __name__ == '__main__':
     main()

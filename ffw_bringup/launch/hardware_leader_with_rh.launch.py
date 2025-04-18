@@ -37,18 +37,18 @@ def generate_launch_description():
     # Robot controllers config file path
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("ffw_bringup"),
-            "config",
-            "leader_with_rh_hardware_controller.yaml",
+            FindPackageShare('ffw_bringup'),
+            'config',
+            'leader_with_rh_hardware_controller.yaml',
         ]
     )
 
     # ros2_control Node
     control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
+        package='controller_manager',
+        executable='ros2_control_node',
         parameters=[robot_controllers],
-        output="both",
+        output='both',
     )
 
     robot_description_content = Command(
@@ -63,22 +63,22 @@ def generate_launch_description():
     robot_description = {'robot_description': robot_description_content}
 
     robot_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
+        package='controller_manager',
+        executable='spawner',
         arguments=[
-            "joint_trajectory_command_broadcaster_left",
-            "joint_trajectory_command_broadcaster_right",
-            "spring_actuator_controller_left",
-            "spring_actuator_controller_right",
-            "joint_state_broadcaster",
+            'joint_trajectory_command_broadcaster_left',
+            'joint_trajectory_command_broadcaster_right',
+            'spring_actuator_controller_left',
+            'spring_actuator_controller_right',
+            'joint_state_broadcaster',
         ],
         parameters=[robot_description],
     )
 
     robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="both",
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='both',
         parameters=[robot_description],
     )
 
