@@ -364,6 +364,8 @@
         <state_interface name="Present Input Voltage"/>
         <param name="Operating Mode">5</param>
         <param name="Return Delay Time">0</param>
+        <param name="Profile Velocity">0</param>
+        <param name="Profile Acceleration">0</param>
       </gpio>
 
       <!-- LEFT ARM -->
@@ -527,6 +529,8 @@
         <state_interface name="Present Input Voltage"/>
         <param name="Operating Mode">5</param>
         <param name="Return Delay Time">0</param>
+        <param name="Profile Velocity">0</param>
+        <param name="Profile Acceleration">0</param>
       </gpio>
 
       <!-- NECK -->
