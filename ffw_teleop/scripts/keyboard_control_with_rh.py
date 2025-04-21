@@ -40,7 +40,9 @@ class KeyboardController(Node):
                 'limits': [(-3.14, 3.14)] * 8,
                 'position_step': [0.1] * 8,
                 'publisher': self.create_publisher(
-                    JointTrajectory, '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory', 10)
+                    JointTrajectory,
+                    '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
+                    10)
             },
             'arm_r': {
                 'joints': [
@@ -52,7 +54,8 @@ class KeyboardController(Node):
                 'limits': [(-3.14, 3.14)] * 8,
                 'position_step': [0.1] * 8,
                 'publisher': self.create_publisher(
-                    JointTrajectory, '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory', 10)
+                    JointTrajectory,
+                    '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory', 10)
             },
             'neck': {
                 'joints': ['neck_joint1', 'neck_joint2'],
