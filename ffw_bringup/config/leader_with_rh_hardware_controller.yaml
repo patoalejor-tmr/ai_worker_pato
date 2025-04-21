@@ -41,7 +41,7 @@
         - 0.0
         - 0.0
         - 0.0
-        - 0.2
+        - 0.3
       action_monitor_rate: 20.0
       use_local_topics: true
 
@@ -67,7 +67,7 @@
         - 0.0
         - 0.0
         - 0.0
-        - 0.2
+        - 0.3
       action_monitor_rate: 20.0
       use_local_topics: true
 

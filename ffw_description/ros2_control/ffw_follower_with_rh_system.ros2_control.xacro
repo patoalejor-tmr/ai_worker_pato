@@ -351,7 +351,7 @@
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">3000</param>
         <param name="Max Position Limit">101249</param>
-        <param name="Min Position Limit">-101249</param>
+        <param name="Min Position Limit">-148630</param>
       </gpio>
       <gpio name="dxl8">
         <param name="type">dxl</param>
@@ -515,7 +515,7 @@
         <param name="Return Delay Time">0</param>
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">3000</param>
-        <param name="Max Position Limit">101249</param>
+        <param name="Max Position Limit">148630</param>
         <param name="Min Position Limit">-101249</param>
       </gpio>
       <gpio name="dxl38">
