@@ -19,11 +19,11 @@
       spring_actuator_controller_right:
         type: spring_actuator_controller/SpringActuatorController
 
-      fsr_controller_left:
-        type: fsr_controller/FSRController
+      joystick_controller_left:
+        type: joystick_controller/JoystickController
 
-      fsr_controller_right:
-        type: fsr_controller/FSRController
+      joystick_controller_right:
+        type: joystick_controller/JoystickController
 
 /**:
   joint_trajectory_command_broadcaster_left:
@@ -100,7 +100,7 @@
         - velocity
 
 /**:
-  fsr_controller_left:
+  joystick_controller_left:
     ros__parameters:
       joystick_sensors:
         - l_sensorxel_joy
@@ -121,7 +121,7 @@
       deadzone: 0.05
 
 /**:
-  fsr_controller_right:
+  joystick_controller_right:
     ros__parameters:
       joystick_sensors:
         - r_sensorxel_joy

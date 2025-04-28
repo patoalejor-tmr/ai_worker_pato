@@ -83,9 +83,9 @@ def generate_launch_description():
             ('/arm_r_controller/joint_trajectory',
              '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory'),
             ('/neck_controller/joint_trajectory',
-             '/leader/fsr_controller_left/joint_trajectory'),
+             '/leader/joystick_controller_left/joint_trajectory'),
             ('/body_controller/joint_trajectory',
-             '/leader/fsr_controller_right/joint_trajectory')
+             '/leader/joystick_controller_right/joint_trajectory')
         ]
     )
 
