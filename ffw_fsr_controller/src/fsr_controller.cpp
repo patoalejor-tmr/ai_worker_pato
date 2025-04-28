@@ -59,20 +59,21 @@ void FSRController::joint_states_callback(const sensor_msgs::msg::JointState::Sh
 {
   // Store current joint states
   current_joint_states_ = *msg;
-  
+
   // Initialize last_active_positions_ with current joint positions if not already done
   if (!has_joint_states_ && !params_.controlled_joints.empty()) {
     last_active_positions_.resize(params_.controlled_joints.size());
     for (size_t i = 0; i < params_.controlled_joints.size(); ++i) {
       const auto & joint_name = params_.controlled_joints[i];
-      auto it = std::find(current_joint_states_.name.begin(), current_joint_states_.name.end(), joint_name);
+      auto it = std::find(current_joint_states_.name.begin(), current_joint_states_.name.end(),
+        joint_name);
       if (it != current_joint_states_.name.end()) {
         size_t index = std::distance(current_joint_states_.name.begin(), it);
         last_active_positions_[i] = current_joint_states_.position[index];
       }
     }
   }
-  
+
   has_joint_states_ = true;
 }
 
@@ -95,17 +96,17 @@ controller_interface::return_type FSRController::update(
       }
 
       double raw_adc = joint_state_interface_[j][i].get().get_value();
-      
+
       // Normalize ADC value to [-1.0, 1.0] range
       double normalized_value;
       if (raw_adc < params_.joystick_calibration_center) {
         // Below center value
-        normalized_value = -(params_.joystick_calibration_center - raw_adc) / 
-                          (params_.joystick_calibration_center - params_.joystick_calibration_min);
+        normalized_value = -(params_.joystick_calibration_center - raw_adc) /
+          (params_.joystick_calibration_center - params_.joystick_calibration_min);
       } else {
         // Above center value
-        normalized_value = (raw_adc - params_.joystick_calibration_center) / 
-                          (params_.joystick_calibration_max - params_.joystick_calibration_center);
+        normalized_value = (raw_adc - params_.joystick_calibration_center) /
+          (params_.joystick_calibration_max - params_.joystick_calibration_center);
       }
 
       // Apply deadzone
@@ -122,9 +123,11 @@ controller_interface::return_type FSRController::update(
       }
 
       // Check if this interface should be reversed
-      const auto& interface_name = state_interface_types_[j];
-      if (std::find(params_.reverse_interfaces.begin(), params_.reverse_interfaces.end(), interface_name) 
-          != params_.reverse_interfaces.end()) {
+      const auto & interface_name = state_interface_types_[j];
+      if (std::find(params_.reverse_interfaces.begin(), params_.reverse_interfaces.end(),
+          interface_name) !=
+        params_.reverse_interfaces.end())
+      {
         normalized_value = -normalized_value;
       }
 
@@ -134,11 +137,14 @@ controller_interface::return_type FSRController::update(
   }
 
   // Handle transition from active to inactive (entering deadzone)
-  if (was_active_ && !any_fsr_active && !current_joint_states_.name.empty() && !params_.controlled_joints.empty()) {
+  if (was_active_ && !any_fsr_active && !current_joint_states_.name.empty() &&
+    !params_.controlled_joints.empty())
+  {
     // Store the last active positions
     for (size_t i = 0; i < params_.controlled_joints.size(); ++i) {
       const auto & joint_name = params_.controlled_joints[i];
-      auto it = std::find(current_joint_states_.name.begin(), current_joint_states_.name.end(), joint_name);
+      auto it = std::find(current_joint_states_.name.begin(), current_joint_states_.name.end(),
+        joint_name);
       if (it != current_joint_states_.name.end()) {
         size_t index = std::distance(current_joint_states_.name.begin(), it);
         last_active_positions_[i] = current_joint_states_.position[index];
@@ -159,16 +165,17 @@ controller_interface::return_type FSRController::update(
       // Calculate new positions based on FSR values
       for (size_t i = 0; i < params_.controlled_joints.size(); ++i) {
         const auto & joint_name = params_.controlled_joints[i];
-        auto it = std::find(current_joint_states_.name.begin(), current_joint_states_.name.end(), joint_name);
+        auto it = std::find(current_joint_states_.name.begin(), current_joint_states_.name.end(),
+          joint_name);
         if (it != current_joint_states_.name.end()) {
           size_t index = std::distance(current_joint_states_.name.begin(), it);
           double current_position = current_joint_states_.position[index];
-          
+
           // Use X value for all joints if only X interface is available
           // Otherwise use X for first joint and Y for second joint
-          double fsr_value = (state_interface_types_.size() > 1 && i == 1) ? 
-                            fsr_values_[0][1] : fsr_values_[0][0];
-          
+          double fsr_value = (state_interface_types_.size() > 1 && i == 1) ?
+            fsr_values_[0][1] : fsr_values_[0][0];
+
           double new_position = current_position + fsr_value * params_.jog_scale;
           point.positions.push_back(new_position);
           // Store the new position as last active position
@@ -191,7 +198,7 @@ controller_interface::return_type FSRController::update(
   // Publish FSR values
   auto fsr_msg = std_msgs::msg::Float64MultiArray();
   // Flatten the 2D vector for publishing
-  for (const auto& fsr_value : fsr_values_) {
+  for (const auto & fsr_value : fsr_values_) {
     fsr_msg.data.insert(fsr_msg.data.end(), fsr_value.begin(), fsr_value.end());
   }
   fsr_publisher_->publish(fsr_msg);
@@ -242,7 +249,7 @@ controller_interface::CallbackReturn FSRController::on_configure(
 
   // Initialize the FSR values vector with the correct size
   fsr_values_.resize(n_fsrs_);
-  for (auto& vec : fsr_values_) {
+  for (auto & vec : fsr_values_) {
     vec.resize(state_interface_types_.size(), 0.0);
   }
 
@@ -279,8 +286,9 @@ controller_interface::CallbackReturn FSRController::on_activate(
 
   // Order all FSR sensors in the storage
   for (size_t i = 0; i < state_interface_types_.size(); ++i) {
-    const auto& interface = state_interface_types_[i];
-    std::vector<std::reference_wrapper<hardware_interface::LoanedStateInterface>> ordered_interfaces;
+    const auto & interface = state_interface_types_[i];
+    std::vector<std::reference_wrapper<hardware_interface::LoanedStateInterface>>
+    ordered_interfaces;
     if (!controller_interface::get_ordered_interfaces(
         state_interfaces_, fsr_names_, interface, ordered_interfaces))
     {
@@ -326,4 +334,4 @@ controller_interface::CallbackReturn FSRController::on_shutdown(
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-  fsr_controller::FSRController, controller_interface::ControllerInterface) 
+  fsr_controller::FSRController, controller_interface::ControllerInterface)

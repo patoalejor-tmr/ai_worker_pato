@@ -78,4 +78,4 @@ ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 ################################################################################
 # Macro for ament package
 ################################################################################
-ament_package() 
+ament_package()

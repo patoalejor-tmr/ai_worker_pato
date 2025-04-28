@@ -84,7 +84,8 @@ protected:
   std::vector<std::string> state_interface_types_ = {"JOYSTICK X VALUE", "JOYSTICK Y VALUE"};
   size_t n_fsrs_ = 0;
   std::vector<std::vector<double>> fsr_values_;  // Changed to 2D vector for X and Y values
-  std::vector<std::vector<std::reference_wrapper<hardware_interface::LoanedStateInterface>>> joint_state_interface_;
+  std::vector<std::vector<std::reference_wrapper<hardware_interface::LoanedStateInterface>>>
+  joint_state_interface_;
   sensor_msgs::msg::JointState current_joint_states_;
   bool was_active_ = false;  // Track previous FSR state
   std::vector<double> last_active_positions_;  // Store last active positions
@@ -100,4 +101,4 @@ protected:
 
 }  // namespace fsr_controller
 
-#endif  // FSR_CONTROLLER__FSR_CONTROLLER_HPP_ 
+#endif  // FSR_CONTROLLER__FSR_CONTROLLER_HPP_
