@@ -5,4 +5,4 @@
       A controller that reads JOYSTICK X VALUE values from hardware interfaces and publishes them.
     </description>
   </class>
-</library> 
+</library>
