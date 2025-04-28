@@ -116,7 +116,7 @@
    <joint name="arm_r_joint1" type="revolute">
       <parent link="arm_base_link" />
       <child link="arm_r_link1" />
-      <origin xyz="0 -0.1025 0" rpy="0 0 0" />
+      <origin xyz="0 -0.11345 0" rpy="0 0 0" />
       <axis xyz="0 1 0" />
       <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
       <dynamics damping="0.1" />
@@ -146,9 +146,9 @@
    <joint name="arm_r_joint2" type="revolute">
       <parent link="arm_r_link1" />
       <child link="arm_r_link2" />
-      <origin xyz="0 -0.123 0" rpy="0 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit velocity="4.8" effort="1000" lower="0" upper="3.14" />
+      <origin xyz="0 -0.11205 0" rpy="0 0 0" />
+      <axis xyz="1 0 0" />
+      <limit velocity="4.8" effort="1000" lower="-3.14" upper="0" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_r_link2">
@@ -176,9 +176,9 @@
    <joint name="arm_r_joint3" type="revolute">
       <parent link="arm_r_link2" />
       <child link="arm_r_link3" />
-      <origin xyz="0 0 -0.165" rpy="0 0 0" />
-      <axis xyz="0 0 -1" />
-      <limit velocity="4.8" effort="1000" lower="-1.57" upper="1.57" />
+      <origin xyz="0 0 -0.175950" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_r_link3">
@@ -206,7 +206,7 @@
    <joint name="arm_r_joint4" type="revolute">
       <parent link="arm_r_link3" />
       <child link="arm_r_link4" />
-      <origin xyz="0 0 -0.117" rpy="0 0 0" />
+      <origin xyz="0 0 -0.10605" rpy="0 0 0" />
       <axis xyz="0 1 0" />
       <limit velocity="4.8" effort="1000" lower="-1.86" upper="1.86" />
       <dynamics damping="0.1" />
@@ -236,9 +236,9 @@
    <joint name="arm_r_joint5" type="revolute">
       <parent link="arm_r_link4" />
       <child link="arm_r_link5" />
-      <origin xyz="0 0 -0.1559" rpy="0 0 0" />
-      <axis xyz="0 0 -1" />
-      <limit velocity="4.8" effort="1000" lower="-1.57" upper="1.57" />
+      <origin xyz="0 0 -0.16595" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_r_link5">
@@ -266,9 +266,9 @@
    <joint name="arm_r_joint6" type="revolute">
       <parent link="arm_r_link5" />
       <child link="arm_r_link6" />
-      <origin xyz="0 0 -0.1041" rpy="0 0 0" />
+      <origin xyz="0 0 -0.1593" rpy="0 0 0" />
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1000" lower="-1.57" upper="1.57" />
+      <limit velocity="4.8" effort="1000" lower="-0.6" upper="0.6" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_r_link6">
@@ -296,9 +296,9 @@
    <joint name="arm_r_joint7" type="revolute">
       <parent link="arm_r_link6" />
       <child link="arm_r_link7" />
-      <origin xyz="0 0 -0.0885" rpy="0 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit velocity="4.8" effort="1000" lower="-1.046" upper="1.046" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <axis xyz="1 0 0" />
+      <limit velocity="4.8" effort="1000" lower="-0.3" upper="1.57" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_r_link7">
@@ -327,7 +327,7 @@
    <joint name="arm_l_joint1" type="revolute">
       <parent link="arm_base_link" />
       <child link="arm_l_link1" />
-      <origin xyz="0 0.1025 0" rpy="0 0 0" />
+      <origin xyz="0 0.11345 0" rpy="0 0 0" />
       <axis xyz="0 1 0" />
       <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
       <dynamics damping="0.1" />
@@ -357,7 +357,7 @@
    <joint name="arm_l_joint2" type="revolute">
       <parent link="arm_l_link1" />
       <child link="arm_l_link2" />
-      <origin xyz="0 0.123 0" rpy="0 0 0" />
+      <origin xyz="0 0.11205 0" rpy="0 0 0" />
       <axis xyz="1 0 0" />
       <limit velocity="4.8" effort="1000" lower="0.0" upper="3.14" />
       <dynamics damping="0.1" />
@@ -387,9 +387,9 @@
    <joint name="arm_l_joint3" type="revolute">
       <parent link="arm_l_link2" />
       <child link="arm_l_link3" />
-      <origin xyz="0 0 -0.165" rpy="0 0 0" />
+      <origin xyz="0 0 -0.17595" rpy="0 0 0" />
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1000" lower="-6.28" upper="6.28" />
+      <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_l_link3">
@@ -417,7 +417,7 @@
    <joint name="arm_l_joint4" type="revolute">
       <parent link="arm_l_link3" />
       <child link="arm_l_link4" />
-      <origin xyz="0 0 -0.117" rpy="0 0 0" />
+      <origin xyz="0 0 -0.10605" rpy="0 0 0" />
       <axis xyz="0 1 0" />
       <limit velocity="4.8" effort="1000" lower="-1.86" upper="1.86" />
       <dynamics damping="0.1" />
@@ -447,9 +447,9 @@
    <joint name="arm_l_joint5" type="revolute">
       <parent link="arm_l_link4" />
       <child link="arm_l_link5" />
-      <origin xyz="0 0 -0.1559" rpy="0 0 0" />
+      <origin xyz="0 0 -0.16595" rpy="0 0 0" />
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1000" lower="-1.57" upper="1.57" />
+      <limit velocity="4.8" effort="1000" lower="-3.14" upper="3.14" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_l_link5">
@@ -477,9 +477,9 @@
    <joint name="arm_l_joint6" type="revolute">
       <parent link="arm_l_link5" />
       <child link="arm_l_link6" />
-      <origin xyz="0 0 -0.1041" rpy="0 0 0" />
+      <origin xyz="0 0 -0.1593" rpy="0 0 0" />
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1000" lower="-1.57" upper="1.57" />
+      <limit velocity="4.8" effort="1000" lower="-0.5" upper="0.5" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_l_link6">
@@ -507,9 +507,9 @@
    <joint name="arm_l_joint7" type="revolute">
       <parent link="arm_l_link6" />
       <child link="arm_l_link7" />
-      <origin xyz="0 0 -0.0885" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <axis xyz="1 0 0" />
-      <limit velocity="4.8" effort="1000" lower="-1.046" upper="1.046" />
+      <limit velocity="4.8" effort="1000" lower="-1.57" upper="0.3" />
       <dynamics damping="0.1" />
    </joint>
    <link name="arm_l_link7">

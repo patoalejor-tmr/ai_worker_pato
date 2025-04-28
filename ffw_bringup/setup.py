@@ -13,7 +13,7 @@ author_emails = ', '.join(email for _, email in authors_info)
 
 setup(
     name=package_name,
-    version='1.0.2',
+    version='1.0.3',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -26,7 +26,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    author=authors_info,
+    author=authors,
     author_email=author_emails,
     maintainer='Pyo',
     maintainer_email='pyo@robotis.com',
@@ -42,13 +42,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'hand_controller_left = ffw_bringup.hand_controller_left:main',
-            'hand_controller_right = ffw_bringup.hand_controller_right:main',
-            'hand_calibrator_left = ffw_bringup.hand_calibrator_left:main',
-            'hand_calibrator_right = ffw_bringup.hand_calibrator_right:main',
-            'hand_controller_setting = ffw_bringup.hand_controller_setting:main',
             'init_position = ffw_bringup.init_position:main',
-            'ffw_create_udev_rules = ffw_bringup.ffw_create_udev_rules:main',
         ],
     },
 )

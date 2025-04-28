@@ -28,18 +28,12 @@ def generate_launch_description():
     )
 
     init_follower = ExecuteProcess(
-        cmd=['ros2', 'run', 'ffw_bringup', 'init_position_for_follower_teleop'],
+        cmd=['ros2', 'run', 'ffw_bringup', 'init_position'],
         output='screen'
     )
 
     start_leader = ExecuteProcess(
         cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_with_rh.launch.py'],
-        output='screen'
-    )
-
-    start_keyboard_gui = ExecuteProcess(
-        cmd=['ros2', 'run', 'ffw_teleop', 'keyboard_control_standalone.py'],
-        shell=True,
         output='screen'
     )
 
@@ -63,16 +57,6 @@ def generate_launch_description():
                 on_exit=[
                     LogInfo(msg='Init complete. Starting Leader Launch...'),
                     start_leader
-                ]
-            )
-        ),
-
-        RegisterEventHandler(
-            OnProcessStart(
-                target_action=start_leader,
-                on_start=[
-                    LogInfo(msg='Launching Keyboard GUI...'),
-                    start_keyboard_gui
                 ]
             )
         ),

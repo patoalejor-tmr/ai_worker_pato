@@ -58,7 +58,8 @@ jobs:
             ffw
             ffw_bringup
             ffw_description
-            ffw_hand_library
+            ffw_joystick_controller
             ffw_joint_trajectory_command_broadcaster
             ffw_moveit_config
+            ffw_spring_actuator_controller
             ffw_teleop

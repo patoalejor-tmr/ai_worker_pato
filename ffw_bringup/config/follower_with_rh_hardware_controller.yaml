@@ -35,6 +35,7 @@ arm_l_controller:
       - position
       - velocity
     allow_nonzero_velocity_at_trajectory_end: true
+
 arm_r_controller:
   ros__parameters:
     joints:
@@ -52,6 +53,7 @@ arm_r_controller:
       - position
       - velocity
     allow_nonzero_velocity_at_trajectory_end: true
+
 neck_controller:
   ros__parameters:
     joints:
@@ -63,6 +65,8 @@ neck_controller:
       - position
       - velocity
     allow_nonzero_velocity_at_trajectory_end: true
+    allow_partial_joints_goal: true
+
 body_controller:
   ros__parameters:
     joints:
