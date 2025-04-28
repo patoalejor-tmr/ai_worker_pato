@@ -3,9 +3,10 @@
 <package format="3">
   <name>ffw_joystick_controller</name>
   <version>1.0.3</version>
-  <description>ROS2 controller for reading JOYSTICK X VALUE values</description>
-  <maintainer email="user@todo.todo">user</maintainer>
-  <license>Apache License 2.0</license>
+  <description>ROS 2 controller for reading joystick values</description>
+  <maintainer email="pyo@robotis.com">Pyo</maintainer>
+  <license>Apache 2.0</license>
+  <author email="wwj@robotis.com">Woojin Wie</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
