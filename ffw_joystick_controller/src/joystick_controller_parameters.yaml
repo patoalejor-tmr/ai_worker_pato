@@ -1,8 +1,8 @@
-fsr_controller:
-  fsr_sensors: {
+joystick_controller:
+  joystick_sensors: {
     type: string_array,
     default_value: [],
-    description: "FSR sensor names to read from",
+    description: "Joystick sensor names to read from",
     read_only: true,
     validation: {
       unique<>: null,
@@ -10,8 +10,8 @@ fsr_controller:
   }
   state_interfaces: {
     type: string_array,
-    default_value: ["JOYSTICK X VALUE"],
-    description: "State interfaces provided by the hardware for FSR sensors",
+    default_value: ["JOYSTICK X VALUE", "JOYSTICK Y VALUE"],
+    description: "State interfaces provided by the hardware for Joystick sensors",
     read_only: true,
   }
   reverse_interfaces: {
@@ -41,7 +41,7 @@ fsr_controller:
   controlled_joints: {
     type: string_array,
     default_value: [],
-    description: "List of joints to control with FSR",
+    description: "List of joints to control with Joystick",
     read_only: true
   }
   joint_states_topic: {

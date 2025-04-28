@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef FSR_CONTROLLER__FSR_CONTROLLER_HPP_
-#define FSR_CONTROLLER__FSR_CONTROLLER_HPP_
+#ifndef JOYSTICK_CONTROLLER__JOYSTICK_CONTROLLER_HPP_
+#define JOYSTICK_CONTROLLER__JOYSTICK_CONTROLLER_HPP_
 
 #include <memory>
 #include <string>
@@ -22,8 +22,8 @@
 
 #include "controller_interface/controller_interface.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
-#include "fsr_controller/visibility_control.h"
-#include "ffw_fsr_controller/fsr_controller_parameters.hpp"
+#include "joystick_controller/visibility_control.h"
+#include "ffw_joystick_controller/joystick_controller_parameters.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
 #include "rclcpp_lifecycle/state.hpp"
@@ -31,49 +31,49 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 
-namespace fsr_controller
+namespace joystick_controller
 {
 
-class FSRController : public controller_interface::ControllerInterface
+class JoystickController : public controller_interface::ControllerInterface
 {
 public:
-  FSR_CONTROLLER_PUBLIC
-  FSRController();
+  JOYSTICK_CONTROLLER_PUBLIC
+  JoystickController();
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::InterfaceConfiguration command_interface_configuration() const override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::InterfaceConfiguration state_interface_configuration() const override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::return_type update(
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::CallbackReturn on_init() override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::CallbackReturn on_activate(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::CallbackReturn on_cleanup(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::CallbackReturn on_error(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  FSR_CONTROLLER_PUBLIC
+  JOYSTICK_CONTROLLER_PUBLIC
   controller_interface::CallbackReturn on_shutdown(
     const rclcpp_lifecycle::State & previous_state) override;
 
@@ -99,6 +99,6 @@ protected:
   Params params_;
 };
 
-}  // namespace fsr_controller
+}  // namespace joystick_controller
 
-#endif  // FSR_CONTROLLER__FSR_CONTROLLER_HPP_
+#endif  // JOYSTICK_CONTROLLER__JOYSTICK_CONTROLLER_HPP_

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <fsr_controller/fsr_controller.hpp>
+#include <joystick_controller/joystick_controller.hpp>
 
 #include <chrono>
 #include <string>
@@ -24,16 +24,16 @@
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "trajectory_msgs/msg/joint_trajectory_point.hpp"
 
-namespace fsr_controller
+namespace joystick_controller
 {
 
-FSRController::FSRController()
+JoystickController::JoystickController()
 : controller_interface::ControllerInterface()
 {
 }
 
 controller_interface::InterfaceConfiguration
-FSRController::command_interface_configuration() const
+JoystickController::command_interface_configuration() const
 {
   controller_interface::InterfaceConfiguration config;
   config.type = controller_interface::interface_configuration_type::NONE;
@@ -41,7 +41,7 @@ FSRController::command_interface_configuration() const
 }
 
 controller_interface::InterfaceConfiguration
-FSRController::state_interface_configuration() const
+JoystickController::state_interface_configuration() const
 {
   controller_interface::InterfaceConfiguration config;
   config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
@@ -55,7 +55,7 @@ FSRController::state_interface_configuration() const
   return config;
 }
 
-void FSRController::joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
+void JoystickController::joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
 {
   // Store current joint states
   current_joint_states_ = *msg;
@@ -77,7 +77,7 @@ void FSRController::joint_states_callback(const sensor_msgs::msg::JointState::Sh
   has_joint_states_ = true;
 }
 
-controller_interface::return_type FSRController::update(
+controller_interface::return_type JoystickController::update(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   // Don't publish anything until we've received joint states
@@ -209,7 +209,7 @@ controller_interface::return_type FSRController::update(
   return controller_interface::return_type::OK;
 }
 
-controller_interface::CallbackReturn FSRController::on_init()
+controller_interface::CallbackReturn JoystickController::on_init()
 {
   try {
     // Create the parameter listener and get the parameters
@@ -223,7 +223,7 @@ controller_interface::CallbackReturn FSRController::on_init()
   return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn FSRController::on_configure(
+controller_interface::CallbackReturn JoystickController::on_configure(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   auto logger = get_node()->get_logger();
@@ -240,11 +240,11 @@ controller_interface::CallbackReturn FSRController::on_configure(
   params_ = param_listener_->get_params();
 
   // Get FSR sensor names from parameters
-  fsr_names_ = params_.fsr_sensors;
+  fsr_names_ = params_.joystick_sensors;
   n_fsrs_ = fsr_names_.size();
 
   if (fsr_names_.empty()) {
-    RCLCPP_WARN(logger, "'fsr_sensors' parameter is empty.");
+    RCLCPP_WARN(logger, "'joystick_sensors' parameter is empty.");
   }
 
   // Initialize the FSR values vector with the correct size
@@ -267,13 +267,13 @@ controller_interface::CallbackReturn FSRController::on_configure(
   // Create subscriber for joint states
   joint_states_subscriber_ = get_node()->create_subscription<sensor_msgs::msg::JointState>(
     params_.joint_states_topic, rclcpp::SystemDefaultsQoS(),
-    std::bind(&FSRController::joint_states_callback, this, std::placeholders::_1));
+    std::bind(&JoystickController::joint_states_callback, this, std::placeholders::_1));
 
-  RCLCPP_INFO(get_node()->get_logger(), "FSRController configured successfully.");
+  RCLCPP_INFO(get_node()->get_logger(), "JoystickController configured successfully.");
   return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn FSRController::on_activate(
+controller_interface::CallbackReturn JoystickController::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   auto logger = get_node()->get_logger();
@@ -284,7 +284,7 @@ controller_interface::CallbackReturn FSRController::on_activate(
   // Initialize state interface vector
   joint_state_interface_.resize(state_interface_types_.size());
 
-  // Order all FSR sensors in the storage
+  // Order all Joystick sensors in the storage
   for (size_t i = 0; i < state_interface_types_.size(); ++i) {
     const auto & interface = state_interface_types_[i];
     std::vector<std::reference_wrapper<hardware_interface::LoanedStateInterface>>
@@ -300,38 +300,38 @@ controller_interface::CallbackReturn FSRController::on_activate(
     joint_state_interface_[i] = ordered_interfaces;
   }
 
-  RCLCPP_INFO(get_node()->get_logger(), "FSRController activated successfully.");
+  RCLCPP_INFO(get_node()->get_logger(), "JoystickController activated successfully.");
   return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn FSRController::on_deactivate(
+controller_interface::CallbackReturn JoystickController::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
-  RCLCPP_INFO(get_node()->get_logger(), "FSRController deactivated successfully.");
+  RCLCPP_INFO(get_node()->get_logger(), "JoystickController deactivated successfully.");
   return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn FSRController::on_cleanup(
-  const rclcpp_lifecycle::State & /*previous_state*/)
-{
-  return CallbackReturn::SUCCESS;
-}
-
-controller_interface::CallbackReturn FSRController::on_error(
+controller_interface::CallbackReturn JoystickController::on_cleanup(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   return CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn FSRController::on_shutdown(
+controller_interface::CallbackReturn JoystickController::on_error(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   return CallbackReturn::SUCCESS;
 }
 
-}  // namespace fsr_controller
+controller_interface::CallbackReturn JoystickController::on_shutdown(
+  const rclcpp_lifecycle::State & /*previous_state*/)
+{
+  return CallbackReturn::SUCCESS;
+}
+
+}  // namespace joystick_controller
 
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-  fsr_controller::FSRController, controller_interface::ControllerInterface)
+  joystick_controller::JoystickController, controller_interface::ControllerInterface)

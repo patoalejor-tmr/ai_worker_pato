@@ -102,7 +102,7 @@
 /**:
   fsr_controller_left:
     ros__parameters:
-      fsr_sensors:
+      joystick_sensors:
         - l_sensorxel_joy
       state_interfaces:
         - JOYSTICK X VALUE
@@ -123,7 +123,7 @@
 /**:
   fsr_controller_right:
     ros__parameters:
-      fsr_sensors:
+      joystick_sensors:
         - r_sensorxel_joy
       state_interfaces:
         - JOYSTICK X VALUE
