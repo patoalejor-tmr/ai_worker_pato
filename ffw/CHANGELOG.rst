@@ -4,7 +4,7 @@ Changelog for package ffw
 
 1.0.3 (2025-04-28)
 ------------------
-* Added support for FSR controller
+* Added support for Joystick controller
 * Added ffw_spring_actuator_controller
 * Contributors: Woojin Wie
 
