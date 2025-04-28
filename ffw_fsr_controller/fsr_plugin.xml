@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<library path="fsr_controller">
+  <class name="fsr_controller/FSRController" type="fsr_controller::FSRController" base_class_type="controller_interface::ControllerInterface">
+    <description>
+      A controller that reads JOYSTICK X VALUE values from hardware interfaces and publishes them.
+    </description>
+  </class>
+</library> 
