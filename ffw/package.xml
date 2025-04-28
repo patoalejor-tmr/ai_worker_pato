@@ -15,7 +15,6 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
   <exec_depend>ffw_bringup</exec_depend>
   <exec_depend>ffw_description</exec_depend>
-  <exec_depend>ffw_hand_library</exec_depend>
   <exec_depend>ffw_joint_trajectory_command_broadcaster</exec_depend>
   <exec_depend>ffw_moveit_config</exec_depend>
   <exec_depend>ffw_teleop</exec_depend>
