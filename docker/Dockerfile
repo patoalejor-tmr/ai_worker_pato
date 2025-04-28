@@ -1,5 +1,11 @@
-# Base image
-ARG BASE_IMAGE=robotis/ros:jazzy-base-torch2.7.0
+ARG TARGETARCH
+
+# Base images for different architectures
+FROM ros:jazzy-ros-base AS base-arm64
+FROM robotis/ros:jazzy-base-torch2.7.0 AS base-amd64
+
+# Select the appropriate base image based on TARGETARCH
+FROM base-${TARGETARCH} AS base
 
 #################################
 #   Librealsense Builder Stage  #
@@ -59,7 +65,7 @@ RUN cd /usr/src/librealsense \
 ######################################
 #   librealsense Base Image Stage    #
 ######################################
-FROM ${BASE_IMAGE} AS librealsense
+FROM base AS librealsense
 
 # Copy binaries from builder stage
 COPY --from=librealsense-builder /opt/librealsense /usr/local/
@@ -115,14 +121,15 @@ RUN if [ "$WITH_GAZEBO" = "true" ]; then \
     git clone -b jazzy https://github.com/ros-controls/gz_ros2_control; \
     fi
 
-RUN pip install torch cmake datasets deepdiff diffusers draccus einops flask gdown gymnasium h5py huggingface-hub imageio jsonlines numba omegaconf opencv-python-headless packaging av pymunk pynput pyzmq rerun-sdk termcolor torchvision wandb zarr
-
-RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
-    pip install -e . --ignore-installed packaging --no-deps
-
-RUN apt-get update && \
+# Install Python packages and ffmpeg only for amd64
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+    pip install torch cmake datasets deepdiff diffusers draccus einops flask gdown gymnasium h5py huggingface-hub imageio jsonlines numba omegaconf opencv-python-headless packaging av pymunk pynput pyzmq rerun-sdk termcolor torchvision wandb zarr && \
+    cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
+    pip install -e . --ignore-installed packaging --no-deps && \
+    apt-get update && \
     apt-get install -y ffmpeg && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*; \
+    fi
 
 RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
     cd ${COLCON_WS} && \
