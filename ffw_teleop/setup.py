@@ -1,8 +1,6 @@
-import glob
-
 from setuptools import find_packages, setup
 
-package_name = 'ffw_bringup'
+package_name = 'ffw_teleop'
 authors_info = [
     ('Sungho Woo', 'wsh@robotis.com'),
     ('Woojin Wie', 'wwj@robotis.com'),
@@ -10,19 +8,14 @@ authors_info = [
 ]
 authors = ', '.join(author for author, _ in authors_info)
 author_emails = ', '.join(email for _, email in authors_info)
-
 setup(
     name=package_name,
     version='1.0.3',
-    packages=find_packages(exclude=['test']),
+    packages=find_packages(exclude=[]),
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name, ['ffw.rules']),
-        ('share/' + package_name + '/launch', glob.glob('launch/*.launch.py')),
-        ('share/' + package_name + '/config', glob.glob('config/*.yaml')),
-        ('share/' + package_name + '/worlds', glob.glob('worlds/*.sdf')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -30,19 +23,12 @@ setup(
     author_email=author_emails,
     maintainer='Pyo',
     maintainer_email='pyo@robotis.com',
-    keywords=['ROS'],
-    classifiers=[
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python',
-        'Topic :: Software Development',
-    ],
-    description='ROS 2 launch scripts for starting the FFW',
+    description='FFW teleop ROS 2 package.',
     license='Apache 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'init_position = ffw_bringup.init_position:main',
+            'keyborad_control_with_rh = ffw_teleop.keyboard_control_with_rh:main',
         ],
     },
 )
