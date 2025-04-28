@@ -18,6 +18,7 @@
   <exec_depend>ffw_joint_trajectory_command_broadcaster</exec_depend>
   <exec_depend>ffw_moveit_config</exec_depend>
   <exec_depend>ffw_teleop</exec_depend>
+  <exec_depend>ffw_fsr_controller</exec_depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>
