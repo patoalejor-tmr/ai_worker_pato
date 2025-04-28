@@ -30,12 +30,11 @@ WORKDIR ${COLCON_WS}
 
 RUN mkdir -p ${COLCON_WS}/src && \
     cd ${COLCON_WS}/src && \
-    git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
+    git clone -b feature-ai-worker https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_interfaces.git && \
-    git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git
-    # git clone -b feature-refactoring https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive
-    # git clone -b jazzy https://github.com/ROBOTIS-GIT/open_manipulator.git && \
-    # git clone -b jazzy https://github.com/ROBOTIS-GIT/ai_worker.git
+    git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git && \
+    git clone -b feature-refactoring https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
+    git clone -b feature-hardware-revision-3 https://github.com/ROBOTIS-GIT/ai_worker.git
 
 # Clone gz_ros2_control only if WITH_GAZEBO is true
 RUN if [ "$WITH_GAZEBO" = "true" ]; then \
