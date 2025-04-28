@@ -58,7 +58,6 @@ jobs:
             ffw
             ffw_bringup
             ffw_description
-            ffw_hand_library
             ffw_joint_trajectory_command_broadcaster
             ffw_moveit_config
             ffw_teleop
