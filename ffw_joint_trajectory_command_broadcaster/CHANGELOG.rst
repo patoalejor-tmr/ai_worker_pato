@@ -2,6 +2,10 @@
 Changelog for package ffw_joint_trajectory_command_broadcaster
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.3 (2025-04-28)
+------------------
+* None
+
 1.0.2 (2025-04-16)
 ------------------
 * Updated codebase to comply with flake8 linting standards

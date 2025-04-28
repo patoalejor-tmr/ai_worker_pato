@@ -2,6 +2,10 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.3 (2025-04-28)
+------------------
+* None
+
 1.0.2 (2025-04-16)
 ------------------
 * Added support for ROBOTIS RH Gripper
