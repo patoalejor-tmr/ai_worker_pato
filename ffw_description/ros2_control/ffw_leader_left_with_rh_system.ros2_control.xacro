@@ -55,6 +55,11 @@
         </hardware>
       </xacro:unless>
 
+      <sensor name="l_sensorxel_joy">
+        <state_interface name="JOYSTICK X VALUE"/>
+        <state_interface name="JOYSTICK Y VALUE"/>
+        <state_interface name="JOYSTICK TACT SWITCH"/>
+      </sensor>
       <joint name="l_rh_r1_joint">
         <command_interface name="position"/>
         <command_interface name="effort"/>
@@ -112,6 +117,13 @@
         <state_interface name="effort"/>
       </joint>
 
+      <gpio name="l_sensorxel_joy">
+        <param name="type">sensor</param>
+        <param name="ID">10</param>
+        <state_interface name="JOYSTICK X VALUE"/>
+        <state_interface name="JOYSTICK Y VALUE"/>
+        <state_interface name="JOYSTICK TACT SWITCH"/>
+      </gpio>
       <gpio name="dxl38">
         <param name="type">dxl</param>
         <param name="ID">38</param>
@@ -149,7 +161,7 @@
         <state_interface name="Present Velocity"/>
         <state_interface name="Torque Enable"/>
         <state_interface name="Present Input Voltage"/>
-        <param name="Drive Mode">1</param>
+        <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
         <param name="Torque Enable">0</param>

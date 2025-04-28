@@ -8,8 +8,6 @@
 
   arm_l_controller:
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory
-    default: true
     joints:
       - arm_l_joint1
       - arm_l_joint2
@@ -20,8 +18,6 @@
       - arm_l_joint7
   arm_r_controller:
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory
-    default: true
     joints:
       - arm_r_joint1
       - arm_r_joint2
@@ -32,14 +28,10 @@
       - arm_r_joint7
   neck_controller:
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory
-    default: true
     joints:
       - neck_joint1
       - neck_joint2
   body_controller:
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory
-    default: true
     joints:
       - linear_joint

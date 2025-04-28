@@ -45,13 +45,13 @@ def generate_launch_description():
     fake_sensor_commands = LaunchConfiguration('fake_sensor_commands')
     port_name = LaunchConfiguration('port_name')
 
-    urdf_file = Command([
+    robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name='xacro')]),
         ' ',
         PathJoinSubstitution([FindPackageShare('ffw_description'),
                               'urdf',
                               'follower',
-                              'ffw_follower_with_rh_low_speed.urdf.xacro']),
+                              'ffw_follower_with_rh_fast.urdf.xacro']),
         ' ',
         'use_sim:=', use_sim,
         ' ',
@@ -69,24 +69,30 @@ def generate_launch_description():
         FindPackageShare('ffw_description'), 'rviz', 'ffw.rviz'
     ])
 
+    robot_description = {'robot_description': robot_description_content}
+
     control_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        parameters=[{'robot_description': urdf_file}, controller_manager_config],
+        parameters=[robot_description, controller_manager_config],
         output='both',
         condition=UnlessCondition(use_sim),
         remappings=[
             ('/arm_l_controller/joint_trajectory',
-             '/leader/joint_trajectory_left/joint_trajectory'),
+             '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory'),
             ('/arm_r_controller/joint_trajectory',
-             '/leader/joint_trajectory_right/joint_trajectory')
+             '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory'),
+            ('/neck_controller/joint_trajectory',
+             '/leader/fsr_controller_left/joint_trajectory'),
+            ('/body_controller/joint_trajectory',
+             '/leader/fsr_controller_right/joint_trajectory')
         ]
     )
 
     robot_state_pub_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'robot_description': urdf_file, 'use_sim_time': use_sim}],
+        parameters=[robot_description, {'use_sim_time': use_sim}],
         output='screen'
     )
 
@@ -105,32 +111,15 @@ def generate_launch_description():
         output='screen'
     )
 
-    arm_l_controller_spawner = Node(
+    robot_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['arm_l_controller'],
-        output='screen'
-    )
-
-    arm_r_controller_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['arm_r_controller'],
-        output='screen'
-    )
-
-    neck_controller_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['neck_controller'],
-        output='screen'
-    )
-
-    body_controller_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['body_controller'],
-        output='screen'
+        arguments=['arm_l_controller',
+                   'arm_r_controller',
+                   'neck_controller',
+                   'body_controller'
+        ],
+        parameters=[robot_description],
     )
 
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
@@ -140,43 +129,12 @@ def generate_launch_description():
         )
     )
 
-    delay_arm_l_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[arm_l_controller_spawner]
-        )
-    )
-
-    delay_arm_r_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[arm_r_controller_spawner]
-        )
-    )
-
-    delay_neck_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[neck_controller_spawner]
-        )
-    )
-
-    delay_body_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[body_controller_spawner]
-        )
-    )
-
     return LaunchDescription(
         declared_arguments + [
             control_node,
             robot_state_pub_node,
             joint_state_broadcaster_spawner,
             delay_rviz_after_joint_state_broadcaster_spawner,
-            delay_arm_l_controller_spawner_after_joint_state_broadcaster_spawner,
-            delay_arm_r_controller_spawner_after_joint_state_broadcaster_spawner,
-            delay_body_controller_spawner_after_joint_state_broadcaster_spawner,
-            delay_neck_controller_spawner_after_joint_state_broadcaster_spawner,
+            robot_controller_spawner,
         ]
     )
