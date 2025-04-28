@@ -137,4 +137,7 @@ RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "source ${COLCON_WS}/install/setup.bash" >> ~/.bashrc  && \
-    echo "alias cb='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'" >> ~/.bashrc
+    echo "alias cb='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'" >> ~/.bashrc && \
+    echo "alias leader='ros2 launch ffw_bringup hardware_leader_with_rh.launch.py'" >> ~/.bashrc && \
+    echo "alias follower='ros2 launch ffw_bringup hardware_follower_teleop_with_rh.launch.py'" >> ~/.bashrc && \
+    echo "alias bringup='ros2 launch ffw_bringup ffw_teleop_with_rh.launch.py'" >> ~/.bashrc
