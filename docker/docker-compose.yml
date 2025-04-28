@@ -25,3 +25,10 @@ services:
       - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
     privileged: true
     command: bash
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
