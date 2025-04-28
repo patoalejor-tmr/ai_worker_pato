@@ -114,10 +114,11 @@ def generate_launch_description():
     robot_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['arm_l_controller',
-                   'arm_r_controller',
-                   'neck_controller',
-                   'body_controller'
+        arguments=[
+            'arm_l_controller',
+            'arm_r_controller',
+            'neck_controller',
+            'body_controller'
         ],
         parameters=[robot_description],
     )
