@@ -2,6 +2,12 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.3 (2025-04-28)
+------------------
+* Added support for Joystick controller
+* Added ffw_spring_actuator_controller
+* Contributors: Woojin Wie
+
 1.0.2 (2025-04-16)
 ------------------
 * Added support for ROBOTIS RH Gripper

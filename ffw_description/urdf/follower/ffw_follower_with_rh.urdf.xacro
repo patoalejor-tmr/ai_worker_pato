@@ -14,8 +14,9 @@
   <xacro:include filename="$(find ffw_description)/urdf/left_rh_p12_rn_a.urdf.xacro" />
   <xacro:include filename="$(find ffw_description)/urdf/right_rh_p12_rn_a.urdf.xacro" />
 
-<xacro:l_rh_p12_rn_a/>
-<xacro:r_rh_p12_rn_a/>
+  <xacro:l_rh_p12_rn_a/>
+  <xacro:r_rh_p12_rn_a/>
+
   <!-- World -->
   <link name="world"/>
 
