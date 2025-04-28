@@ -28,7 +28,7 @@ def generate_launch_description():
     )
 
     init_follower = ExecuteProcess(
-        cmd=['ros2', 'run', 'ffw_bringup', 'init_position_for_follower_teleop'],
+        cmd=['ros2', 'run', 'ffw_bringup', 'init_position'],
         output='screen'
     )
 
