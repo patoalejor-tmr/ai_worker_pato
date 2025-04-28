@@ -106,11 +106,15 @@
         - l_sensorxel_joy
       state_interfaces:
         - JOYSTICK X VALUE
+        - JOYSTICK Y VALUE
+      reverse_interfaces:
+        - JOYSTICK Y VALUE
       joystick_calibration_min: 0.0
       joystick_calibration_center: 1830.0
       joystick_calibration_max: 4033.0
       controlled_joints:
         - neck_joint1
+        - neck_joint2
       joint_states_topic: "/joint_states"
       joint_trajectory_topic: "~/joint_trajectory"
       jog_scale: 0.02
@@ -130,5 +134,5 @@
         - linear_joint
       joint_states_topic: "/joint_states"
       joint_trajectory_topic: "~/joint_trajectory"
-      jog_scale: 0.002
+      jog_scale: 0.005
       deadzone: 0.05
