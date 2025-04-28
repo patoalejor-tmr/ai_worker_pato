@@ -55,11 +55,19 @@ start_container() {
     esac
 
     # Run docker-compose
-    docker compose -f "${SCRIPT_DIR}/docker-compose.yml" up -d
+    docker compose -f "${SCRIPT_DIR}/docker-compose.yml" up -d --build
 }
 
 # Function to enter the container
 enter_container() {
+    # Set up X11 forwarding only if DISPLAY is set
+    if [ -n "$DISPLAY" ]; then
+        echo "Setting up X11 forwarding..."
+        xhost +local:docker || true
+    else
+        echo "Warning: DISPLAY environment variable is not set. X11 forwarding will not be available."
+    fi
+
     if ! docker ps | grep -q "$CONTAINER_NAME"; then
         echo "Error: Container is not running"
         exit 1
