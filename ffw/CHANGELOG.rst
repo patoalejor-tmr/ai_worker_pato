@@ -5,6 +5,7 @@ Changelog for package ffw
 1.0.4 (2025-05-08)
 ------------------
 * Fixed Dockerfile
+* Updated ros2 control xacro file to support async
 * Contributors: Woojin Wie
 
 1.0.3 (2025-04-28)
