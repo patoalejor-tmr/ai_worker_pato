@@ -120,7 +120,7 @@ RUN mkdir -p ${COLCON_WS}/src && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_interfaces.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
-    git clone -b feature-docker https://github.com/ROBOTIS-GIT/ai_worker.git && \
+    git clone -b jazzy https://github.com/ROBOTIS-GIT/ai_worker.git && \
     git clone -b ros2-master https://github.com/IntelRealSense/realsense-ros.git
 
 # Clone gz_ros2_control only if WITH_GAZEBO is true
