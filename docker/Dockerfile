@@ -67,6 +67,13 @@ RUN cd /usr/src/librealsense \
 ######################################
 FROM base AS librealsense
 
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    echo 'export PATH=/opt/venv/bin:$PATH' >> /root/.bashrc && \
+    echo 'export PYTHONPATH=/opt/venv/lib/python3.12/site-packages:$PYTHONPATH' >> /root/.bashrc && \
+    export PATH=/opt/venv/bin:$PATH && \
+    export PYTHONPATH=/opt/venv/lib/python3.12/site-packages:$PYTHONPATH; \
+    fi
+
 # Copy binaries from builder stage
 COPY --from=librealsense-builder /opt/librealsense /usr/local/
 COPY --from=librealsense-builder /usr/local/lib/python3.12/dist-packages/pyrealsense2 /usr/local/lib/python3.12/dist-packages/pyrealsense2
