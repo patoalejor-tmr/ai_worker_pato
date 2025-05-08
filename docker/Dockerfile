@@ -69,7 +69,7 @@ FROM base AS librealsense
 
 # Copy binaries from builder stage
 COPY --from=librealsense-builder /opt/librealsense /usr/local/
-# COPY --from=librealsense-builder /usr/lib/python3/dist-packages/pyrealsense2 /usr/lib/python3/dist-packages/pyrealsense2
+COPY --from=librealsense-builder /usr/local/lib/python3.12/dist-packages/pyrealsense2 /usr/local/lib/python3.12/dist-packages/pyrealsense2
 COPY --from=librealsense-builder /usr/src/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/
 COPY --from=librealsense-builder /usr/src/librealsense/config/99-realsense-d4xx-mipi-dfu.rules /etc/udev/rules.d/
 ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib
@@ -113,7 +113,8 @@ RUN mkdir -p ${COLCON_WS}/src && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_interfaces.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
-    git clone -b jazzy https://github.com/ROBOTIS-GIT/ai_worker.git
+    git clone -b feature-docker https://github.com/ROBOTIS-GIT/ai_worker.git && \
+    git clone -b ros2-master https://github.com/IntelRealSense/realsense-ros.git
 
 # Clone gz_ros2_control only if WITH_GAZEBO is true
 RUN if [ "$WITH_GAZEBO" = "true" ]; then \
@@ -121,16 +122,24 @@ RUN if [ "$WITH_GAZEBO" = "true" ]; then \
     git clone -b jazzy https://github.com/ros-controls/gz_ros2_control; \
     fi
 
-RUN pip install torch cmake datasets deepdiff diffusers draccus einops flask gdown gymnasium h5py huggingface-hub imageio jsonlines numba omegaconf opencv-python-headless packaging av pymunk pynput pyzmq rerun-sdk termcolor torchvision wandb zarr && \
-    cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
-    pip install -e . --ignore-installed packaging --no-deps && \
+RUN cd ${COLCON_WS} && \
     apt-get update && \
-    apt-get install -y ffmpeg && \
+    rosdep update && \
+    rosdep install -i --from-path src --rosdistro $ROS_DISTRO --skip-keys="librealsense2 dynamixel_hardware_interface dynamixel_interfaces dynamixel_sdk physical_ai_tools ai_worker gz_ros2_control" -y && \
     rm -rf /var/lib/apt/lists/*
 
 RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
     cd ${COLCON_WS} && \
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
+
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
+    pip install --ignore-installed -e .
+
+RUN pip install setuptools==68.1.2
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "source ${COLCON_WS}/install/setup.bash" >> ~/.bashrc  && \
