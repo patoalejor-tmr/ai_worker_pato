@@ -2,6 +2,12 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.5 (2025-05-09)
+------------------
+* Fixed Dockerfile
+* Updated Camera URDF
+* Contributors: Woojin Wie
+
 1.0.4 (2025-05-08)
 ------------------
 * Fixed Dockerfile
