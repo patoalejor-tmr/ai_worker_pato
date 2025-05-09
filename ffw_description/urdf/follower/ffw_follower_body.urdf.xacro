@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ffw">
+   <xacro:include filename="$(find realsense2_description)/urdf/_d405.urdf.xacro" />
    <xacro:property name="meshes_file_direction" value="package://ffw_description/meshes/follower" />
    <link name="base_link">
       <visual>
@@ -296,7 +297,7 @@
    <joint name="arm_r_joint7" type="revolute">
       <parent link="arm_r_link6" />
       <child link="arm_r_link7" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 -0.0006 0" rpy="0 0 0" />
       <axis xyz="1 0 0" />
       <limit velocity="4.8" effort="1000" lower="-0.3" upper="1.57" />
       <dynamics damping="0.1" />
@@ -323,6 +324,9 @@
          <inertia ixx="5.998355100e-05" ixy="0.000000000e+00" ixz="2.451378300e-05" iyy="1.746288100e-04" iyz="0.000000000e+00" izz="1.606692600e-04" />
       </inertial>
    </link>
+   <xacro:sensor_d405 parent="arm_r_link7" use_nominal_extrinsics="false" name="camera_r">
+      <origin xyz="0.102293 -0.021 -0.0345518" rpy="-1.57079632679 1.66678943569 0"/>
+   </xacro:sensor_d405>
 
    <joint name="arm_l_joint1" type="revolute">
       <parent link="arm_base_link" />
@@ -507,7 +511,7 @@
    <joint name="arm_l_joint7" type="revolute">
       <parent link="arm_l_link6" />
       <child link="arm_l_link7" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0.0006 0" rpy="0 0 0" />
       <axis xyz="1 0 0" />
       <limit velocity="4.8" effort="1000" lower="-1.57" upper="0.3" />
       <dynamics damping="0.1" />
@@ -534,4 +538,8 @@
          <inertia ixx="5.994976500e-05" ixy="0.000000000e+00" ixz="2.416233500e-05" iyy="1.738725800e-04" iyz="0.000000000e+00" izz="1.599468200e-04" />
       </inertial>
    </link>
+   <xacro:sensor_d405 parent="arm_l_link7" use_nominal_extrinsics="false" name="camera_l">
+      <origin xyz="0.102293 -0.021 -0.0345518" rpy="-1.57079632679 1.66678943569 0"/>
+   </xacro:sensor_d405>
+
 </robot>
