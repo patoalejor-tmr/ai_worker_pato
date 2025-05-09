@@ -10,11 +10,13 @@ FROM base-${TARGETARCH} AS base
 #################################
 #   Librealsense Builder Stage  #
 #################################
-FROM ubuntu:24.04 AS librealsense-builder
+FROM base AS librealsense-builder
 
-ARG LIBRS_VERSION=2.56.3
-# Make sure that we have a version number of librealsense as argument
-RUN test -n "$LIBRS_VERSION"
+ARG TARGETARCH
+
+# ARG LIBRS_VERSION=2.56.3
+# # Make sure that we have a version number of librealsense as argument
+# RUN test -n "$LIBRS_VERSION"
 
 # To avoid waiting for input during package installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -42,10 +44,14 @@ RUN apt-get update || true \
 
 # Download sources
 WORKDIR /usr/src
-RUN curl https://codeload.github.com/IntelRealSense/librealsense/tar.gz/refs/tags/v$LIBRS_VERSION -o librealsense.tar.gz
-RUN tar -zxf librealsense.tar.gz \
-    && rm librealsense.tar.gz
-RUN ln -s /usr/src/librealsense-$LIBRS_VERSION /usr/src/librealsense
+# RUN curl https://codeload.github.com/IntelRealSense/librealsense/tar.gz/refs/tags/v$LIBRS_VERSION -o librealsense.tar.gz
+# RUN tar -zxf librealsense.tar.gz \
+#     && rm librealsense.tar.gz
+# RUN ln -s /usr/src/librealsense-$LIBRS_VERSION /usr/src/librealsense
+
+RUN git clone https://github.com/IntelRealSense/librealsense.git && \
+    cd librealsense && \
+    git checkout 1e34346894be975e8e594fab22f8b31a89a710bb
 
 # Build and install
 RUN cd /usr/src/librealsense \
@@ -54,18 +60,27 @@ RUN cd /usr/src/librealsense \
     -DCMAKE_C_FLAGS_RELEASE="${CMAKE_C_FLAGS_RELEASE} -s" \
     -DCMAKE_CXX_FLAGS_RELEASE="${CMAKE_CXX_FLAGS_RELEASE} -s" \
     -DCMAKE_INSTALL_PREFIX=/opt/librealsense \
-    -DBUILD_GRAPHICAL_EXAMPLES=TRUE \
+    -DBUILD_GRAPHICAL_EXAMPLES=true \
     -DBUILD_PYTHON_BINDINGS:bool=true \
     -DCMAKE_BUILD_TYPE=Release ../ \
-    -DFORCE_RSUSB_BACKEND=TRUE \
+    -DFORCE_RSUSB_BACKEND=true \
+    -DBUILD_WITH_CUDA=true \
     -DPYTHON_EXECUTABLE=/usr/bin/python3 \
     && make -j$(($(nproc)-1)) all \
     && make install
 
-######################################
-#   librealsense Base Image Stage    #
-######################################
-FROM base AS librealsense
+# Use a conditional RUN step to handle pyrealsense2 copy
+# We'll copy to a temp location first to unify the path
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    cp -r /opt/venv/lib/python3.12/site-packages/pyrealsense2 /usr/local/lib/python3.12/dist-packages/; \
+    fi
+
+###################################
+#   AI Worker Base Image Stage    #
+###################################
+FROM base
+
+ARG TARGETARCH
 
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
     echo 'export PATH=/opt/venv/bin:$PATH' >> /root/.bashrc && \
@@ -121,7 +136,9 @@ RUN mkdir -p ${COLCON_WS}/src && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/ai_worker.git && \
-    git clone -b ros2-master https://github.com/IntelRealSense/realsense-ros.git
+    git clone -b r/4.56.4 https://github.com/IntelRealSense/realsense-ros.git && \
+    cd realsense-ros && \
+    git checkout cbd8b8487d4c0126bb590822db9469414496e62a
 
 # Clone gz_ros2_control only if WITH_GAZEBO is true
 RUN if [ "$WITH_GAZEBO" = "true" ]; then \
