@@ -23,7 +23,7 @@ from launch.event_handlers import OnProcessExit, OnProcessStart
 
 def generate_launch_description():
     start_follower = ExecuteProcess(
-        cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_follower_teleop_with_rh.launch.py'],
+        cmd=['ros2', 'launch', 'ffw_bringup', 'follower_with_camera.launch.py'],
         output='screen'
     )
 
@@ -33,7 +33,7 @@ def generate_launch_description():
     )
 
     start_leader = ExecuteProcess(
-        cmd=['ros2', 'launch', 'ffw_bringup', 'hardware_leader_with_rh.launch.py'],
+        cmd=['ros2', 'launch', 'ffw_bringup', 'leader.launch.py'],
         output='screen'
     )
 
