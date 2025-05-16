@@ -23,6 +23,7 @@ services:
       - ./workspace:/workspace
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+      - ../:/root/ros2_ws/src/ai_worker/
     privileged: true
     command: bash
     runtime: nvidia
