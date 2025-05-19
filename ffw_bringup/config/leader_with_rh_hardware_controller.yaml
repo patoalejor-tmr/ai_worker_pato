@@ -117,7 +117,7 @@
         - neck_joint2
       joint_states_topic: "/joint_states"
       joint_trajectory_topic: "~/joint_trajectory"
-      jog_scale: 0.02
+      jog_scale: 0.06
       deadzone: 0.05
 
 /**:
