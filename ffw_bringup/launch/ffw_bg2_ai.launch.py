@@ -26,11 +26,11 @@ def generate_launch_description():
     bringup_launch_dir = os.path.join(get_package_share_directory('ffw_bringup'), 'launch')
 
     follower = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir, 'follower.launch.py')),
+        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir, 'ffw_bg2_follower_ai.launch.py')),
         launch_arguments={'launch_cameras': 'true', 'init_position': 'true'}.items()
     )
     leader = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir, 'leader.launch.py'))
+        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir, 'ffw_lg2_leader_ai.launch.py'))
     )
 
     return LaunchDescription([
