@@ -192,7 +192,10 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(PathJoinSubstitution([bringup_launch_dir, 'camera.launch.py'])),
         condition=IfCondition(launch_cameras)
     )
-    camera_timer = TimerAction(period=10.0, actions=[camera_launch], condition=IfCondition(launch_cameras))
+
+    # Camera timers with conditional delay based on init_position
+    camera_timer_20s = TimerAction(period=20.0, actions=[camera_launch], condition=IfCondition(init_position))
+    camera_timer_10s = TimerAction(period=10.0, actions=[camera_launch], condition=UnlessCondition(init_position))
 
     return LaunchDescription(
         declared_arguments + [
@@ -202,6 +205,7 @@ def generate_launch_description():
             delay_rviz_after_joint_state_broadcaster_spawner,
             robot_controller_spawner,
             init_position_event_handler,
-            camera_timer,
+            camera_timer_20s,
+            camera_timer_10s,
         ]
     )
