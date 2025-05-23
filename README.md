@@ -2,7 +2,7 @@
 
 ## **1. Introduction**
 
-This is the AI-Worker project repository. It supports the control of the **Follower** device (hand, lift, and neck) as well as the **Leader** device (arms and hands).
+This is the AI-Worker project repository. It supports the control of the **Follower** device (hand, lift, and head) as well as the **Leader** device (arms and hands).
 
 This package supports **ROS 2 Jazzy** and **Gazebo Harmonic** on Ubuntu 24.04.
 

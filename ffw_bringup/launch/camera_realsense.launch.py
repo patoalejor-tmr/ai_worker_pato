@@ -45,7 +45,7 @@ def yaml_to_dict(path_to_yaml):
         return yaml.load(f, Loader=yaml.SafeLoader)
 
 # Read serial numbers from rs_serial.yaml
-serials_path = os.path.join(get_package_share_directory('ffw_bringup'), 'config', 'rs_serial.yaml')
+serials_path = os.path.join(get_package_share_directory('ffw_bringup'), 'config', 'common', 'rs_serial.yaml')
 serials = yaml_to_dict(serials_path)
 serial1 = serials.get('camera1_serial')
 serial2 = serials.get('camera2_serial')

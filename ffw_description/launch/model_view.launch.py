@@ -54,7 +54,7 @@ def generate_launch_description():
                     FindPackageShare('ffw_description'),
                     'urdf',
                     'follower',
-                    'ffw_follower_with_rh.urdf.xacro'
+                    'ffw_bg2_follower.urdf.xacro'
                 ]
             ),
             ' ',

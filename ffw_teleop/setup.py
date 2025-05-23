@@ -28,7 +28,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'keyborad_control_with_rh = ffw_teleop.keyboard_control_with_rh:main',
+            'keyborad_control = ffw_teleop.keyboard_control:main',
         ],
     },
 )

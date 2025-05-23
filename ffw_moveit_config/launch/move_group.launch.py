@@ -35,7 +35,7 @@ def generate_launch_description():
             get_package_share_directory('ffw_description'),
             'urdf',
             'follower',
-            'ffw_follower.urdf.xacro',
+            'ffw_bg2_follower.urdf.xacro',
         )
     )
     robot_description = {'robot_description': robot_description_config.toxml()}
@@ -44,7 +44,7 @@ def generate_launch_description():
     robot_description_semantic_path = os.path.join(
         get_package_share_directory('ffw_moveit_config'),
         'config',
-        'ffw.srdf',
+        'ffw_bg2.srdf',
     )
     with open(robot_description_semantic_path, 'r') as file:
         robot_description_semantic_config = file.read()

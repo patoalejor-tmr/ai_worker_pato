@@ -43,6 +43,7 @@ os.environ["RCUTILS_COLORIZED_OUTPUT"] = "1"
 default_config_common = os.path.join(
     get_package_share_directory('ffw_bringup'),
     'config',
+    'common',
     'common'
 )
 
@@ -150,6 +151,7 @@ def launch_setup(context, *args, **kwargs):
     config_camera_path = os.path.join(
         get_package_share_directory('ffw_bringup'),
         'config',
+        'common',
         camera_model_val + '.yaml'
     )
 

@@ -57,14 +57,14 @@ class KeyboardController(Node):
                     JointTrajectory,
                     '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory', 10)
             },
-            'neck': {
-                'joints': ['neck_joint1', 'neck_joint2'],
+            'head': {
+                'joints': ['head_joint1', 'head_joint2'],
                 'positions': [0.0] * 2,
                 'labels': [None] * 2,
                 'limits': [(-1.0, 1.0)] * 2,
                 'position_step': [0.1] * 2,
                 'publisher': self.create_publisher(
-                    JointTrajectory, '/neck_controller/joint_trajectory', 10)
+                    JointTrajectory, '/head_controller/joint_trajectory', 10)
             },
             'body': {
                 'joints': ['linear_joint'],
