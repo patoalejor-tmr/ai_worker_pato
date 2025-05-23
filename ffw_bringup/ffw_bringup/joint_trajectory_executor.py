@@ -39,7 +39,8 @@ class JointTrajectoryExecutor(Node):
         self.declare_parameter('joint_names', [''])
         self.declare_parameter('step_names', [''])  # List of step names
         self.declare_parameter('duration', 10.0)
-        self.declare_parameter('epsilon', 0.01)
+        self.declare_parameter('position_tolerance', 0.01)
+        self.declare_parameter('velocity_tolerance', 0.01)
         self.declare_parameter(
             'action_topic', '/arm_controller/follow_joint_trajectory'
         )
@@ -53,7 +54,8 @@ class JointTrajectoryExecutor(Node):
             self.get_parameter('step_names').get_parameter_value().string_array_value
         )
         self.duration = self.get_parameter('duration').value
-        self.epsilon = self.get_parameter('epsilon').value
+        self.position_tolerance = self.get_parameter('position_tolerance').value
+        self.velocity_tolerance = self.get_parameter('velocity_tolerance').value
         self.action_topic = self.get_parameter('action_topic').value
         self.joint_states_topic = self.get_parameter('joint_states_topic').value
 
@@ -116,10 +118,15 @@ class JointTrajectoryExecutor(Node):
 
     def check_step_completion(self):
         target_positions = self.get_step_target_positions()
-        return all(
-            abs(curr - target) < self.epsilon
+        # Check both position and velocity
+        positions_ok = all(
+            abs(curr - target) < self.position_tolerance
             for curr, target in zip(self.current_positions, target_positions)
         )
+        velocities_ok = all(
+            abs(vel) < self.velocity_tolerance for vel in self.current_velocities
+        )
+        return positions_ok and velocities_ok
 
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
