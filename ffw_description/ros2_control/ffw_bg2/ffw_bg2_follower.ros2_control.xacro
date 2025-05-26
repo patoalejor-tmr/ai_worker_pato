@@ -32,14 +32,14 @@
               0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
@@ -53,14 +53,14 @@
               0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
@@ -281,15 +281,11 @@
         <param name="Drive Mode">1</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
-        <param name="Velocity Limit">2020</param>
-        <param name="Acceleration Limit">20200</param>
-        <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">300</param>
-        <param name="Max Position Limit">131072</param>
-        <param name="Min Position Limit">-131072</param>
-        <param name="Position P Gain">1583185</param>
-        <param name="Velocity P Gain">18184</param>
-        <param name="Velocity I Gain">1085331</param>
+        <param name="Velocity Limit">167</param>
+        <param name="Profile Velocity">167</param>
+        <param name="Profile Acceleration">0</param>
+        <param name="Max Position Limit">4095</param>
+        <param name="Min Position Limit">0</param>
       </gpio>
       <gpio name="dxl7">
         <param name="type">dxl</param>
@@ -297,7 +293,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
-        <param name="Drive Mode">1</param>
+        <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
         <param name="Velocity Limit">2020</param>
@@ -423,15 +419,11 @@
         <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
-        <param name="Velocity Limit">2020</param>
-        <param name="Acceleration Limit">20200</param>
-        <param name="Profile Velocity">2020</param>
-        <param name="Profile Acceleration">300</param>
-        <param name="Max Position Limit">131072</param>
-        <param name="Min Position Limit">-131072</param>
-        <param name="Position P Gain">1583185</param>
-        <param name="Velocity P Gain">18184</param>
-        <param name="Velocity I Gain">1085331</param>
+        <param name="Velocity Limit">167</param>
+        <param name="Profile Velocity">167</param>
+        <param name="Profile Acceleration">0</param>
+        <param name="Max Position Limit">4095</param>
+        <param name="Min Position Limit">0</param>
       </gpio>
       <gpio name="dxl37">
         <param name="type">dxl</param>
@@ -439,7 +431,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
-        <param name="Drive Mode">1</param>
+        <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
         <param name="Velocity Limit">2020</param>

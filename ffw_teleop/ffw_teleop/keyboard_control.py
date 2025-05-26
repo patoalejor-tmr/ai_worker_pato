@@ -33,7 +33,7 @@ class KeyboardController(Node):
             'arm_l': {
                 'joints': [
                     'arm_l_joint1', 'arm_l_joint2', 'arm_l_joint3',
-                    'arm_l_joint4', 'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7', 'l_rh_r1_joint'
+                    'arm_l_joint4', 'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7', 'gripper_l_joint1'
                 ],
                 'positions': [0.0] * 8,
                 'labels': [None] * 8,
@@ -47,7 +47,7 @@ class KeyboardController(Node):
             'arm_r': {
                 'joints': [
                     'arm_r_joint1', 'arm_r_joint2', 'arm_r_joint3',
-                    'arm_r_joint4', 'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7', 'r_rh_r1_joint'
+                    'arm_r_joint4', 'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7', 'gripper_r_joint1'
                 ],
                 'positions': [0.0] * 8,
                 'labels': [None] * 8,
@@ -67,7 +67,7 @@ class KeyboardController(Node):
                     JointTrajectory, '/head_controller/joint_trajectory', 10)
             },
             'body': {
-                'joints': ['linear_joint'],
+                'joints': ['lift_joint'],
                 'positions': [0.0],
                 'labels': [None],
                 'limits': [(-1.0, 0.0)],
