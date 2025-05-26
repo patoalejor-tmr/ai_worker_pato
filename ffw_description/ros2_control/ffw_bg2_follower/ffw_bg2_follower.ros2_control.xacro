@@ -452,7 +452,7 @@
         <param name="Profile Acceleration">0</param>
       </gpio>
 
-      <!-- BODY -->
+      <!-- LIFT -->
       <gpio name="dxl81">
         <param name="type">dxl</param>
         <param name="ID">81</param>

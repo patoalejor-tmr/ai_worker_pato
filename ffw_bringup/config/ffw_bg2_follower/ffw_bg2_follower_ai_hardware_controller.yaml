@@ -13,7 +13,7 @@
       head_controller:
         type: joint_trajectory_controller/JointTrajectoryController
 
-      body_controller:
+      lift_controller:
         type: joint_trajectory_controller/JointTrajectoryController
 
       joint_state_broadcaster:
@@ -72,7 +72,7 @@
       allow_partial_joints_goal: true
 
 /**:
-  body_controller:
+  lift_controller:
     ros__parameters:
       joints:
         - lift_joint

@@ -124,9 +124,9 @@ def generate_launch_description():
         output='screen'
     )
 
-    load_body_controller = ExecuteProcess(
+    load_lift_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'body_controller'],
+             'lift_controller'],
         output='screen'
     )
 
@@ -160,7 +160,7 @@ def generate_launch_description():
                on_exit=[load_arm_l_controller,
                         load_arm_r_controller,
                         load_head_controller,
-                        load_body_controller],
+                        load_lift_controller],
             )
         ),
         bridge,

@@ -91,7 +91,7 @@ def generate_launch_description():
              '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory'),
             ('/head_controller/joint_trajectory',
              '/leader/joystick_controller_left/joint_trajectory'),
-            ('/body_controller/joint_trajectory',
+            ('/lift_controller/joint_trajectory',
              '/leader/joystick_controller_right/joint_trajectory')
         ]
     )
@@ -125,7 +125,7 @@ def generate_launch_description():
             'arm_l_controller',
             'arm_r_controller',
             'head_controller',
-            'body_controller'
+            'lift_controller'
         ],
         parameters=[robot_description],
     )
@@ -165,10 +165,10 @@ def generate_launch_description():
         parameters=[trajectory_params_file],
         output='screen',
     )
-    joint_trajectory_executor_body = Node(
+    joint_trajectory_executor_lift = Node(
         package='ffw_bringup',
         executable='joint_trajectory_executor',
-        name='body_joint_trajectory_executor',
+        name='lift_joint_trajectory_executor',
         parameters=[trajectory_params_file],
         output='screen',
     )
@@ -180,7 +180,7 @@ def generate_launch_description():
                 joint_trajectory_executor_left,
                 joint_trajectory_executor_right,
                 joint_trajectory_executor_head,
-                joint_trajectory_executor_body
+                joint_trajectory_executor_lift
             ]
         ),
         condition=IfCondition(init_position)

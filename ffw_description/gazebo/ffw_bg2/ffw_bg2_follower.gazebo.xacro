@@ -59,7 +59,7 @@
   <xacro:Link reference="l_rh_p12_rn_l2"/>
 
   
-  <xacro:SimpleTransmission trans="linear_trans" joint="linear_joint" actuator="linear_actuator"/>
+  <xacro:SimpleTransmission trans="lift_trans" joint="lift_joint" actuator="lift_actuator"/>
   <xacro:SimpleTransmission trans="head_trans1" joint="head_joint1" actuator="head_actuator1"/>
   <xacro:SimpleTransmission trans="head_trans2" joint="head_joint2" actuator="head_actuator2"/>
   <xacro:SimpleTransmission trans="arm_r_trans1" joint="arm_r_joint1" actuator="arm_r_actuator1"/>

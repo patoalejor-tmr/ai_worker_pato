@@ -4,7 +4,7 @@
     - arm_l_controller
     - arm_r_controller
     - head_controller
-    - body_controller
+    - lift_controller
 
   arm_l_controller:
     type: FollowJointTrajectory
@@ -31,7 +31,7 @@
     joints:
       - head_joint1
       - head_joint2
-  body_controller:
+  lift_controller:
     type: FollowJointTrajectory
     joints:
-      - linear_joint
+      - lift_joint

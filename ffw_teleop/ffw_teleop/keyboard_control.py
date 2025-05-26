@@ -66,14 +66,14 @@ class KeyboardController(Node):
                 'publisher': self.create_publisher(
                     JointTrajectory, '/head_controller/joint_trajectory', 10)
             },
-            'body': {
+            'lift': {
                 'joints': ['lift_joint'],
                 'positions': [0.0],
                 'labels': [None],
                 'limits': [(-1.0, 0.0)],
                 'position_step': [0.1],
                 'publisher': self.create_publisher(
-                    JointTrajectory, '/body_controller/joint_trajectory', 10)
+                    JointTrajectory, '/lift_controller/joint_trajectory', 10)
             }
         }
 

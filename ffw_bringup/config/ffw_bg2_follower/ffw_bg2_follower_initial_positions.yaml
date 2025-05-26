@@ -57,7 +57,7 @@
       joint_states_topic: '/joint_states'
 
 /**:
-  body_joint_trajectory_executor:
+  lift_joint_trajectory_executor:
     ros__parameters:
       joint_names:
         - lift_joint
@@ -66,5 +66,5 @@
       duration: 10.0
       position_tolerance: 0.1
       velocity_tolerance: 0.01
-      action_topic: '/body_controller/follow_joint_trajectory'
+      action_topic: '/lift_controller/follow_joint_trajectory'
       joint_states_topic: '/joint_states'
