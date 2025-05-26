@@ -30,6 +30,7 @@ def generate_launch_description():
     rviz_config = os.path.join(
         get_package_share_directory('ffw_moveit_config'),
         'config',
+        'ffw_bg2',
         'moveit.rviz'
     )
 
@@ -38,8 +39,8 @@ def generate_launch_description():
         os.path.join(
             get_package_share_directory('ffw_description'),
             'urdf',
-            'follower',
-            'ffw_follower.urdf.xacro',
+            'ffw_bg2_follower',
+            'ffw_bg2_follower.urdf.xacro',
         )
     )
     robot_description = {'robot_description': robot_description_config.toxml()}
@@ -48,6 +49,7 @@ def generate_launch_description():
     robot_description_semantic_path = os.path.join(
         get_package_share_directory('ffw_moveit_config'),
         'config',
+        'ffw_bg2',
         'ffw.srdf',
     )
     with open(robot_description_semantic_path, 'r') as file:
@@ -76,6 +78,7 @@ def generate_launch_description():
     ompl_planning_yaml_path = os.path.join(
         get_package_share_directory('ffw_moveit_config'),
         'config',
+        'ffw_bg2',
         'ompl_planning.yaml',
     )
     with open(ompl_planning_yaml_path, 'r') as file:
@@ -86,6 +89,7 @@ def generate_launch_description():
     kinematics_yaml_path = os.path.join(
         get_package_share_directory('ffw_moveit_config'),
         'config',
+        'ffw_bg2',
         'kinematics.yaml',
     )
     with open(kinematics_yaml_path, 'r') as file:
@@ -97,6 +101,7 @@ def generate_launch_description():
     joint_limits_yaml_path = os.path.join(
         get_package_share_directory('ffw_moveit_config'),
         'config',
+        'ffw_bg2',
         'joint_limits.yaml',
     )
     with open(joint_limits_yaml_path, 'r') as file:
