@@ -68,7 +68,7 @@ def generate_launch_description():
 
     xacro_file = os.path.join(ffw_description_path,
                               'urdf',
-                              'follower',
+                              'ffw_bg2_follower',
                               'ffw_bg2_follower.urdf.xacro')
 
     doc = xacro.process_file(xacro_file, mappings={'use_sim': 'true'})
