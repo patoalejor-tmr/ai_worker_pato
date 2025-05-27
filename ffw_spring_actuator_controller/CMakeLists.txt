@@ -11,28 +11,19 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 endif()
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
-  angles
-  control_msgs
-  control_toolbox
   controller_interface
   generate_parameter_library
   hardware_interface
   pluginlib
   rclcpp
   rclcpp_lifecycle
-  realtime_tools
-  rsl
-  tl_expected
   urdf
-  kdl_parser
-  orocos_kdl_vendor
 )
 
 ################################################################################
 # Find ament packages and libraries for ament and system dependencies
 ################################################################################
 find_package(ament_cmake REQUIRED)
-find_package(backward_ros REQUIRED)
 foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
 endforeach()
