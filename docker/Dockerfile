@@ -153,11 +153,11 @@ WORKDIR ${COLCON_WS}
 
 RUN mkdir -p ${COLCON_WS}/src && \
     cd ${COLCON_WS}/src && \
-    git clone -b feature-ai-worker https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
+    git clone -b feature-command-interfaces https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_interfaces.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git && \
-    git clone -b feature-rivision-2 https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
-    git clone -b jazzy https://github.com/ROBOTIS-GIT/ai_worker.git && \
+    git clone -b jazzy https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
+    git clone -b feature-hardware-revision-2 https://github.com/ROBOTIS-GIT/ai_worker.git && \
     git clone -b r/4.56.4 https://github.com/IntelRealSense/realsense-ros.git && \
     cd realsense-ros && git checkout cbd8b8487d4c0126bb590822db9469414496e62a
 
