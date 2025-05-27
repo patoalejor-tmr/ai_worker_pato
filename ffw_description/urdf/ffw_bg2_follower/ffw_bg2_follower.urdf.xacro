@@ -5,14 +5,15 @@
   <xacro:arg name="use_fake_hardware" default="false" />
   <xacro:arg name="fake_sensor_commands" default="false" />
   <xacro:arg name="prefix" default="" />
+  <xacro:arg name="model" default="ffw_bg2_follower" />
 
   <xacro:include filename="$(find ffw_description)/urdf/common/follower/ffw_follower_body.xacro" />
 
   <xacro:include filename="$(find ffw_description)/urdf/common/rh_p12_rn_a/rh_p12_rn_a.urdf.xacro" />
 
-  <xacro:include filename="$(find ffw_description)/ros2_control/ffw_bg2_follower/ffw_bg2_follower.ros2_control.xacro" />
+  <xacro:include filename="$(find ffw_description)/ros2_control/$(arg model)/ffw_bg2_follower.ros2_control.xacro" />
 
-  <xacro:include filename="$(find ffw_description)/gazebo/ffw_bg2/ffw_bg2_follower.gazebo.xacro" />
+  <xacro:include filename="$(find ffw_description)/gazebo/$(arg model)/ffw_bg2_follower.gazebo.xacro" />
 
   <link name="world"/>
 
@@ -64,7 +65,7 @@
 
   <gazebo>
       <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-        <parameters>$(find ffw_bringup)/config/ffw_bg2_follower/ffw_bg2_follower_gazebo_controller_manager.yaml</parameters>
+        <parameters>$(find ffw_bringup)/config/$(arg model)/ffw_bg2_follower_ai_hardware_controller.yaml</parameters>
       </plugin>
   </gazebo>
 

@@ -42,6 +42,8 @@ def generate_launch_description():
                               description='Whether to launch cameras.'),
         DeclareLaunchArgument('init_position', default_value='true',
                               description='Whether to launch the init_position node.'),
+        DeclareLaunchArgument('model', default_value='ffw_bg2_follower',
+                              description='Robot model name.'),
     ]
 
     start_rviz = LaunchConfiguration('start_rviz')
@@ -51,13 +53,14 @@ def generate_launch_description():
     port_name = LaunchConfiguration('port_name')
     launch_cameras = LaunchConfiguration('launch_cameras')
     init_position = LaunchConfiguration('init_position')
+    model = LaunchConfiguration('model')
 
     robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name='xacro')]),
         ' ',
         PathJoinSubstitution([FindPackageShare('ffw_description'),
                               'urdf',
-                              'ffw_bg2_follower',
+                              model,
                               'ffw_bg2_follower.urdf.xacro']),
         ' ',
         'use_sim:=', use_sim,
@@ -67,10 +70,12 @@ def generate_launch_description():
         'fake_sensor_commands:=', fake_sensor_commands,
         ' ',
         'port_name:=', port_name,
+        ' ',
+        'model:=', model,
     ])
 
     controller_manager_config = PathJoinSubstitution([
-        FindPackageShare('ffw_bringup'), 'config', 'ffw_bg2_follower', 'ffw_bg2_follower_ai_hardware_controller.yaml'
+        FindPackageShare('ffw_bringup'), 'config', model, 'ffw_bg2_follower_ai_hardware_controller.yaml'
     ])
     rviz_config_file = PathJoinSubstitution([
         FindPackageShare('ffw_description'), 'rviz', 'ffw.rviz'
@@ -140,7 +145,7 @@ def generate_launch_description():
     trajectory_params_file = PathJoinSubstitution([
         FindPackageShare('ffw_bringup'),
         'config',
-        'ffw_bg2_follower',
+        model,
         'ffw_bg2_follower_initial_positions.yaml',
     ])
 
