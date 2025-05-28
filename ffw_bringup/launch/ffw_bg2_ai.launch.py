@@ -16,21 +16,25 @@
 #
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
+import os
+
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-import os
-from ament_index_python.packages import get_package_share_directory
+
 
 def generate_launch_description():
     bringup_launch_dir = os.path.join(get_package_share_directory('ffw_bringup'), 'launch')
 
     follower = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir, 'ffw_bg2_follower_ai.launch.py')),
+        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir,
+                                                   'ffw_bg2_follower_ai.launch.py')),
         launch_arguments={'launch_cameras': 'true', 'init_position': 'true'}.items()
     )
     leader = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir, 'ffw_lg2_leader_ai.launch.py'))
+        PythonLaunchDescriptionSource(os.path.join(bringup_launch_dir,
+                                                   'ffw_lg2_leader_ai.launch.py'))
     )
 
     return LaunchDescription([

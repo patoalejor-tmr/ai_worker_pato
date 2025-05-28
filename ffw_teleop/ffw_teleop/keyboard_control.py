@@ -17,8 +17,8 @@
 # Authors: Wonho Yun
 
 import tkinter as tk
-import numpy as np  # Add for trajectory planning
 
+import numpy as np
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
@@ -34,7 +34,8 @@ class KeyboardController(Node):
             'arm_l': {
                 'joints': [
                     'arm_l_joint1', 'arm_l_joint2', 'arm_l_joint3',
-                    'arm_l_joint4', 'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7', 'gripper_l_joint1'
+                    'arm_l_joint4', 'arm_l_joint5', 'arm_l_joint6', 'arm_l_joint7',
+                    'gripper_l_joint1'
                 ],
                 'positions': [0.0] * 8,
                 'labels': [None] * 8,
@@ -49,7 +50,8 @@ class KeyboardController(Node):
             'arm_r': {
                 'joints': [
                     'arm_r_joint1', 'arm_r_joint2', 'arm_r_joint3',
-                    'arm_r_joint4', 'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7', 'gripper_r_joint1'
+                    'arm_r_joint4', 'arm_r_joint5', 'arm_r_joint6', 'arm_r_joint7',
+                    'gripper_r_joint1'
                 ],
                 'positions': [0.0] * 8,
                 'labels': [None] * 8,
@@ -131,7 +133,8 @@ class KeyboardController(Node):
 
             pos_coeff = 10 * t_norm3 - 15 * t_norm4 + 6 * t_norm5
             vel_coeff = (30 * t_norm2 - 60 * t_norm3 + 30 * t_norm4) / self.duration
-            acc_coeff = (60 * t_norm - 180 * t_norm2 + 120 * t_norm3) / (self.duration * self.duration)
+            acc_coeff = (60 * t_norm - 180 * t_norm2
+                         + 120 * t_norm3) / (self.duration * self.duration)
 
             positions = []
             velocities = []

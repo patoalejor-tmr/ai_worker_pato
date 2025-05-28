@@ -17,11 +17,12 @@
 # Authors: Sungho Woo, Woojin Wie, Wonho Yun
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler, IncludeLaunchDescription, TimerAction
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -75,7 +76,8 @@ def generate_launch_description():
     ])
 
     controller_manager_config = PathJoinSubstitution([
-        FindPackageShare('ffw_bringup'), 'config', model, 'ffw_bg2_follower_ai_hardware_controller.yaml'
+        FindPackageShare('ffw_bringup'), 'config', model,
+        'ffw_bg2_follower_ai_hardware_controller.yaml'
     ])
     rviz_config_file = PathJoinSubstitution([
         FindPackageShare('ffw_description'), 'rviz', 'ffw.rviz'
@@ -194,13 +196,16 @@ def generate_launch_description():
     # Camera launch include
     bringup_launch_dir = PathJoinSubstitution([FindPackageShare('ffw_bringup'), 'launch'])
     camera_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(PathJoinSubstitution([bringup_launch_dir, 'camera.launch.py'])),
+        PythonLaunchDescriptionSource(PathJoinSubstitution([bringup_launch_dir,
+                                                            'camera.launch.py'])),
         condition=IfCondition(launch_cameras)
     )
 
     # Camera timers with conditional delay based on init_position
-    camera_timer_20s = TimerAction(period=20.0, actions=[camera_launch], condition=IfCondition(init_position))
-    camera_timer_10s = TimerAction(period=10.0, actions=[camera_launch], condition=UnlessCondition(init_position))
+    camera_timer_20s = TimerAction(period=20.0, actions=[camera_launch],
+                                   condition=IfCondition(init_position))
+    camera_timer_10s = TimerAction(period=10.0, actions=[camera_launch],
+                                   condition=UnlessCondition(init_position))
 
     return LaunchDescription(
         declared_arguments + [
