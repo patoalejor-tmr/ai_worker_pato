@@ -167,7 +167,8 @@ controller_interface::return_type JoystickController::update(
     point.time_from_start = rclcpp::Duration(0, 0);
 
     if (any_sensorxel_joy_active && !sensorxel_joy_values_.empty() &&
-        !sensorxel_joy_values_[0].empty()) {
+      !sensorxel_joy_values_[0].empty())
+    {
       // Calculate new positions based on sensorxel_joy values
       for (size_t i = 0; i < params_.controlled_joints.size(); ++i) {
         const auto & joint_name = params_.controlled_joints[i];
