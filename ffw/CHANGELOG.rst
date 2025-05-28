@@ -2,6 +2,15 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.6 (2025-05-28)
+------------------
+* Modified Docker volume mapping
+* Created RealSense and ZED launch files
+* Adjusted joint names
+* Improved file structure
+* Removed deprecated files
+* Contributors: Woojin Wie
+
 1.0.5 (2025-05-09)
 ------------------
 * Fixed Dockerfile

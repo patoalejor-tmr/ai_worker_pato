@@ -2,6 +2,12 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.6 (2025-05-28)
+------------------
+* Updated Camera URDF
+* Adjusted joint names
+* Contributors: Woojin Wie
+
 1.0.5 (2025-05-09)
 ------------------
 * Updated Camera URDF
