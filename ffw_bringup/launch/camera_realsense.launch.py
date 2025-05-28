@@ -34,13 +34,13 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction
 from launch.substitutions import LaunchConfiguration
-import rs_launch
 import yaml
 
 # Add realsense2_camera/launch to sys.path using ROS package discovery
 realsense2_camera_launch_dir = os.path.join(get_package_share_directory('realsense2_camera'),
                                             'launch')
 sys.path.append(realsense2_camera_launch_dir)
+import rs_launch  # noqa: E402, I100
 
 
 # Utility function to load YAML as dict
