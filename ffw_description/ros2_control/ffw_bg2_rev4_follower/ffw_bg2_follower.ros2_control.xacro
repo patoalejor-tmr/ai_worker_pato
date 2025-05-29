@@ -248,7 +248,7 @@
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">160199</param>
-        <param name="Min Position Limit">-160199</param>
+        <param name="Min Position Limit">-245000</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
         <param name="Velocity I Gain">1085331</param>
@@ -297,7 +297,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
-        <param name="Drive Mode">1</param>
+        <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
         <param name="Velocity Limit">2020</param>
@@ -390,7 +390,7 @@
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">160199</param>
-        <param name="Min Position Limit">-160199</param>
+        <param name="Min Position Limit">-245000</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
         <param name="Velocity I Gain">1085331</param>
@@ -439,7 +439,7 @@
         <command_interface name="Goal Position"/>
         <state_interface name="Present Position"/>
         <state_interface name="Present Velocity"/>
-        <param name="Drive Mode">1</param>
+        <param name="Drive Mode">0</param>
         <param name="Operating Mode">3</param>
         <param name="Return Delay Time">0</param>
         <param name="Velocity Limit">2020</param>
