@@ -1,5 +1,5 @@
 services:
-  ros2:
+  ai_worker:
     container_name: ai_worker
     build:
       context: .

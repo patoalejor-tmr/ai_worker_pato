@@ -153,11 +153,11 @@ WORKDIR ${COLCON_WS}
 
 RUN mkdir -p ${COLCON_WS}/src && \
     cd ${COLCON_WS}/src && \
-    git clone -b feature-command-interfaces https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
+    git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/dynamixel_interfaces.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/DynamixelSDK.git && \
     git clone -b jazzy https://github.com/ROBOTIS-GIT/physical_ai_tools.git --recursive && \
-    git clone -b feature-hardware-revision-2 https://github.com/ROBOTIS-GIT/ai_worker.git && \
+    git clone -b jazzy https://github.com/ROBOTIS-GIT/ai_worker.git && \
     git clone -b r/4.56.4 https://github.com/IntelRealSense/realsense-ros.git && \
     cd realsense-ros && git checkout cbd8b8487d4c0126bb590822db9469414496e62a
 
@@ -196,7 +196,6 @@ RUN pip install 'numpy<2'
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "source ${COLCON_WS}/install/setup.bash" >> ~/.bashrc  && \
     echo "alias cb='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'" >> ~/.bashrc && \
-    echo "alias leader='ros2 launch ffw_bringup leader.launch.py'" >> ~/.bashrc && \
-    echo "alias follower='ros2 launch ffw_bringup follower.launch.py'" >> ~/.bashrc && \
-    echo "alias follower_with_camera='ros2 launch ffw_bringup follower_with_camera.launch.py'" >> ~/.bashrc && \
-    echo "alias bringup='ros2 launch ffw_bringup bringup.launch.py'" >> ~/.bashrc
+    echo "alias ffw_lg2_leader_ai='ros2 launch ffw_bringup ffw_lg2_leader_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ffw_bg2_follower_ai='ros2 launch ffw_bringup ffw_bg2_follower_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc
