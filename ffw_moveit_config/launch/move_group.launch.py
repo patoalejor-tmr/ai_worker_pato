@@ -29,12 +29,13 @@ import yaml
 
 def generate_launch_description():
 
+    model = LaunchConfiguration('model')
     # Robot description
     robot_description_config = xacro.process_file(
         os.path.join(
             get_package_share_directory('ffw_description'),
             'urdf',
-            'ffw_bg2_follower',
+            model,
             'ffw_bg2_follower.urdf.xacro',
         )
     )
@@ -146,7 +147,12 @@ def generate_launch_description():
         'use_sim',
         default_value='true',
         description='Start robot in Gazebo simulation.')
+    declare_model = DeclareLaunchArgument(
+        'model',
+        default_value='ffw_bg2_follower',
+        description='Robot model name.')
     ld.add_action(declare_use_sim)
+    ld.add_action(declare_model)
 
     move_group_node = Node(
         package='moveit_ros_move_group',

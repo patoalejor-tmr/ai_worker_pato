@@ -43,7 +43,7 @@ def generate_launch_description():
                               description='Whether to launch cameras.'),
         DeclareLaunchArgument('init_position', default_value='true',
                               description='Whether to launch the init_position node.'),
-        DeclareLaunchArgument('model', default_value='ffw_bg2_follower',
+        DeclareLaunchArgument('model', default_value='ffw_bg2_rev4_follower',
                               description='Robot model name.'),
     ]
 

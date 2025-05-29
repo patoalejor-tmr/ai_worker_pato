@@ -111,8 +111,8 @@
         - JOYSTICK Y VALUE
         - JOYSTICK X VALUE
       joystick_calibration_min: 0.0
-      joystick_calibration_center: 1830.0
-      joystick_calibration_max: 4033.0
+      joystick_calibration_center: 2048.0
+      joystick_calibration_max: 4096.0
       controlled_joints:
         - head_joint1
         - head_joint2
@@ -129,8 +129,8 @@
       state_interfaces:
         - JOYSTICK X VALUE
       joystick_calibration_min: 0.0
-      joystick_calibration_center: 1830.0
-      joystick_calibration_max: 4033.0
+      joystick_calibration_center: 2048.0
+      joystick_calibration_max: 4096.0
       controlled_joints:
         - lift_joint
       joint_states_topic: "/joint_states"
