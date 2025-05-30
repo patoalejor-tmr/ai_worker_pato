@@ -11,19 +11,13 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 endif()
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
-  angles
-  control_msgs
-  control_toolbox
   controller_interface
   generate_parameter_library
   hardware_interface
-  kdl_parser
   pluginlib
   rclcpp
   rclcpp_lifecycle
   realtime_tools
-  tl_expected
-  urdf
 )
 
 ################################################################################
@@ -50,19 +44,13 @@ target_include_directories(spring_actuator_controller PUBLIC
   $<INSTALL_INTERFACE:include/spring_actuator_controller>
 )
 target_link_libraries(spring_actuator_controller PUBLIC
-  ${control_msgs_TARGETS}
-  angles::angles
-  control_toolbox::control_toolbox
   controller_interface::controller_interface
   hardware_interface::mock_components
-  kdl_parser::kdl_parser
   pluginlib::pluginlib
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   realtime_tools::realtime_tools
   spring_actuator_controller_parameters
-  tl_expected::tl_expected
-  urdf::urdf
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
