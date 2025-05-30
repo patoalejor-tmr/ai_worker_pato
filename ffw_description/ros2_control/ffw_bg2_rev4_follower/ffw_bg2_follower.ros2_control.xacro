@@ -210,7 +210,7 @@
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">300</param>
         <param name="Max Position Limit">0</param>
-        <param name="Min Position Limit">-131072</param>
+        <param name="Min Position Limit">-262144</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">41387</param>
         <param name="Velocity I Gain">1065630</param>
@@ -247,7 +247,7 @@
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">300</param>
-        <param name="Max Position Limit">160199</param>
+        <param name="Max Position Limit">90000</param>
         <param name="Min Position Limit">-245000</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
@@ -351,7 +351,7 @@
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">300</param>
-        <param name="Max Position Limit">131072</param>
+        <param name="Max Position Limit">262144</param>
         <param name="Min Position Limit">0</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">41387</param>
@@ -389,7 +389,7 @@
         <param name="Acceleration Limit">20200</param>
         <param name="Profile Velocity">2020</param>
         <param name="Profile Acceleration">300</param>
-        <param name="Max Position Limit">160199</param>
+        <param name="Max Position Limit">90000</param>
         <param name="Min Position Limit">-245000</param>
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
@@ -493,7 +493,7 @@
         <param name="Return Delay Time">0</param>
         <param name="Profile Velocity">200</param>
         <param name="Profile Acceleration">50</param>
-        <param name="Max Position Limit">2731</param>
+        <param name="Max Position Limit">2500</param>
         <param name="Min Position Limit">1896</param>
         <param name="Position P Gain">1600</param>
         <param name="Position I Gain">400</param>
