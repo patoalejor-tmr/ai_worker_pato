@@ -47,15 +47,15 @@
   </link>
 
   <xacro:ffw_follower_body parent="$(arg prefix)base_link" prefix="$(arg prefix)">
-    <origin xyz="0.053 0 1.2846" rpy="0 0 0" />
+    <origin xyz="0.0055 0 1.4316" rpy="0 0 0" />
   </xacro:ffw_follower_body>
 
   <xacro:rh_p12_rn_a parent="$(arg prefix)arm_l_link7" prefix="$(arg prefix)gripper_l_">
-    <origin xyz="0 0 -0.05" rpy="0 3.14159265359 0"/>
+    <origin xyz="0 0 -0.078" rpy="0 3.14159265359 0"/>
   </xacro:rh_p12_rn_a>
 
   <xacro:rh_p12_rn_a parent="$(arg prefix)arm_r_link7" prefix="$(arg prefix)gripper_r_">
-    <origin xyz="0 0 -0.05" rpy="0 3.14159265359 0"/>
+    <origin xyz="0 0 -0.078" rpy="0 3.14159265359 0"/>
   </xacro:rh_p12_rn_a>
 
   <xacro:ffw_bg2_follower_system
