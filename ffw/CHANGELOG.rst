@@ -2,6 +2,11 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.8 (2025-06-02)
+------------------
+* Updated Model files for ffw_bg2_rev4
+* Contributors: Woojin Wie
+
 1.0.7 (2025-05-30)
 ------------------
 * Updated Model files for ffw_bg2_rev4
