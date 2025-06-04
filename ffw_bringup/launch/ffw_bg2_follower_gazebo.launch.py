@@ -25,12 +25,22 @@ from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchD
 from launch.actions import RegisterEventHandler, SetEnvironmentVariable
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, FindExecutable
+from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 import xacro
 
 
 def generate_launch_description():
+    declared_arguments = [
+        DeclareLaunchArgument('model', default_value='ffw_bg2_rev4_follower',
+                              description='Robot model name.'),
+        DeclareLaunchArgument('world', default_value='empty_world',
+                              description='Gz sim World'),
+    ]
+
+    model = LaunchConfiguration('model')
+    world = LaunchConfiguration('world')
 
     ffw_description_path = os.path.join(
         get_package_share_directory('ffw_description'))
@@ -47,18 +57,12 @@ def generate_launch_description():
             ]
         )
 
-    arguments = LaunchDescription([
-                DeclareLaunchArgument('world', default_value='empty_world',
-                                      description='Gz sim World'),
-           ]
-    )
-
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory('ros_gz_sim'), 'launch'), '/gz_sim.launch.py']),
                 launch_arguments=[
                     ('gz_args', [
-                        LaunchConfiguration('world'),
+                        world,
                         '.sdf',
                         ' -v 1',
                         ' -r'
@@ -66,14 +70,18 @@ def generate_launch_description():
                 ]
              )
 
-    xacro_file = os.path.join(ffw_description_path,
+    robot_desc = Command([
+        PathJoinSubstitution([FindExecutable(name='xacro')]),
+        ' ',
+        PathJoinSubstitution([FindPackageShare('ffw_description'),
                               'urdf',
-                              'ffw_bg2_follower',
-                              'ffw_bg2_follower.urdf.xacro')
-
-    doc = xacro.process_file(xacro_file, mappings={'use_sim': 'true'})
-
-    robot_desc = doc.toprettyxml(indent='  ')
+                              model,
+                              'ffw_bg2_follower.urdf.xacro']),
+        ' ',
+        'model:=', model,
+        ' ',
+        'use_sim:=true',
+    ])
 
     params = {'robot_description': robot_desc}
 
@@ -95,8 +103,8 @@ def generate_launch_description():
                    '-R', '0.0',
                    '-P', '0.0',
                    '-Y', '0.0',
-                   '-name', 'ffw',
-                   '-allow_renaming', 'true'
+                   '-name', model,
+                   '-allow_renaming', 'true',
                    '-use_sim', 'true'],
     )
 
@@ -148,6 +156,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        *declared_arguments,
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=gz_spawn_entity,
@@ -165,7 +174,6 @@ def generate_launch_description():
         ),
         bridge,
         gazebo_resource_path,
-        arguments,
         gazebo,
         node_robot_state_publisher,
         gz_spawn_entity,
