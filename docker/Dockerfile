@@ -165,6 +165,9 @@ RUN apt-get update && apt-get install -y \
     ros-${ROS_DISTRO}-ros2-controllers \
     ros-${ROS_DISTRO}-tf-transformations \
     ros-${ROS_DISTRO}-pal-statistics \
+    ros-${ROS_DISTRO}-web-video-server \
+    ros-${ROS_DISTRO}-rosbridge-suite \
+    ros-${ROS_DISTRO}-image-transport-plugins \
     vim \
     nano \
     && apt-get install -y ros-${ROS_DISTRO}-moveit --no-install-recommends \
@@ -227,3 +230,13 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "alias ffw_lg2_leader_ai='ros2 launch ffw_bringup ffw_lg2_leader_ai.launch.py'" >> ~/.bashrc && \
     echo "alias ffw_bg2_follower_ai='ros2 launch ffw_bringup ffw_bg2_follower_ai.launch.py'" >> ~/.bashrc && \
     echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc
+
+
+# Copy the start.sh script
+COPY start.sh /start.sh
+
+# Give execute permission to the start.sh script
+RUN chmod +x /start.sh
+
+# Run the start.sh script
+CMD ["/start.sh"]

@@ -26,8 +26,9 @@ services:
       - ../:/root/ros2_ws/src/ai_worker/
       - ./lerobot/outputs:/root/ros2_ws/src/physical_ai_tools/lerobot/outputs
       - ./huggingface:/root/.cache/huggingface
+      - ./start.sh:/start.sh
     privileged: true
-    command: bash
+    command: bash -c "/start.sh; /bin/bash"
     runtime: nvidia
     deploy:
       resources:
