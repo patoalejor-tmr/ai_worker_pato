@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Activate virtual environment if it exists
+if [ -d /opt/venv ]; then
+    source /opt/venv/bin/activate
+fi
+
+# Source bashrc
+source /root/.bashrc
+
 # Source ROS environment
 source /opt/ros/${ROS_DISTRO}/setup.bash
 
