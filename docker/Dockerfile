@@ -242,6 +242,3 @@ COPY start.sh /start.sh
 
 # Give execute permission to the start.sh script
 RUN chmod +x /start.sh
-
-# Run the start.sh script
-CMD ["/start.sh"]
