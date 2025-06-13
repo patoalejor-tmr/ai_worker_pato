@@ -210,16 +210,21 @@ RUN cd ${COLCON_WS} && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO --skip-keys="librealsense2 dynamixel_hardware_interface dynamixel_interfaces dynamixel_sdk physical_ai_tools ai_worker gz_ros2_control" -y && \
     rm -rf /var/lib/apt/lists/*
 
-RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
-    cd ${COLCON_WS} && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
-
 RUN apt-get update && \
     apt-get install -y ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
 RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
     pip install --ignore-installed -e .
+
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    echo 'export PYTHONPATH=${COLCON_WS}/src/physical_ai_tools/lerobot:$PYTHONPATH' >> /root/.bashrc && \
+    export PYTHONPATH=${COLCON_WS}/src/physical_ai_tools/lerobot:$PYTHONPATH; \
+    fi
+
+RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
+    cd ${COLCON_WS} && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
 
 RUN pip install setuptools==68.1.2
 RUN pip install 'numpy<2'
