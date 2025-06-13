@@ -109,12 +109,9 @@
       sensorxel_l_joy_reverse_interfaces:
         - JOYSTICK Y VALUE
         - JOYSTICK X VALUE
-      sensorxel_r_joy_reverse_interfaces:
-        - JOYSTICK Y VALUE
-        - JOYSTICK X VALUE
       joystick_calibration_min: 0.0
-      joystick_calibration_center: 2048.0
-      joystick_calibration_max: 4096.0
+      joystick_calibration_center: 1830.0
+      joystick_calibration_max: 4033.0
       sensorxel_l_joy_controlled_joints:
         - head_joint1
         - head_joint2
@@ -123,5 +120,6 @@
       joint_states_topic: "/joint_states"
       sensorxel_l_joy_joint_trajectory_topic: "/leader/joystick_controller_left/joint_trajectory"
       sensorxel_r_joy_joint_trajectory_topic: "/leader/joystick_controller_right/joint_trajectory"
-      jog_scale: 0.06
+      sensorxel_l_joy_jog_scale: 0.06
+      sensorxel_r_joy_jog_scale: 0.005
       deadzone: 0.05

@@ -32,6 +32,7 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 namespace joystick_controller
 {
@@ -99,10 +100,19 @@ protected:
   std::map<std::string, rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr> sensor_joint_trajectory_publisher_;
   std::map<std::string, rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr> sensorxel_joy_publisher_;
 
+  // Add per-sensor jog scale
+  std::map<std::string, double> sensor_jog_scale_;
+
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_states_subscriber_;
 
   std::shared_ptr<ParamListener> param_listener_;
   Params params_;
+
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr mode_pub_;
+  std::string current_mode_ = "swerve";
+  bool prev_tact_switch_ = false;
+
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
 };
 
 }  // namespace joystick_controller
