@@ -28,7 +28,7 @@ services:
       - ./huggingface:/root/.cache/huggingface
       - ./start.sh:/start.sh
     privileged: true
-    command: bash -c "/start.sh; /bin/bash"
+    command: bash
     runtime: nvidia
     deploy:
       resources:
