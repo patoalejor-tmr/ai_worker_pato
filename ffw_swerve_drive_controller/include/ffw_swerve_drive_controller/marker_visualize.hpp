@@ -16,8 +16,8 @@
  * Author: Geonhee Lee
  */
 
-#ifndef FFW_SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_
-#define FFW_SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_
+#ifndef SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_
+#define SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_
 
 #include <string>
 #include <vector>
@@ -149,4 +149,4 @@ private:
 
 }  // namespace ffw_swerve_drive_controller
 
-#endif  // FFW_SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_
+#endif  // SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_

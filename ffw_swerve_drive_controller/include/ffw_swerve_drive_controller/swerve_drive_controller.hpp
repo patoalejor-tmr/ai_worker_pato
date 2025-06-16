@@ -16,8 +16,8 @@
  * Author: Geonhee Lee
  */
 
-#ifndef FFW_SWERVE_DRIVE_CONTROLLER__SWERVE_DRIVE_CONTROLLER_HPP_
-#define FFW_SWERVE_DRIVE_CONTROLLER__SWERVE_DRIVE_CONTROLLER_HPP_
+#ifndef SWERVE_DRIVE_CONTROLLER__SWERVE_DRIVE_CONTROLLER_HPP_
+#define SWERVE_DRIVE_CONTROLLER__SWERVE_DRIVE_CONTROLLER_HPP_
 
 #include <memory>
 #include <string>
@@ -68,9 +68,6 @@ using OdomStatePublisher = realtime_tools::RealtimePublisher<OdomStateMsg>;
 using TfStatePublisher = realtime_tools::RealtimePublisher<TfStateMsg>;
 
 // Enum definitions
-enum class JointKind { STEERING, WHEEL };
-enum class JointEnd { FRONT, REAR };
-enum class JointSide { LEFT, RIGHT, CENTER };
 enum Rotation { CCW, CW, STOP };
 
 // Structure to hold module information for easier access
@@ -163,6 +160,8 @@ protected:
   std::vector<double> previoud_steering_commands_;
   double steering_angular_velocity_limit_;
   double steering_alignment_angle_error_threshold_;
+  double steering_alignment_start_angle_error_threshold_;
+  double steering_alignment_start_speed_error_threshold_;
   std::string odom_solver_method_str_;
 
   std::string cmd_vel_topic_;
@@ -187,7 +186,7 @@ protected:
   double target_wz_ = 0.0;
   rclcpp::Time last_cmd_vel_time_;
 
-  // --- Odometry ---
+  // Odometry  
   Odometry odometry_;
   rclcpp::Publisher<OdomStateMsg>::SharedPtr odom_s_publisher_ = nullptr;
   std::unique_ptr<OdomStatePublisher> rt_odom_state_publisher_ = nullptr;
@@ -234,15 +233,13 @@ protected:
   SpeedLimiter limiter_angular_z_;
 
   // Flag to check if stopping due to timeout
-  bool is_halted_ = false;
   bool enable_direct_joint_commands_ = false;
   double wheel_saturation_scale_factor_ = 1.0;
   bool enabled_wheel_saturation_scaling_ = false;
-
-  // flip
+  
+  // Open Loop ctrl 
   std::vector<double> previous_wheel_directions_;
 
-  // --- Utility Functions ---
   /**
    * @brief Normalize angle to be within the range [-pi, pi].
    */
@@ -261,7 +258,8 @@ protected:
   // Utility function prototype (global scope)
   void reset_controller_reference_msg(
     const std::shared_ptr<geometry_msgs::msg::Twist> & msg);
+
 };
 }  // namespace ffw_swerve_drive_controller
 
-#endif  // FFW_SWERVE_DRIVE_CONTROLLER__SWERVE_DRIVE_CONTROLLER_HPP_
+#endif  // SWERVE_DRIVE_CONTROLLER__SWERVE_DRIVE_CONTROLLER_HPP_
