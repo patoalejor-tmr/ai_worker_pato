@@ -87,7 +87,7 @@ controller_interface::return_type JoystickController::update(
     return controller_interface::return_type::OK;
   }
   // flag to prevent trajectory publish when swerve mode is on
-  bool swerve_mode = (current_mode_ == "arm_control");
+  bool swerve_mode = (current_mode_ == "swerve");
 
   double left_x = 0.0, left_y = 0.0;
   double right_y = 0.0;
