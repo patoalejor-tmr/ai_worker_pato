@@ -236,9 +236,3 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "alias ffw_bg2_follower_ai='ros2 launch ffw_bringup ffw_bg2_follower_ai.launch.py'" >> ~/.bashrc && \
     echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc
 
-
-# Copy the start.sh script
-COPY start.sh /start.sh
-
-# Give execute permission to the start.sh script
-RUN chmod +x /start.sh
