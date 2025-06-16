@@ -71,6 +71,7 @@ using TfStatePublisher = realtime_tools::RealtimePublisher<TfStateMsg>;
 enum class JointKind { STEERING, WHEEL };
 enum class JointEnd { FRONT, REAR };
 enum class JointSide { LEFT, RIGHT, CENTER };
+enum Rotation { CCW, CW, STOP };
 
 // Structure to hold module information for easier access
 struct ModuleHandles
@@ -158,6 +159,7 @@ protected:
   bool enabled_steering_angular_velocity_limit_;
   bool enabled_steering_angular_limit_;
   bool enabled_open_loop_;
+  uint is_rotation_direction_;
   std::vector<double> previoud_steering_commands_;
   double steering_angular_velocity_limit_;
   double steering_alignment_angle_error_threshold_;
