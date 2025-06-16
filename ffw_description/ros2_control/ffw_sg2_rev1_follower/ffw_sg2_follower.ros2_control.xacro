@@ -5,7 +5,7 @@
   <xacro:macro name="ffw_sg2_follower_system" params="use_sim:=^|false use_fake_hardware:=^|false fake_sensor_commands:=^|false">
     <xacro:property name="initial_positions" value="${load_yaml(initial_positions_file)['initial_positions']}"/>
 
-    <ros2_control name="ffw_sg2_follower" type="system">
+    <ros2_control name="ffw_sg2_follower" type="system" is_async="true">
 
       <xacro:if value="$(arg use_sim)">
         <hardware>

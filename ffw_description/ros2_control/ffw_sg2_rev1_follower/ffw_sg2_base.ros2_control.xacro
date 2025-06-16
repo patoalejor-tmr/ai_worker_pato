@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="ffw_sg2_base_system" params="use_sim:=^|false use_fake_hardware:=^|false fake_sensor_commands:=^|false">
+    <xacro:property name="initial_positions" value="${load_yaml(initial_positions_file)['initial_positions']}"/>
+
+    <ros2_control name="ffw_sg2_base" type="system" is_async="true">
+      <hardware>
+        <plugin>dynamixel_hardware_interface/DynamixelHardware</plugin>
+        <param name="port_name">/dev/ttyUSB0</param>
+        <param name="baud_rate">4000000</param>
+        <param name="dynamixel_model_folder">/param/dxl_model</param>
+        <param name="number_of_joints">6</param>
+        <param name="number_of_transmissions">6</param>
+        <param name="disable_torque_at_init">true</param>
+        <param name="transmission_to_joint_matrix">
+          1, 0, 0, 0, 0, 0,
+          0, 1, 0, 0, 0, 0,
+          0, 0, 1, 0, 0, 0,
+          0, 0, 0, 1, 0, 0,
+          0, 0, 0, 0, 1, 0,
+          0, 0, 0, 0, 0, 1
+        </param>
+        <param name="joint_to_transmission_matrix">
+          1, 0, 0, 0, 0, 0,
+          0, 1, 0, 0, 0, 0,
+          0, 0, 1, 0, 0, 0,
+          0, 0, 0, 1, 0, 0,
+          0, 0, 0, 0, 1, 0,
+          0, 0, 0, 0, 0, 1
+        </param>
+        <param name="dynamixel_state_pub_msg_name">dynamixel_hardware_interface/dxl_state</param>
+        <param name="get_dynamixel_data_srv_name">dynamixel_hardware_interface/get_dxl_data</param>
+        <param name="set_dynamixel_data_srv_name">dynamixel_hardware_interface/set_dxl_data</param>
+        <param name="reboot_dxl_srv_name">dynamixel_hardware_interface/reboot_dxl</param>
+        <param name="set_dxl_torque_srv_name">dynamixel_hardware_interface/set_dxl_torque</param>
+        <param name="error_timeout_ms">500</param>
+      </hardware>
+
+      <joint name="joint1_steer">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="joint1_drive">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="joint2_steer">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="joint2_drive">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="joint3_steer">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="joint3_drive">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <gpio name="dxl1_steer">
+        <param name="type">virtual_dxl</param>
+        <param name="ID">1</param>
+        <param name="model_num">620</param>
+        <param name="comm_id">200</param>
+        <command_interface name="Goal Position"/>
+        <state_interface name="Present Current"/>
+        <state_interface name="Present Velocity"/>
+        <state_interface name="Present Position"/>
+        <param name="Drive Mode">5</param>
+        <param name="Operating Mode">3</param>
+        <param name="Velocity Limit">12592</param>
+        <param name="Acceleration Limit">125920</param>
+        <param name="Min Position Limit">-524288</param>
+        <param name="Max Position Limit">524288</param>
+        <param name="Return Delay Time">0</param>
+        <param name="Profile Velocity">12592</param>
+        <param name="Profile Acceleration">12592</param>
+        <param name="Profile Acceleration Time">300</param>
+        <param name="Profile Time">1000</param>
+      </gpio>
+      <gpio name="dxl1_drive">
+        <param name="type">virtual_dxl</param>
+        <param name="ID">2</param>
+        <param name="model_num">623</param>
+        <param name="comm_id">200</param>
+        <command_interface name="Goal Velocity"/>
+        <state_interface name="Present Current"/>
+        <state_interface name="Present Velocity"/>
+        <state_interface name="Present Position"/>
+        <param name="Drive Mode">0</param>
+        <param name="Operating Mode">1</param>
+        <param name="Return Delay Time">0</param>
+        <param name="Current Limit">2000</param>
+        <param name="Velocity Limit">18600</param>
+        <param name="Velocity FF LPF Freqency">100</param>
+        <param name="Current I Gain">2042035</param>
+        <param name="Current P Gain">2984</param>
+        <param name="Velocity I Gain">2300000</param>
+        <param name="Velocity P Gain">100000</param>
+        <param name="Velocity FF Gain">50000</param>
+        <param name="Profile Acceleration">100</param>
+      </gpio>
+
+      <gpio name="dxl2_steer">
+        <param name="type">virtual_dxl</param>
+        <param name="ID">3</param>
+        <param name="model_num">621</param>
+        <param name="comm_id">200</param>
+        <command_interface name="Goal Position"/>
+        <state_interface name="Present Current"/>
+        <state_interface name="Present Velocity"/>
+        <state_interface name="Present Position"/>
+        <param name="Drive Mode">5</param>
+        <param name="Operating Mode">3</param>
+        <param name="Velocity Limit">12592</param>
+        <param name="Acceleration Limit">125920</param>
+        <param name="Min Position Limit">-524288</param>
+        <param name="Max Position Limit">524288</param>
+        <param name="Return Delay Time">0</param>
+        <param name="Profile Velocity">12592</param>
+        <param name="Profile Acceleration">12592</param>
+        <param name="Profile Acceleration Time">300</param>
+        <param name="Profile Time">1000</param>
+      </gpio>
+      <gpio name="dxl2_drive">
+        <param name="type">virtual_dxl</param>
+        <param name="ID">4</param>
+        <param name="model_num">624</param>
+        <param name="comm_id">200</param>
+        <command_interface name="Goal Velocity"/>
+        <state_interface name="Present Current"/>
+        <state_interface name="Present Velocity"/>
+        <state_interface name="Present Position"/>
+        <param name="Drive Mode">1</param>
+        <param name="Operating Mode">1</param>
+        <param name="Return Delay Time">0</param>
+        <param name="Current Limit">2000</param>
+        <param name="Velocity Limit">18600</param>
+        <param name="Velocity FF LPF Freqency">100</param>
+        <param name="Current I Gain">2042035</param>
+        <param name="Current P Gain">2984</param>
+        <param name="Velocity I Gain">2300000</param>
+        <param name="Velocity P Gain">100000</param>
+        <param name="Velocity FF Gain">50000</param>
+        <param name="Profile Acceleration">100</param>
+      </gpio>
+
+      <gpio name="dxl3_steer">
+        <param name="type">virtual_dxl</param>
+        <param name="ID">5</param>
+        <param name="model_num">622</param>
+        <param name="comm_id">200</param>
+        <command_interface name="Goal Position"/>
+        <state_interface name="Present Current"/>
+        <state_interface name="Present Velocity"/>
+        <state_interface name="Present Position"/>
+        <param name="Drive Mode">5</param>
+        <param name="Operating Mode">3</param>
+        <param name="Velocity Limit">12592</param>
+        <param name="Acceleration Limit">125920</param>
+        <param name="Min Position Limit">-524288</param>
+        <param name="Max Position Limit">524288</param>
+        <param name="Return Delay Time">0</param>
+        <param name="Profile Velocity">12592</param>
+        <param name="Profile Acceleration">12592</param>
+        <param name="Profile Acceleration Time">300</param>
+        <param name="Profile Time">1000</param>
+      </gpio>
+      <gpio name="dxl3_drive">
+        <param name="type">virtual_dxl</param>
+        <param name="ID">6</param>
+        <param name="model_num">625</param>
+        <param name="comm_id">200</param>
+        <command_interface name="Goal Velocity"/>
+        <state_interface name="Present Current"/>
+        <state_interface name="Present Velocity"/>
+        <state_interface name="Present Position"/>
+        <param name="Drive Mode">1</param>
+        <param name="Operating Mode">1</param>
+        <param name="Return Delay Time">0</param>
+        <param name="Current Limit">2000</param>
+        <param name="Velocity Limit">18600</param>
+        <param name="Velocity FF LPF Freqency">100</param>
+        <param name="Current I Gain">2042035</param>
+        <param name="Current P Gain">2984</param>
+        <param name="Velocity I Gain">2300000</param>
+        <param name="Velocity P Gain">100000</param>
+        <param name="Velocity FF Gain">50000</param>
+        <param name="Profile Acceleration">100</param>
+      </gpio>
+
+      <gpio name="ffw_g10_rcu">
+        <param name="type">controller</param>
+        <param name="ID">200</param>
+      </gpio>
+    </ros2_control>
+
+  </xacro:macro>
+
+</robot>

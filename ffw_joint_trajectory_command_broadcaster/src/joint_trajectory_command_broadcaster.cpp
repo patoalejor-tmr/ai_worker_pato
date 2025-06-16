@@ -276,9 +276,9 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
 {
 
   // mode is swerve, don't publish trajectory
-  if (current_mode_ == "swerve") {
-    return controller_interface::return_type::OK;
-  }
+  // if (current_mode_ == "swerve") {
+  //   return controller_interface::return_type::OK;
+  // }
 
   // Update stored values
   for (const auto & state_interface : state_interfaces_) {

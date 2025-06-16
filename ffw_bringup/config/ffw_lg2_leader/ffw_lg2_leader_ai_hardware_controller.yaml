@@ -110,8 +110,8 @@
         - JOYSTICK Y VALUE
         - JOYSTICK X VALUE
       joystick_calibration_min: 0.0
-      joystick_calibration_center: 1830.0
-      joystick_calibration_max: 4033.0
+      joystick_calibration_center: 2048.0
+      joystick_calibration_max: 4096.0
       sensorxel_l_joy_controlled_joints:
         - head_joint1
         - head_joint2

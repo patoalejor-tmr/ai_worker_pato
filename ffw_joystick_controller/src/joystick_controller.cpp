@@ -235,9 +235,9 @@ controller_interface::return_type JoystickController::update(
   // publish cmd_vel only when swerve mode is on
   if (swerve_mode) {
     geometry_msgs::msg::Twist twist_msg;
-    twist_msg.linear.x = -left_x;
-    twist_msg.angular.z = -left_y;
-    twist_msg.linear.y = right_y;
+    twist_msg.linear.x = -left_x / 3.0;
+    twist_msg.linear.y =  left_y / 3.0;
+    twist_msg.angular.z = -right_y / 2.0;
     cmd_vel_pub_->publish(twist_msg);
   }
 
