@@ -50,13 +50,13 @@
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
-      <joint name="joint2_steer">
+      <joint name="right_wheel_steer">
         <command_interface name="position"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
-      <joint name="joint2_drive">
+      <joint name="right_wheel_drive">
         <command_interface name="velocity"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
