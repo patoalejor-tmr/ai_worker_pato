@@ -1086,12 +1086,11 @@ controller_interface::return_type SwerveDriveController::update(
 
         if(is_no_limitation){
           // If no limitation, just use the optimized steering angle
-
           double absolute_current_steering_angle =  std::fmod(current_steering_angle, 2.0 * M_PI);
 
           double desired_steering_change_rad = shortest_angular_distance(absolute_current_steering_angle,
             limited_steering_cmd);
-            double actual_steering_change_this_dt = std::clamp(Add commentMore actions
+            double actual_steering_change_this_dt = std::clamp(
               desired_steering_change_rad,
               -max_allowed_steering_change_this_dt,
               max_allowed_steering_change_this_dt
