@@ -37,7 +37,6 @@ generate_parameter_library(swerve_drive_controller_parameter
   config/swerve_drive_controller_parameter.yaml
 )
 
-
 add_library(ffw_swerve_drive_controller
   SHARED
   src/swerve_drive_controller.cpp
@@ -102,6 +101,5 @@ ament_export_targets(
   export_${PROJECT_NAME}
 )
 ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
-
 
 ament_package()
