@@ -49,6 +49,29 @@
     </inertial>
   </link>
 
+  <link name="$(arg prefix)lift_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/lift_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/lift_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="$(arg prefix)lift_fixed_joint" type="fixed">
+    <parent link="$(arg prefix)base_link"/>
+    <child link="$(arg prefix)lift_link"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </joint>
+
   <xacro:ffw_follower_body parent="$(arg prefix)base_link" prefix="$(arg prefix)">
     <origin xyz="0.0055 0 1.4316" rpy="0 0 0" />
   </xacro:ffw_follower_body>
@@ -61,22 +84,54 @@
     <origin xyz="0 0 -0.078" rpy="0 3.14159265359 0"/>
   </xacro:rh_p12_rn_a>
 
-  <link name="$(arg prefix)link_1"/>
-  <joint name="$(arg prefix)joint1_steer" type="revolute">
+  <link name="$(arg prefix)left_wheel_steer_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/left_wheel_steer_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/left_wheel_steer_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="$(arg prefix)left_wheel_steer" type="revolute">
       <parent link="$(arg prefix)base_link"/>
-      <child link="$(arg prefix)link_1"/>
+      <child link="$(arg prefix)left_wheel_steer_link"/>
       <origin xyz="0.1371 0.2554 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
       <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
-  <joint name="$(arg prefix)joint1_drive" type="revolute">
-      <parent link="$(arg prefix)link_1"/>
-      <child link="$(arg prefix)link_1_wheel"/>
+  <joint name="$(arg prefix)left_wheel_drive" type="revolute">
+      <parent link="$(arg prefix)left_wheel_steer_link"/>
+      <child link="$(arg prefix)left_wheel_drive_link"/>
       <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
       <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
-  <link name="$(arg prefix)link_1_wheel"/>
+  <link name="$(arg prefix)left_wheel_drive_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/left_wheel_drive_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/left_wheel_drive_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
 
   <joint name="$(arg prefix)right_wheel_steer" type="revolute">
       <parent link="$(arg prefix)base_link"/>
@@ -127,22 +182,54 @@
     </collision>
   </link>
 
-  <link name="$(arg prefix)link_3"/>
-  <joint name="$(arg prefix)joint3_steer" type="revolute">
+  <joint name="$(arg prefix)rear_wheel_steer" type="revolute">
       <parent link="$(arg prefix)base_link"/>
-      <child link="$(arg prefix)link_3"/>
+      <child link="$(arg prefix)rear_wheel_steer_link"/>
       <origin xyz="-0.2899 0 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
       <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
-  <joint name="$(arg prefix)joint3_drive" type="revolute">
-      <parent link="$(arg prefix)link_3"/>
-      <child link="$(arg prefix)link_3_wheel"/>
+  <link name="$(arg prefix)rear_wheel_steer_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/rear_wheel_steer_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/rear_wheel_steer_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="$(arg prefix)rear_wheel_drive" type="revolute">
+      <parent link="$(arg prefix)rear_wheel_steer_link"/>
+      <child link="$(arg prefix)rear_wheel_drive_link"/>
       <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
       <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
-  <link name="$(arg prefix)link_3_wheel"/>
+  <link name="$(arg prefix)rear_wheel_drive_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/rear_wheel_drive_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/rear_wheel_drive_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
 
   <xacro:ffw_sg2_follower_system
     use_sim="$(arg use_sim)"

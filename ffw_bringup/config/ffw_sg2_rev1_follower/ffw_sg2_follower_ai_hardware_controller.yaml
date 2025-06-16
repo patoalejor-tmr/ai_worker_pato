@@ -89,15 +89,15 @@
 /**:
   swerve_drive_controller:
     ros__parameters:
-      steering_joint_names: ["steering_front_left_joint", "steering_front_right_joint", "steering_rear_joint"]  
+      steering_joint_names: ["left_wheel_steer", "right_wheel_steer", "rear_wheel_steer"]
 
-      wheel_joint_names: ["wheel_front_left_joint", "wheel_front_right_joint", "wheel_rear_joint"]
+      wheel_joint_names: ["left_wheel_drive", "right_wheel_drive", "rear_wheel_drive"]
 
       wheel_radius: 0.0825 # [m]
       cmd_vel_timeout: 1.0  # [sec]
 
-      module_x_offsets: [ 0.2135,  0.2135, -0.2135] # x-distance between base_link and steering angle joint [m]  => 
-      module_y_offsets: [ 0.2554, -0.2554,  0.0] # y-distance between base_link and steering angle joint [m]  
+      module_x_offsets: [ 0.1371,  0.1371, -0.2899] # x-distance between base_link and steering angle joint [m]  =>
+      module_y_offsets: [ 0.2554, -0.2554,  0.0] # y-distance between base_link and steering angle joint [m]
       module_angle_offsets: [ 0.0, 0.0, 0.0] # initial angle difference between base_link and steering angle joint [rad]
       module_steering_limit_lower: [ -6.28, -6.28, -6.28] # minimum steering angle [rad]
       module_steering_limit_upper: [  6.28,  6.28,  6.28] # maximum steering angle [rad]
@@ -115,7 +115,7 @@
       steering_alignment_start_angle_error_threshold: 0.01
       steering_alignment_start_speed_error_threshold: 0.1
       enabled_open_loop: false # use open-loop control or not, true or false
-      
+
       # Wheel control parameters
       enabled_wheel_saturation_scaling: true # adjust wheel scaling factor when wheel speed reaches maximum speed # true or false
 
@@ -132,7 +132,7 @@
 
       # visualization
       enable_visualization: true
-      visualization_marker_topic: "swerve_visualization_markers" 
+      visualization_marker_topic: "swerve_visualization_markers"
       visualization_update_time: 0.10 # [sec]
 
       # Diagnostics
