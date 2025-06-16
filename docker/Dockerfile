@@ -165,6 +165,9 @@ RUN apt-get update && apt-get install -y \
     ros-${ROS_DISTRO}-ros2-controllers \
     ros-${ROS_DISTRO}-tf-transformations \
     ros-${ROS_DISTRO}-pal-statistics \
+    ros-${ROS_DISTRO}-web-video-server \
+    ros-${ROS_DISTRO}-rosbridge-suite \
+    ros-${ROS_DISTRO}-image-transport-plugins \
     vim \
     nano \
     && apt-get install -y ros-${ROS_DISTRO}-moveit --no-install-recommends \
@@ -207,23 +210,24 @@ RUN cd ${COLCON_WS} && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO --skip-keys="librealsense2 dynamixel_hardware_interface dynamixel_interfaces dynamixel_sdk physical_ai_tools ai_worker gz_ros2_control" -y && \
     rm -rf /var/lib/apt/lists/*
 
-RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
-    cd ${COLCON_WS} && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
-
 RUN apt-get update && \
     apt-get install -y ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
+RUN pip install setuptools==68.1.2
+RUN pip install 'numpy<2'
+
 RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
     pip install --ignore-installed -e .
 
-RUN pip install setuptools==68.1.2
-RUN pip install 'numpy<2'
+RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
+    cd ${COLCON_WS} && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
 
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc  && \
     echo "source ${COLCON_WS}/install/setup.bash" >> ~/.bashrc  && \
     echo "alias cb='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'" >> ~/.bashrc && \
     echo "alias ffw_lg2_leader_ai='ros2 launch ffw_bringup ffw_lg2_leader_ai.launch.py'" >> ~/.bashrc && \
     echo "alias ffw_bg2_follower_ai='ros2 launch ffw_bringup ffw_bg2_follower_ai.launch.py'" >> ~/.bashrc && \
-    echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc
+    echo "alias ffw_bg2_ai='ros2 launch ffw_bringup ffw_bg2_ai.launch.py'" >> ~/.bashrc && \
+    echo "alias ai_server='ros2 launch physical_ai_server physical_ai_server_bringup.launch.py'" >> ~/.bashrc

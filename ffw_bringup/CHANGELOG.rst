@@ -2,6 +2,10 @@
 Changelog for package ffw_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.10 (2025-06-16)
+------------------
+* None
+
 1.0.9 (2025-06-09)
 ------------------
 * Modified Gazebo launch file
