@@ -76,9 +76,9 @@
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
-      <gpio name="dxl1">
+      <gpio name="dxl101">
         <param name="type">virtual_dxl</param>
-        <param name="ID">1</param>
+        <param name="ID">101</param>
         <param name="model_num">620</param>
         <param name="comm_id">200</param>
         <command_interface name="Goal Position"/>
@@ -97,9 +97,9 @@
         <param name="Profile Acceleration Time">300</param>
         <param name="Profile Time">1000</param>
       </gpio>
-      <gpio name="dxl2">
+      <gpio name="dxl102">
         <param name="type">virtual_dxl</param>
-        <param name="ID">2</param>
+        <param name="ID">102</param>
         <param name="model_num">623</param>
         <param name="comm_id">200</param>
         <command_interface name="Goal Velocity"/>
@@ -119,9 +119,9 @@
         <param name="Velocity FF Gain">50000</param>
         <param name="Profile Acceleration">100</param>
       </gpio>
-      <gpio name="dxl3">
+      <gpio name="dxl103">
         <param name="type">virtual_dxl</param>
-        <param name="ID">3</param>
+        <param name="ID">103</param>
         <param name="model_num">621</param>
         <param name="comm_id">200</param>
         <command_interface name="Goal Position"/>
@@ -140,9 +140,9 @@
         <param name="Profile Acceleration Time">300</param>
         <param name="Profile Time">1000</param>
       </gpio>
-      <gpio name="dxl4">
+      <gpio name="dxl104">
         <param name="type">virtual_dxl</param>
-        <param name="ID">4</param>
+        <param name="ID">104</param>
         <param name="model_num">624</param>
         <param name="comm_id">200</param>
         <command_interface name="Goal Velocity"/>
@@ -162,9 +162,9 @@
         <param name="Velocity FF Gain">50000</param>
         <param name="Profile Acceleration">100</param>
       </gpio>
-      <gpio name="dxl5">
+      <gpio name="dxl105">
         <param name="type">virtual_dxl</param>
-        <param name="ID">5</param>
+        <param name="ID">105</param>
         <param name="model_num">622</param>
         <param name="comm_id">200</param>
         <command_interface name="Goal Position"/>
@@ -183,9 +183,9 @@
         <param name="Profile Acceleration Time">300</param>
         <param name="Profile Time">1000</param>
       </gpio>
-      <gpio name="dxl6">
+      <gpio name="dxl106">
         <param name="type">virtual_dxl</param>
-        <param name="ID">6</param>
+        <param name="ID">106</param>
         <param name="model_num">625</param>
         <param name="comm_id">200</param>
         <command_interface name="Goal Velocity"/>
