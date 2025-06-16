@@ -109,7 +109,7 @@ protected:
   Params params_;
 
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr mode_pub_;
-  std::string current_mode_ = "swerve";
+  std::string current_mode_ = "arm_control";
   bool prev_tact_switch_ = false;
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;

@@ -87,16 +87,19 @@ controller_interface::return_type JoystickController::update(
     return controller_interface::return_type::OK;
   }
   // flag to prevent trajectory publish when swerve mode is on
-  bool swerve_mode = (current_mode_ == "swerve");
+  bool swerve_mode = (current_mode_ == "arm_control");
 
   double left_x = 0.0, left_y = 0.0;
   double right_y = 0.0;
+  // Add variables to store tact switch states
+  bool left_tact_switch_pressed = false;
+  bool right_tact_switch_pressed = false;
 
   // Iterate for each sensor
   for (size_t sensor_idx = 0; sensor_idx < sensorxel_joy_names_.size(); ++sensor_idx) {
     const auto& sensor_name = sensorxel_joy_names_[sensor_idx];
     RCLCPP_DEBUG(get_node()->get_logger(), "Processing sensor: %s", sensor_name.c_str());
-    
+
     const auto& controlled_joints = sensor_controlled_joints_[sensor_name];
     const auto& reverse_interfaces = sensor_reverse_interfaces_[sensor_name];
     auto& last_active_positions = sensor_last_active_positions_[sensor_name];
@@ -155,8 +158,16 @@ controller_interface::return_type JoystickController::update(
     if (sensor_name == "sensorxel_l_joy") {
       left_x = normalized_values[0];
       left_y = normalized_values[1];
+      // Save left tact switch state
+      if (normalized_values.size() > 2) {
+        left_tact_switch_pressed = (normalized_values[2] > 0.5);
+      }
     } else if (sensor_name == "sensorxel_r_joy") {
       right_y = normalized_values[1];
+      // Save right tact switch state
+      if (normalized_values.size() > 2) {
+        right_tact_switch_pressed = (normalized_values[2] > 0.5);
+      }
     }
 
     if (was_active_ && !any_sensorxel_joy_active && !current_joint_states_.name.empty() && !controlled_joints.empty()) {
@@ -169,23 +180,6 @@ controller_interface::return_type JoystickController::update(
         }
       }
     }
-
-    // // detect right tact switch(rising edge) and publish
-    if (sensor_name == "sensorxel_r_joy") {
-      bool tact_switch_pressed = (normalized_values.size() > 2) && (normalized_values[2] > 0.5);
-      if (tact_switch_pressed && !prev_tact_switch_) {
-        std_msgs::msg::String mode_msg;
-        if (current_mode_ == "swerve") {
-          current_mode_ = "arm_control";
-        } else {
-          current_mode_ = "swerve";
-        }
-        mode_msg.data = current_mode_;
-        mode_pub_->publish(mode_msg);
-      }
-      prev_tact_switch_ = tact_switch_pressed;
-    }
-
 
     // no trajectory publish when swerve mode is off
     if (!swerve_mode) {
@@ -222,7 +216,7 @@ controller_interface::return_type JoystickController::update(
         if (joint_trajectory_publisher) {
           joint_trajectory_publisher->publish(trajectory_msg);
         } else {
-          RCLCPP_WARN(get_node()->get_logger(), "Joint trajectory publisher not found for sensor: %s", 
+          RCLCPP_WARN(get_node()->get_logger(), "Joint trajectory publisher not found for sensor: %s",
                       sensor_name.c_str());
         }
       }
@@ -254,6 +248,20 @@ controller_interface::return_type JoystickController::update(
     RCLCPP_DEBUG(get_node()->get_logger(), "Publishing joystick values to common topic");
     sensorxel_joy_publisher_["common"]->publish(sensorxel_joy_msg);
   }
+
+  // detect both tact switches (rising edge) and publish
+  bool both_tact_switch_pressed = left_tact_switch_pressed && right_tact_switch_pressed;
+  if (both_tact_switch_pressed && !prev_tact_switch_) {
+    std_msgs::msg::String mode_msg;
+    if (current_mode_ == "arm_control") {
+      current_mode_ = "swerve";
+    } else {
+      current_mode_ = "arm_control";
+    }
+    mode_msg.data = current_mode_;
+    mode_pub_->publish(mode_msg);
+  }
+  prev_tact_switch_ = both_tact_switch_pressed;
 
   RCLCPP_DEBUG(get_node()->get_logger(), "Joystick controller update completed");
 
