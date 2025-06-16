@@ -88,8 +88,8 @@
         <param name="Operating Mode">3</param>
         <param name="Velocity Limit">12592</param>
         <param name="Acceleration Limit">125920</param>
-        <param name="Min Position Limit">-524288</param>
-        <param name="Max Position Limit">524288</param>
+        <param name="Min Position Limit">-1572864</param>
+        <param name="Max Position Limit">1572864</param>
         <param name="Return Delay Time">0</param>
         <param name="Profile Velocity">12592</param>
         <param name="Profile Acceleration">12592</param>
@@ -132,8 +132,8 @@
         <param name="Operating Mode">3</param>
         <param name="Velocity Limit">12592</param>
         <param name="Acceleration Limit">125920</param>
-        <param name="Min Position Limit">-524288</param>
-        <param name="Max Position Limit">524288</param>
+        <param name="Min Position Limit">-1572864</param>
+        <param name="Max Position Limit">1572864</param>
         <param name="Return Delay Time">0</param>
         <param name="Profile Velocity">12592</param>
         <param name="Profile Acceleration">12592</param>
@@ -176,8 +176,8 @@
         <param name="Operating Mode">3</param>
         <param name="Velocity Limit">12592</param>
         <param name="Acceleration Limit">125920</param>
-        <param name="Min Position Limit">-524288</param>
-        <param name="Max Position Limit">524288</param>
+        <param name="Min Position Limit">-1572864</param>
+        <param name="Max Position Limit">1572864</param>
         <param name="Return Delay Time">0</param>
         <param name="Profile Velocity">12592</param>
         <param name="Profile Acceleration">12592</param>
