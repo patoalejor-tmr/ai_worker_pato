@@ -217,11 +217,6 @@ RUN apt-get update && \
 RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
     pip install --ignore-installed -e .
 
-RUN if [ "$TARGETARCH" = "arm64" ]; then \
-    echo 'export PYTHONPATH=${COLCON_WS}/src/physical_ai_tools/lerobot:$PYTHONPATH' >> /root/.bashrc && \
-    export PYTHONPATH=${COLCON_WS}/src/physical_ai_tools/lerobot:$PYTHONPATH; \
-    fi
-
 RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && \
     cd ${COLCON_WS} && \
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
