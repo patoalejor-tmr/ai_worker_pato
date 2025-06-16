@@ -16,8 +16,8 @@
  * Author: Geonhee Lee
  */
 
-#ifndef SWERVE_DRIVE_CONTROLLER__ODOMETRY_HPP_
-#define SWERVE_DRIVE_CONTROLLER__ODOMETRY_HPP_
+#ifndef FFW_SWERVE_DRIVE_CONTROLLER__ODOMETRY_HPP_
+#define FFW_SWERVE_DRIVE_CONTROLLER__ODOMETRY_HPP_
 
 #include <Eigen/Dense>
 #include <vector>
@@ -103,4 +103,4 @@ private:
 };
 }  // namespace ffw_swerve_drive_controller
 
-#endif  // SWERVE_DRIVE_CONTROLLER__ODOMETRY_HPP_
+#endif  // FFW_SWERVE_DRIVE_CONTROLLER__ODOMETRY_HPP_
