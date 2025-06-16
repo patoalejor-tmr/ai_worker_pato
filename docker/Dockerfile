@@ -214,6 +214,9 @@ RUN apt-get update && \
     apt-get install -y ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
+RUN pip install setuptools==68.1.2
+RUN pip install 'numpy<2'
+
 RUN cd ${COLCON_WS}/src/physical_ai_tools/lerobot && \
     pip install --ignore-installed -e .
 
