@@ -186,7 +186,7 @@ protected:
   double target_wz_ = 0.0;
   rclcpp::Time last_cmd_vel_time_;
 
-  // Odometry  
+  // Odometry
   Odometry odometry_;
   rclcpp::Publisher<OdomStateMsg>::SharedPtr odom_s_publisher_ = nullptr;
   std::unique_ptr<OdomStatePublisher> rt_odom_state_publisher_ = nullptr;
@@ -236,8 +236,8 @@ protected:
   bool enable_direct_joint_commands_ = false;
   double wheel_saturation_scale_factor_ = 1.0;
   bool enabled_wheel_saturation_scaling_ = false;
-  
-  // Open Loop ctrl 
+
+  // Open Loop ctrl
   std::vector<double> previous_wheel_directions_;
 
   /**

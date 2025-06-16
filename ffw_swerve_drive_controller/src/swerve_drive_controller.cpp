@@ -88,7 +88,7 @@ CallbackReturn SwerveDriveController::on_init()
     auto_declare<double>("steering_alignment_angle_error_threshold", 0.1);
     auto_declare<double>("steering_alignment_start_angle_error_threshold", 0.1);
     auto_declare<double>("steering_alignment_start_speed_error_threshold", 0.1);
-    
+
     auto_declare<std::string>("cmd_vel_topic", "/cmd_vel");
     auto_declare<bool>("use_stamped_cmd_vel", false);
     auto_declare<double>("cmd_vel_timeout", 500.0);
@@ -115,11 +115,10 @@ CallbackReturn SwerveDriveController::on_init()
     // Create the parameter listener and get the parameters
     param_listener_ = std::make_shared<ParamListener>(get_node());
     params_ = param_listener_->get_params();
-  }
-  catch (const std::exception & e) {
-    RCLCPP_FATAL(get_node()->get_logger()
-    , "Exception during parameter declaration: %s"
-    , e.what());
+  } catch (const std::exception & e) {
+    RCLCPP_FATAL(get_node()->get_logger(),
+      "Exception during parameter declaration: %s",
+      e.what());
     return CallbackReturn::ERROR;
   }
   RCLCPP_DEBUG(get_node()->get_logger(), "Parameter declaration successful");
@@ -243,15 +242,17 @@ CallbackReturn SwerveDriveController::on_configure(
       get_node()->get_parameter("steering_angular_velocity_limit").as_double();
     enabled_steering_flip_ = get_node()->get_parameter("enabled_steering_flip").as_bool();
     enabled_open_loop_ = get_node()->get_parameter("enabled_open_loop").as_bool();
-    enabled_steering_angular_velocity_limit_ = get_node()->get_parameter("enabled_steering_angular_velocity_limit").as_bool();
-    enabled_steering_angular_limit_ = get_node()->get_parameter("enabled_steering_angular_limit").as_bool();
+    enabled_steering_angular_velocity_limit_ =
+      get_node()->get_parameter("enabled_steering_angular_velocity_limit").as_bool();
+    enabled_steering_angular_limit_ =
+      get_node()->get_parameter("enabled_steering_angular_limit").as_bool();
     steering_alignment_angle_error_threshold_ = get_node()->get_parameter(
       "steering_alignment_angle_error_threshold").as_double();
     steering_alignment_start_angle_error_threshold_ = get_node()->get_parameter(
       "steering_alignment_start_angle_error_threshold").as_double();
     steering_alignment_start_speed_error_threshold_ = get_node()->get_parameter(
       "steering_alignment_start_speed_error_threshold").as_double();
-      
+
     cmd_vel_topic_ = get_node()->get_parameter("cmd_vel_topic").as_string();
     use_stamped_cmd_vel_ = get_node()->get_parameter("use_stamped_cmd_vel").as_bool();
     cmd_vel_timeout_ = get_node()->get_parameter("cmd_vel_timeout").as_double();
@@ -397,9 +398,9 @@ CallbackReturn SwerveDriveController::on_configure(
   auto & pose_covariance = rt_odom_state_publisher_->msg_.pose.covariance;
   auto & twist_covariance = rt_odom_state_publisher_->msg_.twist.covariance;
   for (size_t index = 0; index < NUM_DIMENSIONS; ++index) {
-      const size_t diagonal_index = NUM_DIMENSIONS * index + index;
-      pose_covariance[diagonal_index] = pose_covariance_diagonal_[index];
-      twist_covariance[diagonal_index] = twist_covariance_diagonal_[index];
+    const size_t diagonal_index = NUM_DIMENSIONS * index + index;
+    pose_covariance[diagonal_index] = pose_covariance_diagonal_[index];
+    twist_covariance[diagonal_index] = twist_covariance_diagonal_[index];
   }
 
   rt_odom_state_publisher_->unlock();
@@ -733,12 +734,12 @@ controller_interface::return_type SwerveDriveController::update(
 
   double time_gap = std::max(0.001, period.seconds());
 
-  // Direct Joint Commands 
+  // Direct Joint Commands
   if (enable_direct_joint_commands_) {
     //direct_joint_control(time, period);
     return controller_interface::return_type::OK;
   }
-  
+
   // 1. read the latest command velocity
   auto current_cmd_vel_ptr = cmd_vel_buffer_.readFromRT();
   RCLCPP_DEBUG(
@@ -1158,8 +1159,7 @@ controller_interface::return_type SwerveDriveController::update(
           // when current steering angle is not close to the target steering angle, stop the wheel
           final_wheel_vel_cmd = 0.0;
           is_steering_aligned = false;
-        }
-        else{
+        } else {
           is_steering_aligned = true;
         }
       }
@@ -1174,33 +1174,34 @@ controller_interface::return_type SwerveDriveController::update(
           i, final_wheel_vel_cmd, module_wheel_speed_limit_lower_[i],
           module_wheel_speed_limit_upper_[i]);
 
-        double clipped_wheel_vel_cmd; 
+        double clipped_wheel_vel_cmd;
         clipped_wheel_vel_cmd = std::clamp(
           final_wheel_vel_cmd,
           module_wheel_speed_limit_lower_[i],
           module_wheel_speed_limit_upper_[i]);
 
-          if(enabled_wheel_saturation_scaling_){
-            wheel_saturation_scale_factor_ = std::min(wheel_saturation_scale_factor_, clipped_wheel_vel_cmd/final_wheel_vel_cmd);
-            RCLCPP_WARN(
-              get_node()->get_logger(),"min scale factor: %.2f, final_wheel_vel_cmd: %.2f, clipped_wheel_vel_cmd: %.2f",
+        if(enabled_wheel_saturation_scaling_) {
+          wheel_saturation_scale_factor_ = std::min(wheel_saturation_scale_factor_,
+              clipped_wheel_vel_cmd / final_wheel_vel_cmd);
+          RCLCPP_WARN(
+              get_node()->get_logger(),
+              "min scale factor: %.2f, final_wheel_vel_cmd: %.2f, clipped_wheel_vel_cmd: %.2f",
               wheel_saturation_scale_factor_, final_wheel_vel_cmd, clipped_wheel_vel_cmd);
-          }
-          else{
-            wheel_saturation_scale_factor_ = 1.0;
-          }
-            
+        } else {
+          wheel_saturation_scale_factor_ = 1.0;
+        }
+
       }
 
       RCLCPP_DEBUG(
-        get_node()->get_logger(), "Calculated Module %zu: Steering command %.2f, Wheel command %.2f",
+        get_node()->get_logger(),
+          "Calculated Module %zu: Steering command %.2f, Wheel command %.2f",
         i, optimized_steering_angle, final_wheel_vel_cmd);
 
       // joints commands
       final_steering_commands[i] = optimized_steering_angle;
       final_wheel_velocity_commands[i] = final_wheel_vel_cmd;
-    }
-    catch (const std::exception & e) {
+    } catch (const std::exception & e) {
       RCLCPP_ERROR_THROTTLE(
         get_node()->get_logger(), *get_node()->get_clock(), 1000,
         "Exception writing commands for module %zu: %s", i, e.what());
@@ -1241,12 +1242,10 @@ controller_interface::return_type SwerveDriveController::update(
         if (i < final_steering_commands.size()) {
           final_steering_commands[i] = current_steering_angle_for_hold;
         }
-        if (i < final_wheel_velocity_commands.size())
-        {
+        if (i < final_wheel_velocity_commands.size()) {
           final_wheel_velocity_commands[i] = 0.0;
         }
-      }
-      catch (const std::exception & e) {
+      } catch (const std::exception & e) {
         RCLCPP_ERROR_THROTTLE(
           get_node()->get_logger(), *get_node()->get_clock(), 1000,
           "Exception during halted command writing for module %zu: %s", i, e.what());
@@ -1258,18 +1257,21 @@ controller_interface::return_type SwerveDriveController::update(
 
       RCLCPP_DEBUG(
         get_node()->get_logger(), "Command Module %zu: Steering command %.2f, Wheel command %.2f",
-        i, final_steering_commands[i], final_wheel_velocity_commands[i]*wheel_saturation_scale_factor_);
-      
+        i, final_steering_commands[i],
+          final_wheel_velocity_commands[i] * wheel_saturation_scale_factor_);
+
       // Set the steering and wheel commands
-      module_handles_[i].steering_cmd_pos.get().set_value(final_steering_commands[i] );
+      module_handles_[i].steering_cmd_pos.get().set_value(final_steering_commands[i]);
       previoud_steering_commands_[i] = final_steering_commands[i];
       if (is_steering_aligned) {
-        module_handles_[i].wheel_cmd_vel.get().set_value(final_wheel_velocity_commands[i]* wheel_saturation_scale_factor_);
+        module_handles_[i].wheel_cmd_vel.get().set_value(final_wheel_velocity_commands[i] *
+            wheel_saturation_scale_factor_);
       } else {
         // If steering is not aligned, stop the wheel
         module_handles_[i].wheel_cmd_vel.get().set_value(0.0);
         RCLCPP_WARN(
-          get_node()->get_logger(),"Steering not aligned, stopping wheel. final_steering_commands: %f",
+          get_node()->get_logger(),
+            "Steering not aligned, stopping wheel. final_steering_commands: %f",
           final_steering_commands[i]);
       }
     }
