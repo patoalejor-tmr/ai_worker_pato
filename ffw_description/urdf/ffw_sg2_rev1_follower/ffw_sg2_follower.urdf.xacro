@@ -65,50 +65,82 @@
   <joint name="$(arg prefix)joint1_steer" type="revolute">
       <parent link="$(arg prefix)base_link"/>
       <child link="$(arg prefix)link_1"/>
-      <origin xyz="0.2135 0.2554 0" rpy="0 0 0"/>
+      <origin xyz="0.1371 0.2554 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1" lower="${-pi*100.0}" upper="${pi*100.0}" />
+      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
   <joint name="$(arg prefix)joint1_drive" type="revolute">
       <parent link="$(arg prefix)link_1"/>
       <child link="$(arg prefix)link_1_wheel"/>
-      <origin xyz="0 0 -0.0825" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1" lower="${-pi*100.0}" upper="${pi*100.0}" />
+      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
   <link name="$(arg prefix)link_1_wheel"/>
 
-  <link name="$(arg prefix)link_2"/>
-  <joint name="$(arg prefix)joint2_steer" type="revolute">
+  <joint name="$(arg prefix)right_wheel_steer" type="revolute">
       <parent link="$(arg prefix)base_link"/>
-      <child link="$(arg prefix)link_2"/>
-      <origin xyz="0.2135 -0.2554 0" rpy="0 0 0"/>
+      <child link="$(arg prefix)right_wheel_steer_link"/>
+      <origin xyz="0.1371 -0.2554 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1" lower="${-pi*100.0}" upper="${pi*100.0}" />
+      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
-  <joint name="$(arg prefix)joint2_drive" type="revolute">
-      <parent link="$(arg prefix)link_2"/>
-      <child link="$(arg prefix)link_2_wheel"/>
-      <origin xyz="0 0 -0.0825" rpy="0 0 0"/>
+  <link name="$(arg prefix)right_wheel_steer_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/right_wheel_steer_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/right_wheel_steer_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="$(arg prefix)right_wheel_drive" type="revolute">
+      <parent link="$(arg prefix)right_wheel_steer_link"/>
+      <child link="$(arg prefix)right_wheel_drive_link"/>
+      <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1" lower="${-pi*100.0}" upper="${pi*100.0}" />
+      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
-  <link name="$(arg prefix)link_2_wheel"/>
+  <link name="$(arg prefix)right_wheel_drive_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/right_wheel_drive_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${meshes_file_direction}/right_wheel_drive_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
 
   <link name="$(arg prefix)link_3"/>
   <joint name="$(arg prefix)joint3_steer" type="revolute">
       <parent link="$(arg prefix)base_link"/>
       <child link="$(arg prefix)link_3"/>
-      <origin xyz="-0.2135 0 0" rpy="0 0 0"/>
+      <origin xyz="-0.2899 0 0.27555" rpy="0 0 0"/>
       <axis xyz="0 0 1" />
-      <limit velocity="4.8" effort="1" lower="${-pi*100.0}" upper="${pi*100.0}" />
+      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
   <joint name="$(arg prefix)joint3_drive" type="revolute">
       <parent link="$(arg prefix)link_3"/>
       <child link="$(arg prefix)link_3_wheel"/>
-      <origin xyz="0 0 -0.0825" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.18905" rpy="0 0 0"/>
       <axis xyz="0 1 0" />
-      <limit velocity="4.8" effort="1" lower="${-pi*100.0}" upper="${pi*100.0}" />
+      <limit velocity="4.8" effort="1" lower="${-pi*6.0}" upper="${pi*6.0}" />
   </joint>
   <link name="$(arg prefix)link_3_wheel"/>
 
