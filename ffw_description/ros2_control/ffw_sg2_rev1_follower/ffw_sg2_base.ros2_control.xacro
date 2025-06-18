@@ -9,51 +9,40 @@
       </xacro:if>
       <xacro:unless value="$(arg use_sim)">
         <hardware>
-          <plugin>dynamixel_hardware_interface/DynamixelHardware</plugin>
-          <param name="port_name">/dev/ttyUSB0</param>
-          <param name="baud_rate">4000000</param>
-          <param name="dynamixel_model_folder">/param/dxl_model</param>
-          <param name="number_of_joints">6</param>
-          <param name="number_of_transmissions">6</param>
-          <param name="disable_torque_at_init">true</param>
-          <param name="transmission_to_joint_matrix">
-            1, 0, 0, 0, 0, 0,
-            0, 1, 0, 0, 0, 0,
-            0, 0, 1, 0, 0, 0,
-            0, 0, 0, 1, 0, 0,
-            0, 0, 0, 0, 1, 0,
-            0, 0, 0, 0, 0, 1
-          </param>
-          <param name="joint_to_transmission_matrix">
-            1, 0, 0, 0, 0, 0,
-            0, 1, 0, 0, 0, 0,
-            0, 0, 1, 0, 0, 0,
-            0, 0, 0, 1, 0, 0,
-            0, 0, 0, 0, 1, 0,
-            0, 0, 0, 0, 0, 1
-          </param>
-          <param name="dynamixel_state_pub_msg_name">dynamixel_hardware_interface/dxl_state</param>
-          <param name="get_dynamixel_data_srv_name">dynamixel_hardware_interface/get_dxl_data</param>
-          <param name="set_dynamixel_data_srv_name">dynamixel_hardware_interface/set_dxl_data</param>
-          <param name="reboot_dxl_srv_name">dynamixel_hardware_interface/reboot_dxl</param>
-          <param name="set_dxl_torque_srv_name">dynamixel_hardware_interface/set_dxl_torque</param>
-          <param name="error_timeout_ms">500</param>
+          <xacro:if value="${use_fake_hardware}">
+            <plugin>fake_components/GenericSystem</plugin>
+            <param name="fake_sensor_commands">${fake_sensor_commands}</param>
+            <param name="state_following_offset">0.0</param>
+          </xacro:if>
+          <xacro:unless value="${use_fake_hardware}">
+            <plugin>dynamixel_hardware_interface/DynamixelHardware</plugin>
+            <param name="port_name">/dev/ttyUSB0</param>
+            <param name="baud_rate">4000000</param>
+            <param name="dynamixel_model_folder">/param/dxl_model</param>
+            <param name="number_of_joints">3</param>
+            <param name="number_of_transmissions">3</param>
+            <param name="disable_torque_at_init">true</param>
+            <param name="transmission_to_joint_matrix">
+              1, 0, 0,
+              0, 1, 0,
+              0, 0, 1
+            </param>
+            <param name="joint_to_transmission_matrix">
+              1, 0, 0,
+              0, 1, 0,
+              0, 0, 1
+            </param>
+            <param name="dynamixel_state_pub_msg_name">dynamixel_hardware_interface/dxl_state</param>
+            <param name="get_dynamixel_data_srv_name">dynamixel_hardware_interface/get_dxl_data</param>
+            <param name="set_dynamixel_data_srv_name">dynamixel_hardware_interface/set_dxl_data</param>
+            <param name="reboot_dxl_srv_name">dynamixel_hardware_interface/reboot_dxl</param>
+            <param name="set_dxl_torque_srv_name">dynamixel_hardware_interface/set_dxl_torque</param>
+            <param name="error_timeout_ms">500</param>
+          </xacro:unless>
         </hardware>
       </xacro:unless>
-      <joint name="left_wheel_steer">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
-      </joint>
       <joint name="left_wheel_drive">
         <command_interface name="velocity"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
-      </joint>
-      <joint name="right_wheel_steer">
-        <command_interface name="position"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
@@ -64,39 +53,12 @@
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
-      <joint name="rear_wheel_steer">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
-      </joint>
       <joint name="rear_wheel_drive">
         <command_interface name="velocity"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
-      <gpio name="dxl101">
-        <param name="type">virtual_dxl</param>
-        <param name="ID">101</param>
-        <param name="model_num">620</param>
-        <param name="comm_id">200</param>
-        <command_interface name="Goal Position"/>
-        <state_interface name="Present Current"/>
-        <state_interface name="Present Velocity"/>
-        <state_interface name="Present Position"/>
-        <param name="Drive Mode">5</param>
-        <param name="Operating Mode">3</param>
-        <param name="Velocity Limit">12592</param>
-        <param name="Acceleration Limit">125920</param>
-        <param name="Min Position Limit">-1572864</param>
-        <param name="Max Position Limit">1572864</param>
-        <param name="Return Delay Time">0</param>
-        <param name="Profile Velocity">12592</param>
-        <param name="Profile Acceleration">12592</param>
-        <param name="Profile Acceleration Time">300</param>
-        <param name="Profile Time">1000</param>
-      </gpio>
       <gpio name="dxl102">
         <param name="type">virtual_dxl</param>
         <param name="ID">102</param>
@@ -119,27 +81,6 @@
         <param name="Velocity FF Gain">50000</param>
         <param name="Profile Acceleration">100</param>
       </gpio>
-      <gpio name="dxl103">
-        <param name="type">virtual_dxl</param>
-        <param name="ID">103</param>
-        <param name="model_num">621</param>
-        <param name="comm_id">200</param>
-        <command_interface name="Goal Position"/>
-        <state_interface name="Present Current"/>
-        <state_interface name="Present Velocity"/>
-        <state_interface name="Present Position"/>
-        <param name="Drive Mode">5</param>
-        <param name="Operating Mode">3</param>
-        <param name="Velocity Limit">12592</param>
-        <param name="Acceleration Limit">125920</param>
-        <param name="Min Position Limit">-1572864</param>
-        <param name="Max Position Limit">1572864</param>
-        <param name="Return Delay Time">0</param>
-        <param name="Profile Velocity">12592</param>
-        <param name="Profile Acceleration">12592</param>
-        <param name="Profile Acceleration Time">300</param>
-        <param name="Profile Time">1000</param>
-      </gpio>
       <gpio name="dxl104">
         <param name="type">virtual_dxl</param>
         <param name="ID">104</param>
@@ -161,27 +102,6 @@
         <param name="Velocity P Gain">100000</param>
         <param name="Velocity FF Gain">50000</param>
         <param name="Profile Acceleration">100</param>
-      </gpio>
-      <gpio name="dxl105">
-        <param name="type">virtual_dxl</param>
-        <param name="ID">105</param>
-        <param name="model_num">622</param>
-        <param name="comm_id">200</param>
-        <command_interface name="Goal Position"/>
-        <state_interface name="Present Current"/>
-        <state_interface name="Present Velocity"/>
-        <state_interface name="Present Position"/>
-        <param name="Drive Mode">5</param>
-        <param name="Operating Mode">3</param>
-        <param name="Velocity Limit">12592</param>
-        <param name="Acceleration Limit">125920</param>
-        <param name="Min Position Limit">-1572864</param>
-        <param name="Max Position Limit">1572864</param>
-        <param name="Return Delay Time">0</param>
-        <param name="Profile Velocity">12592</param>
-        <param name="Profile Acceleration">12592</param>
-        <param name="Profile Acceleration Time">300</param>
-        <param name="Profile Time">1000</param>
       </gpio>
       <gpio name="dxl106">
         <param name="type">virtual_dxl</param>
