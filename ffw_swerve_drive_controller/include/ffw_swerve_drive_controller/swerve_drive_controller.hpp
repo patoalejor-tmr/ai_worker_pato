@@ -154,7 +154,6 @@ protected:
   std::vector<double> module_wheel_speed_limit_upper_;
   bool enabled_steering_flip_;
   bool enabled_steering_angular_velocity_limit_;
-  bool enabled_sync_steering_angular_velocity_;
   bool enabled_steering_angular_limit_;
   bool enabled_open_loop_;
   uint is_rotation_direction_;

@@ -245,8 +245,6 @@ CallbackReturn SwerveDriveController::on_configure(
     enabled_open_loop_ = get_node()->get_parameter("enabled_open_loop").as_bool();
     enabled_steering_angular_velocity_limit_ =
       get_node()->get_parameter("enabled_steering_angular_velocity_limit").as_bool();
-    enabled_sync_steering_angular_velocity_ =
-      get_node()->get_parameter("enabled_sync_steering_angular_velocity_").as_bool();
     enabled_steering_angular_limit_ =
       get_node()->get_parameter("enabled_steering_angular_limit").as_bool();
     steering_alignment_angle_error_threshold_ = get_node()->get_parameter(

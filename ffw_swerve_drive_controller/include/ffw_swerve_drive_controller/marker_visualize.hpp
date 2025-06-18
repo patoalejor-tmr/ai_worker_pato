@@ -94,12 +94,21 @@ private:
     int id, const rclcpp::Time & stamp, const std::string & ns,
     const std::vector<geometry_msgs::msg::Point> & points,
     const std_msgs::msg::ColorRGBA & color,
-    double scale_x = LINE_WIDTH);SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_
+    double scale_x = LINE_WIDTH);
+
+  visualization_msgs::msg::Marker create_sphere_marker(
+    int id, const rclcpp::Time & stamp, const std::string & ns,
+    const geometry_msgs::msg::Point & position,
+    double radius,
+    const std_msgs::msg::ColorRGBA & color);
+
+  visualization_msgs::msg::Marker create_text_marker(
     int id, const rclcpp::Time & stamp, const std::string & ns,
     const std::string & text,
     const geometry_msgs::msg::Point & position,
     const std_msgs::msg::ColorRGBA & color,
     double scale_z);
+
 
   visualization_msgs::msg::Marker create_cube_marker(
     int id, const rclcpp::Time & stamp, const std::string & ns,
