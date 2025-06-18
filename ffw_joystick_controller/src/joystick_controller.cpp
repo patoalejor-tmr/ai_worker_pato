@@ -84,9 +84,9 @@ void JoystickController::joint_states_callback(const sensor_msgs::msg::JointStat
 controller_interface::return_type JoystickController::update(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
-  if (!has_joint_states_) {
-    return controller_interface::return_type::OK;
-  }
+  // if (!has_joint_states_) {
+  //   return controller_interface::return_type::OK;
+  // }
   // flag to prevent trajectory publish when swerve mode is on
   bool swerve_mode = (current_mode_ == "swerve");
 
@@ -189,47 +189,48 @@ controller_interface::return_type JoystickController::update(
       }
     }
 
-    // no trajectory publish when swerve mode is off
-    if (!swerve_mode) {
-      if (!current_joint_states_.name.empty() && !controlled_joints.empty()) {
-        auto trajectory_msg = trajectory_msgs::msg::JointTrajectory();
-        trajectory_msg.header.stamp = rclcpp::Time(0);
-        trajectory_msg.joint_names = controlled_joints;
+    // joint_trajectory publish
+    if (!current_joint_states_.name.empty() && !controlled_joints.empty()) {
+      auto trajectory_msg = trajectory_msgs::msg::JointTrajectory();
+      trajectory_msg.header.stamp = rclcpp::Time(0);
+      trajectory_msg.joint_names = controlled_joints;
 
-        trajectory_msgs::msg::JointTrajectoryPoint point;
-        point.time_from_start = rclcpp::Duration(0, 0);
+      trajectory_msgs::msg::JointTrajectoryPoint point;
+      point.time_from_start = rclcpp::Duration(0, 0);
 
-        if (any_sensorxel_joy_active) {
-          for (size_t i = 0; i < controlled_joints.size(); ++i) {
-            const auto & joint_name = controlled_joints[i];
-            auto it = std::find(current_joint_states_.name.begin(),
-                current_joint_states_.name.end(), joint_name);
-            if (it != current_joint_states_.name.end()) {
-              size_t index = std::distance(current_joint_states_.name.begin(), it);
-              double current_position = current_joint_states_.position[index];
-              double sensorxel_joy_value = (state_interface_types_.size() > 1 && i == 1) ?
-                normalized_values[1] : normalized_values[0];
-              double new_position = current_position + sensorxel_joy_value *
-                sensor_jog_scale_[sensor_name];
-              point.positions.push_back(new_position);
-              last_active_positions[i] = new_position;
-            }
+      if (swerve_mode) {
+        // swerve mode, publish zero position
+        point.positions.resize(controlled_joints.size(), 0.0);
+      } else if (any_sensorxel_joy_active) {
+        for (size_t i = 0; i < controlled_joints.size(); ++i) {
+          const auto & joint_name = controlled_joints[i];
+          auto it = std::find(current_joint_states_.name.begin(),
+              current_joint_states_.name.end(), joint_name);
+          if (it != current_joint_states_.name.end()) {
+            size_t index = std::distance(current_joint_states_.name.begin(), it);
+            double current_position = current_joint_states_.position[index];
+            double sensorxel_joy_value = (state_interface_types_.size() > 1 && i == 1) ?
+              normalized_values[1] : normalized_values[0];
+            double new_position = current_position + sensorxel_joy_value *
+              sensor_jog_scale_[sensor_name];
+            point.positions.push_back(new_position);
+            last_active_positions[i] = new_position;
           }
-        } else {
-          point.positions = last_active_positions;
         }
+      } else {
+        point.positions = last_active_positions;
+      }
 
-        point.velocities.resize(point.positions.size(), 0.0);
-        point.accelerations.resize(point.positions.size(), 0.0);
+      point.velocities.resize(point.positions.size(), 0.0);
+      point.accelerations.resize(point.positions.size(), 0.0);
 
-        trajectory_msg.points.push_back(point);
-        if (joint_trajectory_publisher) {
-          joint_trajectory_publisher->publish(trajectory_msg);
-        } else {
-          RCLCPP_WARN(get_node()->get_logger(),
-              "Joint trajectory publisher not found for sensor: %s",
-                      sensor_name.c_str());
-        }
+      trajectory_msg.points.push_back(point);
+      if (joint_trajectory_publisher) {
+        joint_trajectory_publisher->publish(trajectory_msg);
+      } else {
+        RCLCPP_WARN(get_node()->get_logger(),
+            "Joint trajectory publisher not found for sensor: %s",
+                    sensor_name.c_str());
       }
     }
     was_active_ = any_sensorxel_joy_active;
@@ -244,6 +245,13 @@ controller_interface::return_type JoystickController::update(
     twist_msg.linear.y = left_y / 3.0;
     twist_msg.angular.z = -right_y / 2.0;
     cmd_vel_pub_->publish(twist_msg);
+  } else {
+    // swerve mode is off, publish zero twist
+    geometry_msgs::msg::Twist zero_twist;
+    zero_twist.linear.x = 0.0;
+    zero_twist.linear.y = 0.0;
+    zero_twist.angular.z = 0.0;
+    cmd_vel_pub_->publish(zero_twist);
   }
 
   // Optionally publish sensorxel_joy values (flattened)
