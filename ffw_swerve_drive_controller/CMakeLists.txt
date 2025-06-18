@@ -23,7 +23,6 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   sensor_msgs
   visualization_msgs
   rcpputils
-  rcppmath
 )
 
 find_package(ament_cmake REQUIRED)
@@ -49,10 +48,39 @@ add_library(ffw_swerve_drive_controller
 target_compile_features(ffw_swerve_drive_controller PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_include_directories(ffw_swerve_drive_controller PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:include>
+  ${controller_interface_INCLUDE_DIRS}
+  ${hardware_interface_INCLUDE_DIRS}
+  ${nav_msgs_INCLUDE_DIRS}
+  ${pluginlib_INCLUDE_DIRS}
+  ${rclcpp_INCLUDE_DIRS}
+  ${rclcpp_lifecycle_INCLUDE_DIRS}
+  ${realtime_tools_INCLUDE_DIRS}
+  ${std_srvs_INCLUDE_DIRS}
+  ${tf2_INCLUDE_DIRS}
+  ${tf2_geometry_msgs_INCLUDE_DIRS}
+  ${tf2_msgs_INCLUDE_DIRS}
+  ${sensor_msgs_INCLUDE_DIRS}
+  ${visualization_msgs_INCLUDE_DIRS}
+  ${rcpputils_INCLUDE_DIRS}
+)
 
 target_link_libraries(ffw_swerve_drive_controller PUBLIC
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+  controller_interface::controller_interface
+  hardware_interface::hardware_interface
+  ${generate_parameter_library_TARGETS}
+  ${nav_msgs_TARGETS}
+  pluginlib::pluginlib
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
+  realtime_tools::realtime_tools
+  ${std_srvs_TARGETS}
+  tf2::tf2
+  tf2_geometry_msgs::tf2_geometry_msgs
+  ${tf2_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  ${visualization_msgs_TARGETS}
+  rcpputils::rcpputils
   swerve_drive_controller_parameter
 )
 
