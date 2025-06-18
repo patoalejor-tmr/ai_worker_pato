@@ -131,7 +131,7 @@ private:
   size_t num_modules_ = 0;
   rclcpp::Duration marker_lifetime_;
 
-  // 고정 ID 할당
+  // Fixed ID allocation
   const int ROBOT_VEL_ARROW_ID = 0;
   const int ROBOT_VEL_TEXT_ID = 1;
   const int TARGET_ICR_POINT_ID = 100;

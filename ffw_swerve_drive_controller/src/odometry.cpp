@@ -58,9 +58,9 @@ void Odometry::init(const rclcpp::Time & time, const std::array<double, 3> & bas
   timestamp_ = time;
   base_frame_offset_ = base_frame_offset;
 
-  linear_x_accumulator_ = rcppmath::RollingMeanAccumulator<double>(velocity_rolling_window_size_);
-  linear_y_accumulator_ = rcppmath::RollingMeanAccumulator<double>(velocity_rolling_window_size_);
-  angular_z_accumulator_ = rcppmath::RollingMeanAccumulator<double>(velocity_rolling_window_size_);
+  linear_x_accumulator_ = rcpputils::RollingMeanAccumulator<double>(velocity_rolling_window_size_);
+  linear_y_accumulator_ = rcpputils::RollingMeanAccumulator<double>(velocity_rolling_window_size_);
+  angular_z_accumulator_ = rcpputils::RollingMeanAccumulator<double>(velocity_rolling_window_size_);
 }
 
 void Odometry::setModuleParams(
