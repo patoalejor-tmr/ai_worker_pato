@@ -37,11 +37,11 @@ generate_parameter_library(swerve_drive_controller_parameter
   config/swerve_drive_controller_parameter.yaml
 )
 
-add_library(ffw_swerve_drive_controller 
+add_library(ffw_swerve_drive_controller
   SHARED
   src/swerve_drive_controller.cpp
   src/odometry.cpp
-  src/marker_visualize.cpp 
+  src/marker_visualize.cpp
   src/speed_limiter.cpp
 )
 target_compile_features(ffw_swerve_drive_controller PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
