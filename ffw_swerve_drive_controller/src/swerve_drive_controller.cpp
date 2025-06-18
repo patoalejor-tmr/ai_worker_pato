@@ -299,7 +299,7 @@ CallbackReturn SwerveDriveController::on_configure(
       params_.angular.z.max_velocity, params_.angular.z.min_acceleration,
       params_.angular.z.max_acceleration, params_.angular.z.min_jerk, params_.angular.z.max_jerk);
   } catch (const std::exception & e) {
-    RCLCPP_FATAL(logger,"Exception during parameter reading: %s", e.what());
+    RCLCPP_FATAL(logger, "Exception during parameter reading: %s", e.what());
     return CallbackReturn::ERROR;
   }
 
@@ -996,7 +996,7 @@ controller_interface::return_type SwerveDriveController::update(
       }
     } catch (const std::exception & e) {
       RCLCPP_ERROR_THROTTLE(
-        get_node()->get_logger(), 
+        get_node()->get_logger(),
         *get_node()->get_clock(), 1000,
         "Exception reading state for module %zu steering: %s", i, e.what());
       continue;
