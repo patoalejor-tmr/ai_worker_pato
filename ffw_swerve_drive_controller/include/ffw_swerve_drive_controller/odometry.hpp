@@ -26,7 +26,7 @@
 #include <string>
 
 #include "rclcpp/time.hpp"
-#include "rcppmath/rolling_mean_accumulator.hpp"
+#include "rcpputils/rolling_mean_accumulator.hpp"
 
 
 namespace ffw_swerve_drive_controller
@@ -74,7 +74,7 @@ public:
 
 private:
 // \note The versions conditioning is added here to support the source-compatibility with Humble
-  using RollingMeanAccumulator = rcppmath::RollingMeanAccumulator<double>;
+  using RollingMeanAccumulator = rcpputils::RollingMeanAccumulator<double>;
 
   rclcpp::Time timestamp_;
   std::array<double, 3> base_frame_offset_;

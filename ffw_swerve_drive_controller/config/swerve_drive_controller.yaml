@@ -12,7 +12,7 @@ controller_manager:
 
 ffw_swerve_drive_controller:
   ros__parameters:
-    steering_joint_names: ["steering_front_left_joint", "steering_front_right_joint", "steering_rear_joint"]  
+    steering_joint_names: ["steering_front_left_joint", "steering_front_right_joint", "steering_rear_joint"]
     wheel_joint_names: ["wheel_front_left_joint", "wheel_front_right_joint", "wheel_rear_joint"]
     wheel_radius: 0.05 # [m]
 
@@ -31,7 +31,7 @@ ffw_swerve_drive_controller:
 
     # odometry
     odom_solver_method: "svd"  # "pseudo_inverse", "qr", "svd"
-    odom_source: "feedback"  # "command" or "feedback", Choose if open-loop or not (feedback) is used for odometry calculation. 
+    odom_source: "feedback"  # "command" or "feedback", Choose if open-loop or not (feedback) is used for odometry calculation.
     base_frame_id: "base_link"
     odom_frame_id: "odom"
     enable_odom_tf: true
@@ -41,7 +41,7 @@ ffw_swerve_drive_controller:
 
     # visualization
     enable_visualization: true
-    visualization_marker_topic: "swerve_visualization_markers" 
+    visualization_marker_topic: "swerve_visualization_markers"
     visualization_update_time: 0.10 # [sec]
 
     # Velocity and acceleration limits
