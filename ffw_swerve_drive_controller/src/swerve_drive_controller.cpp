@@ -83,6 +83,7 @@ CallbackReturn SwerveDriveController::on_init()
     auto_declare<bool>("enabled_steering_flip", false);
     auto_declare<bool>("enabled_open_loop", false);
     auto_declare<bool>("enabled_steering_angular_velocity_limit", false);
+    auto_declare<bool>("enabled_sync_steering_angular_velocity", false);
     auto_declare<bool>("enabled_steering_angular_limit", true);
     auto_declare<double>("steering_angular_velocity_limit", 0.05);
     auto_declare<double>("steering_alignment_angle_error_threshold", 0.1);
@@ -244,6 +245,8 @@ CallbackReturn SwerveDriveController::on_configure(
     enabled_open_loop_ = get_node()->get_parameter("enabled_open_loop").as_bool();
     enabled_steering_angular_velocity_limit_ =
       get_node()->get_parameter("enabled_steering_angular_velocity_limit").as_bool();
+    enabled_sync_steering_angular_velocity_ =
+      get_node()->get_parameter("enabled_sync_steering_angular_velocity_").as_bool();
     enabled_steering_angular_limit_ =
       get_node()->get_parameter("enabled_steering_angular_limit").as_bool();
     steering_alignment_angle_error_threshold_ = get_node()->get_parameter(
@@ -735,7 +738,6 @@ controller_interface::return_type SwerveDriveController::update(
 
   // Direct Joint Commands
   if (enable_direct_joint_commands_) {
-    // direct_joint_control(time, period);
     return controller_interface::return_type::OK;
   }
 
@@ -1039,17 +1041,6 @@ controller_interface::return_type SwerveDriveController::update(
             optimized_steering_angle = normalize_angle(target_steering_joint_angle + M_PI);
             wheel_rotation_direction = -1.0;
             is_steering_flipped = true;
-            RCLCPP_INFO(
-              get_node()->get_logger(),
-              "Module %zu: Limited Flipping steering angle from "
-              "%.2f to %.2f (angle diff %.2f rad).",
-              i, target_steering_joint_angle, optimized_steering_angle, angle_diff);
-          } else {
-            RCLCPP_WARN(
-              get_node()->get_logger(),
-              "Module %zu: Limited Flipping steering angle would result in "
-              "out-of-bounds angle %.2f.",
-              i, normalize_angle(target_steering_joint_angle + M_PI));
           }
         }
       }
@@ -1271,8 +1262,7 @@ controller_interface::return_type SwerveDriveController::update(
       }
     }
   }
-  wheel_saturation_scale_factor_ = 1.0;  // initialize the scale factor, re-calcuate it in the
-                                         // "Limit the wheel velocity command"
+  wheel_saturation_scale_factor_ = 1.0;
 
   // --- 6. publish odometry message and TF and joint commadns and marker visualization---
   tf2::Quaternion orientation;

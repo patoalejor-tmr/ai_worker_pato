@@ -94,15 +94,7 @@ private:
     int id, const rclcpp::Time & stamp, const std::string & ns,
     const std::vector<geometry_msgs::msg::Point> & points,
     const std_msgs::msg::ColorRGBA & color,
-    double scale_x = LINE_WIDTH);
-
-  visualization_msgs::msg::Marker create_sphere_marker(
-    int id, const rclcpp::Time & stamp, const std::string & ns,
-    const geometry_msgs::msg::Point & position,
-    double radius,
-    const std_msgs::msg::ColorRGBA & color);
-
-  visualization_msgs::msg::Marker create_text_marker(
+    double scale_x = LINE_WIDTH);SWERVE_DRIVE_CONTROLLER__MARKER_VISUALIZE_HPP_
     int id, const rclcpp::Time & stamp, const std::string & ns,
     const std::string & text,
     const geometry_msgs::msg::Point & position,
@@ -131,7 +123,7 @@ private:
   size_t num_modules_ = 0;
   rclcpp::Duration marker_lifetime_;
 
-  // Fixed ID allocation
+  // 고정 ID 할당
   const int ROBOT_VEL_ARROW_ID = 0;
   const int ROBOT_VEL_TEXT_ID = 1;
   const int TARGET_ICR_POINT_ID = 100;
