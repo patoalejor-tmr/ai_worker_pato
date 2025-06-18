@@ -23,6 +23,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   sensor_msgs
   visualization_msgs
   rcpputils
+  rcppmath
 )
 
 find_package(ament_cmake REQUIRED)
@@ -49,11 +50,11 @@ target_compile_features(ffw_swerve_drive_controller PUBLIC c_std_99 cxx_std_17) 
 target_include_directories(ffw_swerve_drive_controller PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(
-  ffw_swerve_drive_controller
+
+target_link_libraries(ffw_swerve_drive_controller PUBLIC
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
+  swerve_drive_controller_parameter
 )
-target_link_libraries(ffw_swerve_drive_controller swerve_drive_controller_parameter)
 
 # Export the plugin definition file
 pluginlib_export_plugin_description_file(controller_interface ffw_swerve_drive_controller.xml) # Use your XML filename
