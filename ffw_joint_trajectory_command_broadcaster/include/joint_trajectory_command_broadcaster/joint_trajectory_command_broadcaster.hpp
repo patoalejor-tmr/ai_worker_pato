@@ -30,7 +30,6 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "urdf/model.h"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
-#include "std_msgs/msg/string.hpp"
 
 namespace joint_trajectory_command_broadcaster
 {
