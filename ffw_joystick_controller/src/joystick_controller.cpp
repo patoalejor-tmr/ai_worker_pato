@@ -84,9 +84,9 @@ void JoystickController::joint_states_callback(const sensor_msgs::msg::JointStat
 controller_interface::return_type JoystickController::update(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
-  // if (!has_joint_states_) {
-  //   return controller_interface::return_type::OK;
-  // }
+  if (!has_joint_states_) {
+    return controller_interface::return_type::OK;
+  }
   // flag to prevent trajectory publish when swerve mode is on
   bool swerve_mode = (current_mode_ == "swerve");
 
@@ -199,8 +199,8 @@ controller_interface::return_type JoystickController::update(
       point.time_from_start = rclcpp::Duration(0, 0);
 
       if (swerve_mode) {
-        // swerve mode, publish zero position
-        point.positions.resize(controlled_joints.size(), 0.0);
+        // swerve mode, maintain last active positions instead of zero
+        point.positions = last_active_positions;
       } else if (any_sensorxel_joy_active) {
         for (size_t i = 0; i < controlled_joints.size(); ++i) {
           const auto & joint_name = controlled_joints[i];
