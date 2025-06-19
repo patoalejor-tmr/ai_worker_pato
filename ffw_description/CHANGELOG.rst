@@ -4,7 +4,8 @@ Changelog for package ffw_description
 
 1.0.10 (2025-06-16)
 ------------------
-* None
+* Support ffw_sg2_rev1 Model
+* Contributors: Woojin Wie
 
 1.0.9 (2025-06-09)
 ------------------
