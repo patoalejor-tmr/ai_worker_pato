@@ -665,8 +665,8 @@ CallbackReturn SwerveDriveController::on_deactivate(
       // Use module_handles if available and initialized correctly
       if (!module_handles_.empty() && i < module_handles_.size()) {
         // Optionally set steering to current pos
-        auto current_steering_get_value = module_handles_[i].steering_state_pos.get().get_optional();
-        if(!module_handles_[i].steering_cmd_pos.get().set_value(current_steering_get_value.value())){
+        auto get_steering_val = module_handles_[i].steering_state_pos.get().get_optional();
+        if(!module_handles_[i].steering_cmd_pos.get().set_value(get_steering_val.value())){
           RCLCPP_WARN(get_node()->get_logger(), "Failed to set value for interface %s",
           module_handles_[i].steering_cmd_pos.get().get_name().c_str());
         }
@@ -887,18 +887,18 @@ controller_interface::return_type SwerveDriveController::update(
         all_states_read = false;
         break;
       }
-      auto current_steering_get_value = module_handles_[i].steering_state_pos.get().get_optional();
-      auto current_wheel_get_value = module_handles_[i].wheel_state_vel.get().get_optional();
+      auto cur_steering_get_val = module_handles_[i].steering_state_pos.get().get_optional();
+      auto cur_wheel_get_val = module_handles_[i].wheel_state_vel.get().get_optional();
 
       if(enabled_open_loop_) {
         current_steering_positions = previoud_steering_commands_[i];
       } else {
-        current_steering_positions = current_steering_get_value.value();
+        current_steering_positions = cur_steering_get_val.value();
       }
 
       corrected_steering_positions.push_back(
         current_steering_positions + module_handles_[i].angle_offset);
-      current_wheel_velocities.push_back(current_wheel_get_value.value());
+      current_wheel_velocities.push_back(cur_wheel_get_val.value());
     } catch (const std::exception & e) {
       RCLCPP_ERROR_THROTTLE(
         get_node()->get_logger(),
@@ -982,10 +982,10 @@ controller_interface::return_type SwerveDriveController::update(
         current_steering_angle = previoud_steering_commands_[i];
       } else {
         // Read the current steering angle from the hardware interface
-        auto current_steering_get_value = module_handles_[i].steering_state_pos.get().get_optional();
-        auto current_wheel_get_value = module_handles_[i].wheel_state_vel.get().get_optional();
-        current_steering_angle = current_steering_get_value.value();
-        current_wheel_velocity = current_wheel_get_value.value();
+        auto cur_steering_get_val = module_handles_[i].steering_state_pos.get().get_optional();
+        auto cur_wheel_get_val = module_handles_[i].wheel_state_vel.get().get_optional();
+        current_steering_angle = cur_steering_get_val.value();
+        current_wheel_velocity = cur_wheel_get_val.value();
       }
     } catch (const std::exception & e) {
       RCLCPP_ERROR_THROTTLE(
@@ -1201,8 +1201,8 @@ controller_interface::return_type SwerveDriveController::update(
       if (module_handles_.empty() || i >= module_handles_.size()) {continue;}
       double current_steering_angle_for_hold = 0.0;
       try {
-        auto current_steering_get_value = module_handles_[i].steering_state_pos.get().get_optional();
-        current_steering_angle_for_hold = current_steering_get_value.value();
+        auto cur_steering_get_val = module_handles_[i].steering_state_pos.get().get_optional();
+        current_steering_angle_for_hold = cur_steering_get_val.value();
 
         if(!module_handles_[i].steering_cmd_pos.get().set_value(current_steering_angle_for_hold)){
           RCLCPP_WARN(get_node()->get_logger(), "Failed to set value for interface %s",
