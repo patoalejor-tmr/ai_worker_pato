@@ -41,11 +41,11 @@ Odometry::Odometry(size_t velocity_rolling_window_size)
   velocity_in_base_frame_angular_z_(0.0),
   num_modules_(0),
   wheel_radius_(0.0),
+  solver_method_(OdomSolverMethod::SVD),
   velocity_rolling_window_size_(velocity_rolling_window_size),
   linear_x_accumulator_(velocity_rolling_window_size),
   linear_y_accumulator_(velocity_rolling_window_size),
-  angular_z_accumulator_(velocity_rolling_window_size),
-  solver_method_(OdomSolverMethod::SVD)
+  angular_z_accumulator_(velocity_rolling_window_size)
 {
   base_frame_offset_.fill(0.0);
 }
