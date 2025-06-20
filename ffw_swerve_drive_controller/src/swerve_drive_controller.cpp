@@ -117,7 +117,8 @@ CallbackReturn SwerveDriveController::on_init()
     param_listener_ = std::make_shared<ParamListener>(get_node());
     params_ = param_listener_->get_params();
   } catch (const std::exception & e) {
-    RCLCPP_FATAL(get_node()->get_logger(),
+    RCLCPP_FATAL(
+      get_node()->get_logger(),
       "Exception during parameter declaration: %s",
       e.what());
     return CallbackReturn::ERROR;
@@ -316,8 +317,7 @@ CallbackReturn SwerveDriveController::on_configure(
   {
     RCLCPP_FATAL(
       logger,
-      "Parameter array lengths do not match expected number of modules (%zu).",
-      "Check YAML configuration.",
+      "Parameter array lengths do not match expected number of modules (%ld).",
       num_modules_);
     RCLCPP_FATAL(
       logger,
@@ -666,13 +666,18 @@ CallbackReturn SwerveDriveController::on_deactivate(
       // Use module_handles if available and initialized correctly
       if (!module_handles_.empty() && i < module_handles_.size()) {
         // Optionally set steering to current pos
-        double current_pos = module_handles_[i].steering_state_pos.get().get_value();
-        module_handles_[i].steering_cmd_pos.get().set_value(current_pos);
+        auto current_steering_get_value =
+          module_handles_[i].steering_state_pos.get().get_optional();
+        if (!module_handles_[i].steering_cmd_pos.get().set_value(current_steering_get_value.value()))
+        {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "Failed to set value for interface %s",
+            module_handles_[i].steering_cmd_pos.get().get_name().c_str());
+        }
       } else {
         RCLCPP_WARN(
           get_node()->get_logger(),
-          "Module handles not available during deactivation for index %zu.",
-          " Attempting direct interface access.",
+          "Module handles not available during deactivation for index %ld.",
           i);
         // Fallback (less safe)
         for (auto & iface : command_interfaces_) {
@@ -680,7 +685,11 @@ CallbackReturn SwerveDriveController::on_deactivate(
           if (i < wheel_joint_names_.size() && iface.get_name() == wheel_joint_names_[i] &&
             iface.get_interface_name() == HW_IF_VELOCITY)
           {
-            iface.set_value(0.0);
+            if (!iface.set_value(0.0)) {
+              RCLCPP_WARN(
+                get_node()->get_logger(), "Failed to set value for interface %s",
+                iface.get_name().c_str());
+            }
             break;
           }
         }
@@ -774,11 +783,11 @@ controller_interface::return_type SwerveDriveController::update(
     const auto & current_cmd_vel = **current_cmd_vel_ptr;
 
     // Receive the new command velocity
-    if(target_vx_ != current_cmd_vel.linear.x ||
+    if (target_vx_ != current_cmd_vel.linear.x ||
       target_vy_ != current_cmd_vel.linear.y ||
       target_wz_ != current_cmd_vel.angular.z)
     {
-      RCLCPP_INFO(
+      RCLCPP_DEBUG(
         get_node()->get_logger(),
         "Received new command velocity: vx=%.2f, vy=%.2f, wz=%.2f",
         current_cmd_vel.linear.x, current_cmd_vel.linear.y, current_cmd_vel.angular.z);
@@ -793,7 +802,7 @@ controller_interface::return_type SwerveDriveController::update(
   }
 
   if (std::isnan(target_vx_) || std::isnan(target_vy_) || std::isnan(target_wz_)) {
-    RCLCPP_ERROR_THROTTLE(
+    RCLCPP_DEBUG_THROTTLE(
       get_node()->get_logger(), *get_node()->get_clock(), 5000,
       "Received NaN in target velocity (vx:%.2f, vy:%.2f, wz:%.2f). Setting targets to zero.",
       target_vx_, target_vy_, target_wz_);
@@ -820,8 +829,7 @@ controller_interface::return_type SwerveDriveController::update(
       // when previous_commands_ is empty or not initialized
       RCLCPP_WARN_THROTTLE(
         get_node()->get_logger(), *get_node()->get_clock(), 1000,
-        "Speed limiter: Not enough previous commands in history.",
-        " Assuming zero for past velocities.");
+        "Speed limiter: Not enough previous commands in history.");
     }
 
     // target_vx_, target_vy_, target_wz_ is the current command velocity (before limiting)
@@ -884,24 +892,18 @@ controller_interface::return_type SwerveDriveController::update(
         all_states_read = false;
         break;
       }
-      RCLCPP_DEBUG(
-        get_node()->get_logger(), "Current Steering='%s': %f",
-        module_handles_[i].steering_state_pos.get().get_name().c_str(),
-        module_handles_[i].steering_state_pos.get().get_value());
-      RCLCPP_DEBUG(
-        get_node()->get_logger(), "Current Wheel='%s': %f",
-        module_handles_[i].wheel_state_vel.get().get_name().c_str(),
-        module_handles_[i].wheel_state_vel.get().get_value());
+      auto current_steering_get_value = module_handles_[i].steering_state_pos.get().get_optional();
+      auto current_wheel_get_value = module_handles_[i].wheel_state_vel.get().get_optional();
 
-      if(enabled_open_loop_) {
+      if (enabled_open_loop_) {
         current_steering_positions = previoud_steering_commands_[i];
       } else {
-        current_steering_positions = module_handles_[i].steering_state_pos.get().get_value();
+        current_steering_positions = current_steering_get_value.value();
       }
 
       corrected_steering_positions.push_back(
         current_steering_positions + module_handles_[i].angle_offset);
-      current_wheel_velocities.push_back(module_handles_[i].wheel_state_vel.get().get_value());
+      current_wheel_velocities.push_back(current_wheel_get_value.value());
     } catch (const std::exception & e) {
       RCLCPP_ERROR_THROTTLE(
         get_node()->get_logger(),
@@ -911,12 +913,6 @@ controller_interface::return_type SwerveDriveController::update(
       break;
     }
   }
-  RCLCPP_DEBUG(
-    get_node()->get_logger(), "Current steering positions: %s, value: %f",
-    corrected_steering_positions.empty() ? "empty" : "valid", corrected_steering_positions[0]);
-  RCLCPP_DEBUG(
-    get_node()->get_logger(), "Current wheel velocities: %s, value: %f",
-    current_wheel_velocities.empty() ? "empty" : "valid", current_wheel_velocities[0]);
 
   // --- 3. update the odometry ---
   if (all_states_read) {
@@ -987,12 +983,15 @@ controller_interface::return_type SwerveDriveController::update(
     double current_wheel_velocity = 0.0;
     try {
       // Use const reference from ModuleHandles
-      if(enabled_open_loop_) {
+      if (enabled_open_loop_) {
         current_steering_angle = previoud_steering_commands_[i];
       } else {
         // Read the current steering angle from the hardware interface
-        current_steering_angle = module_handles_[i].steering_state_pos.get().get_value();
-        current_wheel_velocity = module_handles_[i].wheel_cmd_vel.get().get_value();
+        auto current_steering_get_value =
+          module_handles_[i].steering_state_pos.get().get_optional();
+        auto current_wheel_get_value = module_handles_[i].wheel_state_vel.get().get_optional();
+        current_steering_angle = current_steering_get_value.value();
+        current_wheel_velocity = current_wheel_get_value.value();
       }
     } catch (const std::exception & e) {
       RCLCPP_ERROR_THROTTLE(
@@ -1003,12 +1002,12 @@ controller_interface::return_type SwerveDriveController::update(
     }
 
     // 4.3.check if fliped steering is allowed
-    RCLCPP_DEBUG(get_node()->get_logger(),
-        "target_steering_joint_angle: %.2f, current_steering_angle: %.2f",
+    RCLCPP_DEBUG(
+      get_node()->get_logger(),
+      "target_steering_joint_angle: %.2f, current_steering_angle: %.2f",
       target_steering_joint_angle, current_steering_angle);
     double optimized_steering_angle = target_steering_joint_angle;
     double wheel_rotation_direction = 1.0;
-    bool is_steering_flipped = false;
 
     if (enabled_steering_flip_) {
       double angle_diff = shortest_angular_distance(
@@ -1016,13 +1015,12 @@ controller_interface::return_type SwerveDriveController::update(
         target_steering_joint_angle);
 
       if (std::fabs(angle_diff) > M_PI * 0.5) {
-        if(normalize_angle(target_steering_joint_angle + M_PI) > limit_lower &&
+        if (normalize_angle(target_steering_joint_angle + M_PI) > limit_lower &&
           normalize_angle(target_steering_joint_angle + M_PI) < limit_upper)
         {
           // Flip the steering angle by adding M_PI
           optimized_steering_angle = normalize_angle(target_steering_joint_angle + M_PI);
           wheel_rotation_direction = -1.0;
-          is_steering_flipped = true;
           RCLCPP_DEBUG(
             get_node()->get_logger(),
             "Module %zu: Flipping steering angle from %.2f to %.2f (angle diff %.2f rad).",
@@ -1034,16 +1032,15 @@ controller_interface::return_type SwerveDriveController::update(
             i, normalize_angle(target_steering_joint_angle + M_PI));
         }
       } else {
-        if(target_steering_joint_angle < limit_lower ||
+        if (target_steering_joint_angle < limit_lower ||
           target_steering_joint_angle > limit_upper)
         {
-          if(normalize_angle(target_steering_joint_angle + M_PI) > limit_lower &&
+          if (normalize_angle(target_steering_joint_angle + M_PI) > limit_lower &&
             normalize_angle(target_steering_joint_angle + M_PI) < limit_upper)
           {
             // Flip the steering angle by adding M_PI
             optimized_steering_angle = normalize_angle(target_steering_joint_angle + M_PI);
             wheel_rotation_direction = -1.0;
-            is_steering_flipped = true;
           }
         }
       }
@@ -1057,9 +1054,10 @@ controller_interface::return_type SwerveDriveController::update(
       is_no_limitation = true;
     } else if (limited_steering_cmd < limit_lower || limited_steering_cmd > limit_upper) {
       // Normal case
-      RCLCPP_ERROR(get_node()->get_logger(),
-          "Module %zu: Target steering angle %.2f outside limits [%.2f, %.2f]. Stopping.",
-      i, limited_steering_cmd, limit_lower, limit_upper);
+      RCLCPP_ERROR(
+        get_node()->get_logger(),
+        "Module %zu: Target steering angle %.2f outside limits [%.2f, %.2f]. Stopping.",
+        i, limited_steering_cmd, limit_lower, limit_upper);
       return controller_interface::return_type::ERROR;
     }
 
@@ -1071,46 +1069,27 @@ controller_interface::return_type SwerveDriveController::update(
         double max_allowed_steering_change_this_dt = steering_angular_velocity_limit_ *
           time_gap;
 
-        if(is_no_limitation) {
+        if (is_no_limitation) {
           // If no limitation, just use the optimized steering angle
 
           double absolute_current_steering_angle = std::fmod(current_steering_angle, 2.0 * M_PI);
 
           double desired_steering_change_rad =
-            shortest_angular_distance(absolute_current_steering_angle,
+            shortest_angular_distance(
+            absolute_current_steering_angle,
             limited_steering_cmd);
           double actual_steering_change_this_dt = std::clamp(
-              desired_steering_change_rad,
-              -max_allowed_steering_change_this_dt,
-              max_allowed_steering_change_this_dt
+            desired_steering_change_rad,
+            -max_allowed_steering_change_this_dt,
+            max_allowed_steering_change_this_dt
           );
 
           // If the desired steering change is larger than the maximum allowed change,
           optimized_steering_angle = current_steering_angle + actual_steering_change_this_dt;
 
-          /*if(optimized_steering_angle >= M_PI - 1e-1 || optimized_steering_angle <= -M_PI + 1e-1){
-            if(actual_steering_change_this_dt > 0.0){
-              is_rotation_direction_ = Rotation::CCW;
-              optimized_steering_angle = M_PI;
-              RCLCPP_INFO(
-                get_node()->get_logger(), "Module %zu: Rotation::CCW.",
-                i);
-            }
-            else if(actual_steering_change_this_dt < 0.0){
-              is_rotation_direction_ = Rotation::CW;
-              optimized_steering_angle = -M_PI;
-              RCLCPP_INFO(
-                get_node()->get_logger(), "Module %zu: Rotation::CW.",
-                i);
-            }
-            else{
-              RCLCPP_INFO(
-                get_node()->get_logger(), "Module %zu: Rotation::STOP.",
-                i);
-            }
-          }*/
         } else {
-          double desired_steering_change_rad = shortest_angular_distance(current_steering_angle,
+          double desired_steering_change_rad = shortest_angular_distance(
+            current_steering_angle,
             limited_steering_cmd);
 
           double actual_steering_change_this_dt = std::clamp(
@@ -1133,7 +1112,7 @@ controller_interface::return_type SwerveDriveController::update(
     try {
       // limit the wheel velocity command
       // until current steering angle is close to the target steering angle
-      if(fabs(current_wheel_velocity) >= steering_alignment_start_speed_error_threshold_) {
+      if (fabs(current_wheel_velocity) >= steering_alignment_start_speed_error_threshold_) {
         if (steering_alignment_angle_error_threshold_ <=
           fabs(shortest_angular_distance(current_steering_angle, limited_steering_cmd)))
         {
@@ -1172,13 +1151,14 @@ controller_interface::return_type SwerveDriveController::update(
           module_wheel_speed_limit_lower_[i],
           module_wheel_speed_limit_upper_[i]);
 
-        if(enabled_wheel_saturation_scaling_) {
-          wheel_saturation_scale_factor_ = std::min(wheel_saturation_scale_factor_,
-              clipped_wheel_vel_cmd / final_wheel_vel_cmd);
+        if (enabled_wheel_saturation_scaling_) {
+          wheel_saturation_scale_factor_ = std::min(
+            wheel_saturation_scale_factor_,
+            clipped_wheel_vel_cmd / final_wheel_vel_cmd);
           RCLCPP_WARN(
-              get_node()->get_logger(),
-              "min scale factor: %.2f, final_wheel_vel_cmd: %.2f, clipped_wheel_vel_cmd: %.2f",
-              wheel_saturation_scale_factor_, final_wheel_vel_cmd, clipped_wheel_vel_cmd);
+            get_node()->get_logger(),
+            "min scale factor: %.2f, final_wheel_vel_cmd: %.2f, clipped_wheel_vel_cmd: %.2f",
+            wheel_saturation_scale_factor_, final_wheel_vel_cmd, clipped_wheel_vel_cmd);
         } else {
           wheel_saturation_scale_factor_ = 1.0;
         }
@@ -1186,7 +1166,7 @@ controller_interface::return_type SwerveDriveController::update(
 
       RCLCPP_DEBUG(
         get_node()->get_logger(),
-          "Calculated Module %zu: Steering command %.2f, Wheel command %.2f",
+        "Calculated Module %zu: Steering command %.2f, Wheel command %.2f",
         i, optimized_steering_angle, final_wheel_vel_cmd);
 
       // joints commands
@@ -1199,8 +1179,16 @@ controller_interface::return_type SwerveDriveController::update(
         "Exception writing commands for module %zu: %s", i, e.what());
       try {
         // Attempt to set safe values
-        module_handles_[i].steering_cmd_pos.get().set_value(current_steering_angle);
-        module_handles_[i].wheel_cmd_vel.get().set_value(0.0);
+        if (!module_handles_[i].steering_cmd_pos.get().set_value(current_steering_angle)) {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "Failed to set value for interface %s",
+            module_handles_[i].steering_cmd_pos.get().get_name().c_str());
+        }
+        if (!module_handles_[i].wheel_cmd_vel.get().set_value(0.0)) {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "Failed to set value for interface %s",
+            module_handles_[i].wheel_cmd_vel.get().get_name().c_str());
+        }
 
         // joints commands
         final_steering_commands[i] = current_steering_angle;
@@ -1226,9 +1214,21 @@ controller_interface::return_type SwerveDriveController::update(
       if (module_handles_.empty() || i >= module_handles_.size()) {continue;}
       double current_steering_angle_for_hold = 0.0;
       try {
-        current_steering_angle_for_hold = module_handles_[i].steering_state_pos.get().get_value();
-        module_handles_[i].steering_cmd_pos.get().set_value(current_steering_angle_for_hold);
-        module_handles_[i].wheel_cmd_vel.get().set_value(0.0);
+        auto current_steering_get_value =
+          module_handles_[i].steering_state_pos.get().get_optional();
+        current_steering_angle_for_hold = current_steering_get_value.value();
+
+        if (!module_handles_[i].steering_cmd_pos.get().set_value(current_steering_angle_for_hold)) {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "Failed to set value for interface %s",
+            module_handles_[i].steering_cmd_pos.get().get_name().c_str());
+        }
+
+        if (!module_handles_[i].wheel_cmd_vel.get().set_value(0.0)) {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "Failed to set value for interface %s",
+            module_handles_[i].wheel_cmd_vel.get().get_name().c_str());
+        }
 
         if (i < final_steering_commands.size()) {
           final_steering_commands[i] = current_steering_angle_for_hold;
@@ -1250,20 +1250,34 @@ controller_interface::return_type SwerveDriveController::update(
       RCLCPP_DEBUG(
         get_node()->get_logger(), "Command Module %zu: Steering command %.2f, Wheel command %.2f",
         i, final_steering_commands[i],
-          final_wheel_velocity_commands[i] * wheel_saturation_scale_factor_);
+        final_wheel_velocity_commands[i] * wheel_saturation_scale_factor_);
 
       // Set the steering and wheel commands
-      module_handles_[i].steering_cmd_pos.get().set_value(final_steering_commands[i]);
+      if (!module_handles_[i].steering_cmd_pos.get().set_value(final_steering_commands[i])) {
+        RCLCPP_WARN(
+          get_node()->get_logger(), "Failed to set value for interface %s",
+          module_handles_[i].steering_cmd_pos.get().get_name().c_str());
+      }
       previoud_steering_commands_[i] = final_steering_commands[i];
       if (is_steering_aligned) {
-        module_handles_[i].wheel_cmd_vel.get().set_value(final_wheel_velocity_commands[i] *
-            wheel_saturation_scale_factor_);
+        if (!module_handles_[i].wheel_cmd_vel.get().set_value(
+            final_wheel_velocity_commands[i] *
+            wheel_saturation_scale_factor_))
+        {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "Failed to set value for interface %s",
+            module_handles_[i].wheel_cmd_vel.get().get_name().c_str());
+        }
       } else {
         // If steering is not aligned, stop the wheel
-        module_handles_[i].wheel_cmd_vel.get().set_value(0.0);
+        if (!module_handles_[i].wheel_cmd_vel.get().set_value(0.0)) {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "Failed to set value for interface %s",
+            module_handles_[i].wheel_cmd_vel.get().get_name().c_str());
+        }
         RCLCPP_WARN(
           get_node()->get_logger(),
-            "Steering not aligned, stopping wheel. final_steering_commands: %f",
+          "Steering not aligned, stopping wheel. final_steering_commands: %f",
           final_steering_commands[i]);
       }
     }
@@ -1343,7 +1357,6 @@ controller_interface::return_type SwerveDriveController::update(
         RCLCPP_WARN_THROTTLE(
           get_node()->get_logger(),
           *get_node()->get_clock(), 1000,
-          "Skipping visualization, ",
           "command/steering vectors not ready or size mismatch for publishing.");
       }
     }
