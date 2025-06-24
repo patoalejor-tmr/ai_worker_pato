@@ -13,6 +13,7 @@
 
   <xacro:include filename="$(find ffw_description)/ros2_control/$(arg model)/ffw_sg2_follower.ros2_control.xacro" />
   <xacro:include filename="$(find ffw_description)/ros2_control/$(arg model)/ffw_sg2_base.ros2_control.xacro" />
+  <xacro:include filename="$(find ffw_description)/ros2_control/$(arg model)/ffw_sg2_sensor.ros2_control.xacro" />
 
   <xacro:include filename="$(find ffw_description)/gazebo/$(arg model)/ffw_sg2_follower.gazebo.xacro" />
 
@@ -286,6 +287,11 @@
     fake_sensor_commands="$(arg fake_sensor_commands)"/>
 
   <xacro:ffw_sg2_base_system
+    use_sim="$(arg use_sim)"
+    use_fake_hardware="$(arg use_fake_hardware)"
+    fake_sensor_commands="$(arg fake_sensor_commands)"/>
+
+  <xacro:ffw_sg2_sensor_system
     use_sim="$(arg use_sim)"
     use_fake_hardware="$(arg use_fake_hardware)"
     fake_sensor_commands="$(arg fake_sensor_commands)"/>
