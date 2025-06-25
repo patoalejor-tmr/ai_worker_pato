@@ -232,6 +232,7 @@
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">41387</param>
         <param name="Velocity I Gain">1565630</param>
+        <param name="Position FF Gain">100</param>
       </gpio>
       <gpio name="dxl2">
         <param name="type">dxl</param>
@@ -254,6 +255,7 @@
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">41387</param>
         <param name="Velocity I Gain">1565630</param>
+        <param name="Position FF Gain">100</param>
       </gpio>
       <gpio name="dxl3">
         <param name="type">dxl</param>
@@ -276,6 +278,7 @@
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">41387</param>
         <param name="Velocity I Gain">1565630</param>
+        <param name="Position FF Gain">100</param>
       </gpio>
       <gpio name="dxl4">
         <param name="type">dxl</param>
@@ -298,6 +301,7 @@
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
         <param name="Velocity I Gain">1585331</param>
+        <param name="Position FF Gain">100</param>
       </gpio>
       <gpio name="dxl5">
         <param name="type">dxl</param>
@@ -320,6 +324,7 @@
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
         <param name="Velocity I Gain">1585331</param>
+        <param name="Position FF Gain">100</param>
       </gpio>
       <gpio name="dxl6">
         <param name="type">dxl</param>
@@ -342,6 +347,7 @@
         <param name="Position P Gain">1583185</param>
         <param name="Velocity P Gain">18184</param>
         <param name="Velocity I Gain">1585331</param>
+        <param name="Position FF Gain">100</param>
       </gpio>
       <gpio name="dxl7">
         <param name="type">dxl</param>
