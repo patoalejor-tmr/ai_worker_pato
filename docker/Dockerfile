@@ -1,4 +1,4 @@
-FROM jazzy-ros-base-torch2.7.0-cuda12.8.0 AS librealsense-builder
+FROM robotis/ros:jazzy-ros-base-torch2.7.0-cuda12.8.0 AS librealsense-builder
 
 ARG TARGETARCH
 
@@ -63,8 +63,7 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     cp -r /opt/venv/lib/python3.12/site-packages/pyrealsense2 /usr/local/lib/python3.12/dist-packages/; \
     fi
 
-
-FROM jazzy-ros-base-torch2.7.0-cuda12.8.0 AS ai-worker
+FROM robotis/ros:jazzy-ros-base-torch2.7.0-cuda12.8.0 AS ai-worker
 
 ARG TARGETARCH
 

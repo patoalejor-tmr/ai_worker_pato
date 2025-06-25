@@ -2,7 +2,7 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.10 (2025-06-16)
+1.1.0 (2025-06-16)
 ------------------
 * Add installation of some ROS 2 packages for physical AI tools in Dockerfile
 * Add an alias command in Dockerfile for running the physical AI server

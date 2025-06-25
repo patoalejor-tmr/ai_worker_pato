@@ -2,7 +2,7 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.10 (2025-06-16)
+1.1.0 (2025-06-16)
 ------------------
 * Support ffw_sg2_rev1 Model
 * Contributors: Woojin Wie
