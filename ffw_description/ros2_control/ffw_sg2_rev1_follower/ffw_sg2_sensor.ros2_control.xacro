@@ -57,7 +57,7 @@
       <gpio name="led">
         <param name="type">controller</param>
         <param name="ID">91</param>
-        <command_interface name="Neopixel_Head_Left_Red"/>
+        <!-- <command_interface name="Neopixel_Head_Left_Red"/>
         <command_interface name="Neopixel_Head_Left_Green"/>
         <command_interface name="Neopixel_Head_Left_Blue"/>
         <command_interface name="Neopixel_Head_Left_Brightness"/>
@@ -71,7 +71,7 @@
         <command_interface name="Neopixel_Head_Right_Brightness"/>
         <command_interface name="Neopixel_Head_Right_Mode"/>
         <command_interface name="Neopixel_Head_Right_Control_Time"/>
-        <command_interface name="Neopixel_Head_Right_Led_Count"/>
+        <command_interface name="Neopixel_Head_Right_Led_Count"/> -->
       </gpio>
 
     </ros2_control>
