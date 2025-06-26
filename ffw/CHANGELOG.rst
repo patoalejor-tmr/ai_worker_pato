@@ -2,6 +2,11 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.2 (2025-06-26)
+------------------
+* Added dependencies to the package.xml file
+* Contributors: Woojin Wie
+
 1.1.1 (2025-06-26)
 ------------------
 * Reordered pip install order in Dockerfile to fix the numpy version issue
