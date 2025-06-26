@@ -2,6 +2,11 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.0 (2025-06-16)
+------------------
+* Support ffw_sg2_rev1 Model
+* Contributors: Woojin Wie
+
 1.0.9 (2025-06-09)
 ------------------
 * Updated urdf files for ffw_bg2_rev4
