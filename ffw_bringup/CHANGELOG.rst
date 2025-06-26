@@ -2,6 +2,11 @@
 Changelog for package ffw_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.2 (2025-06-26)
+------------------
+* Added dependencies to the package.xml file
+* Contributors: Woojin Wie
+
 1.1.1 (2025-06-26)
 ------------------
 * None
