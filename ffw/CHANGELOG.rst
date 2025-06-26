@@ -2,6 +2,15 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.0 (2025-06-16)
+------------------
+* Add installation of some ROS 2 packages for physical AI tools in Dockerfile
+* Add an alias command in Dockerfile for running the physical AI server
+* Support ffw_sg2_rev1 Model
+* Add swerve drive controller package for ffw_sg2_rev1
+* Modify joystick controller to support swerve mode
+* Contributors: Kiwoong Park, Woojin Wie, Geonhee Lee, Wonho Yun
+
 1.0.9 (2025-06-09)
 ------------------
 * Updated urdf files for ffw_bg2_rev4

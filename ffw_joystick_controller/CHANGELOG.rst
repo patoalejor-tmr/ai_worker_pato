@@ -2,6 +2,11 @@
 Changelog for package ffw_joystick_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.0 (2025-06-16)
+------------------
+* Modify joystick controller to support swerve mode
+* Contributors: Woojin Wie, Wonho Yun
+
 1.0.9 (2025-06-09)
 ------------------
 * None
