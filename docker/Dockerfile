@@ -106,13 +106,11 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so; \
     fi
 
-# Install realsense and physical_ai_tools dependencies
+# Install realsense dependencies
 RUN apt-get update && apt-get install -y \
     libusb-1.0-0-dev \
     libglfw3-dev \
     ros-${ROS_DISTRO}-image-transport-plugins \
-    ros-${ROS_DISTRO}-web-video-server \
-    ros-${ROS_DISTRO}-rosbridge-suite \
     ffmpeg \
     vim \
     nano \
