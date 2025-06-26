@@ -2,6 +2,12 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.3 (2025-06-26)
+------------------
+* Modified jog scale for ffw_lg2_leader
+* Added dependencies to the package.xml file for image_transport_plugins
+* Contributors: Woojin Wie
+
 1.1.2 (2025-06-26)
 ------------------
 * Added dependencies to the package.xml file
