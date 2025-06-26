@@ -2,6 +2,12 @@
 Changelog for package ffw
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.1 (2025-06-26)
+------------------
+* Reordered pip install order in Dockerfile to fix the numpy version issue
+* Added Current Limit parameter to the ros2_control xacro file for ffw_sg2_rev1
+* Contributors: Woojin Wie
+
 1.1.0 (2025-06-16)
 ------------------
 * Add installation of some ROS 2 packages for physical AI tools in Dockerfile
