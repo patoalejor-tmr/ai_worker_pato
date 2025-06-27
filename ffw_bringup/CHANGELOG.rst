@@ -2,6 +2,10 @@
 Changelog for package ffw_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.4 (2025-06-27)
+------------------
+* None
+
 1.1.3 (2025-06-26)
 ------------------
 * Modified jog scale for ffw_lg2_leader
