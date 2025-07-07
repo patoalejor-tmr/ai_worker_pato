@@ -4,7 +4,8 @@ Changelog for package ffw_swerve_drive_controller
 
 1.1.6 (2025-07-07)
 ------------------
-* None
+* Fix header file name for tf2
+* Contributors: Woojin Wie
 
 1.1.5 (2025-06-30)
 ------------------
