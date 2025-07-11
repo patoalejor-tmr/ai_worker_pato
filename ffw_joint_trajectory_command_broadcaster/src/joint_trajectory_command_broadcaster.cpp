@@ -424,13 +424,6 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
       // Convert to nanoseconds
       int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
       traj_msg.points[0].time_from_start = rclcpp::Duration(0, delay_ns);
-
-      // Debug logging (only log occasionally to avoid spam)
-      static int update_count = 0;
-      if (++update_count % 100 == 0) {
-        RCLCPP_DEBUG(get_node()->get_logger(),
-          "Mean error: %.4f, Adaptive delay: %.3fs", mean_error, adaptive_delay);
-      }
     }
 
     realtime_joint_trajectory_publisher_->unlockAndPublish();
