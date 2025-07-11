@@ -95,6 +95,7 @@ protected:
   bool use_all_available_interfaces() const;
   void joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   bool check_joints_synced() const;
+  double calculate_mean_error() const;
 
 protected:
   // Optional parameters

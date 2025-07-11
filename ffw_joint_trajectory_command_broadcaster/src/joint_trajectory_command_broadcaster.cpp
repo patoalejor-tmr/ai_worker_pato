@@ -129,7 +129,7 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
 
     RCLCPP_INFO(
       get_node()->get_logger(),
-      "Subscribed to follower joint states topic: %s", 
+      "Subscribed to follower joint states topic: %s",
       params_.follower_joint_states_topic.c_str());
   } catch (const std::exception & e) {
     // get_node() may throw, logging raw here
@@ -286,36 +286,39 @@ void JointTrajectoryCommandBroadcaster::joint_states_callback(const sensor_msgs:
       follower_joint_positions_[msg->name[i]] = msg->position[i];
     }
   }
-  
+
   // Debug logging (only log occasionally to avoid spam)
   static int callback_count = 0;
   if (++callback_count % 100 == 0) {
-    RCLCPP_DEBUG(get_node()->get_logger(), 
+    RCLCPP_DEBUG(get_node()->get_logger(),
       "Received follower joint states for %zu joints", msg->name.size());
   }
 }
 
-bool JointTrajectoryCommandBroadcaster::check_joints_synced() const
+double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
 {
   // Check if we have received any follower joint states
   if (follower_joint_positions_.empty()) {
-    return false;
+    return std::numeric_limits<double>::max();  // Return max error if no follower data
   }
 
-  // Check if all leader joints are synced with follower joints
+  double total_error = 0.0;
+  int valid_joints = 0;
+
+  // Calculate mean error across all joints
   for (const auto & joint_name : joint_names_) {
     auto follower_it = follower_joint_positions_.find(joint_name);
     if (follower_it == follower_joint_positions_.end()) {
-      return false;  // Follower doesn't have this joint
+      continue;  // Skip joints not available in follower
     }
 
     double leader_pos = get_value(name_if_value_mapping_, joint_name, HW_IF_POSITION);
     if (std::isnan(leader_pos)) {
-      return false;  // Leader doesn't have valid position for this joint
+      continue;  // Skip joints without valid leader position
     }
 
     // Apply reverse and offset to leader position for comparison
-    if (std::find(params_.reverse_joints.begin(), params_.reverse_joints.end(), joint_name) != 
+    if (std::find(params_.reverse_joints.begin(), params_.reverse_joints.end(), joint_name) !=
         params_.reverse_joints.end()) {
       leader_pos = -leader_pos;
     }
@@ -329,13 +332,17 @@ bool JointTrajectoryCommandBroadcaster::check_joints_synced() const
       }
     }
 
-    // Check if positions are within threshold
-    if (std::abs(leader_pos - follower_it->second) > params_.sync_threshold) {
-      return false;
-    }
+    total_error += std::abs(leader_pos - follower_it->second);
+    valid_joints++;
   }
 
-  return true;
+  return valid_joints > 0 ? total_error / valid_joints : std::numeric_limits<double>::max();
+}
+
+bool JointTrajectoryCommandBroadcaster::check_joints_synced() const
+{
+  double mean_error = calculate_mean_error();
+  return mean_error <= params_.sync_threshold;
 }
 
 controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
@@ -353,14 +360,15 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
     }
   }
 
-  // Check if joints are synced
+  // Calculate mean error and check if joints are synced
+  double mean_error = calculate_mean_error();
   bool current_synced = check_joints_synced();
-  
+
   // Update sync status and handle first publish
   if (first_publish_) {
     joints_synced_ = false;
     first_publish_ = false;
-    RCLCPP_INFO(get_node()->get_logger(), "First publish - using 1 second time_from_start");
+    RCLCPP_INFO(get_node()->get_logger(), "First publish - using adaptive time_from_start based on error");
   } else {
     // Once synced, stay synced permanently
     if (!joints_synced_ && current_synced) {
@@ -400,11 +408,36 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
       traj_msg.points[0].positions[i] = pos_value;
     }
 
-    // Set time_from_start based on sync status
+    // Set time_from_start based on sync status and mean error
     if (joints_synced_) {
       traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate when synced
     } else {
-      traj_msg.points[0].time_from_start = rclcpp::Duration(1, 0);  // 1 second when not synced
+      // Adaptive timing based on mean error
+      // When error is large, use longer delay (up to 1 second)
+      // When error is small, use shorter delay (down to 5ms)
+      double max_error = 0.6;  // 0.1 radians
+      double min_error = 0.01;
+      double min_delay = 0.0;
+      double max_delay = 0.4;
+
+      if(mean_error < min_error) {
+        mean_error = 0;
+      }
+
+      double error_ratio = std::min(mean_error / max_error, 1.0);
+      // Corrected logic: small error -> small delay, large error -> large delay
+      double adaptive_delay = min_delay + (max_delay - min_delay) * error_ratio;
+
+      // Convert to nanoseconds
+      int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
+      traj_msg.points[0].time_from_start = rclcpp::Duration(0, delay_ns);
+
+      // Debug logging (only log occasionally to avoid spam)
+      static int update_count = 0;
+      if (++update_count % 100 == 0) {
+        RCLCPP_DEBUG(get_node()->get_logger(),
+          "Mean error: %.4f, Adaptive delay: %.3fs", mean_error, adaptive_delay);
+      }
     }
 
     realtime_joint_trajectory_publisher_->unlockAndPublish();
