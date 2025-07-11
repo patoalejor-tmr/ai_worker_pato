@@ -412,21 +412,14 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
     if (joints_synced_) {
       traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate when synced
     } else {
-      // Adaptive timing based on mean error
-      // When error is large, use longer delay (up to 1 second)
-      // When error is small, use shorter delay (down to 5ms)
-      double max_error = 0.6;  // 0.1 radians
-      double min_error = 0.01;
-      double min_delay = 0.0;
-      double max_delay = 0.4;
-
-      if(mean_error < min_error) {
+      // Adaptive timing based on mean error using parameters
+      if(mean_error < params_.min_error) {
         mean_error = 0;
       }
 
-      double error_ratio = std::min(mean_error / max_error, 1.0);
+      double error_ratio = std::min(mean_error / params_.max_error, 1.0);
       // Corrected logic: small error -> small delay, large error -> large delay
-      double adaptive_delay = min_delay + (max_delay - min_delay) * error_ratio;
+      double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) * error_ratio;
 
       // Convert to nanoseconds
       int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
