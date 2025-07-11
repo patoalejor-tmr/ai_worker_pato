@@ -125,7 +125,8 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
     // Create subscriber for follower joint states
     joint_states_subscriber_ = get_node()->create_subscription<sensor_msgs::msg::JointState>(
       params_.follower_joint_states_topic, rclcpp::SystemDefaultsQoS(),
-      std::bind(&JointTrajectoryCommandBroadcaster::joint_states_callback, this, std::placeholders::_1));
+      std::bind(&JointTrajectoryCommandBroadcaster::joint_states_callback, this,
+        std::placeholders::_1));
 
     RCLCPP_INFO(
       get_node()->get_logger(),
@@ -278,7 +279,8 @@ double get_value(
   }
 }
 
-void JointTrajectoryCommandBroadcaster::joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
+void JointTrajectoryCommandBroadcaster::joint_states_callback(
+  const sensor_msgs::msg::JointState::SharedPtr msg)
 {
   // Update follower joint positions
   for (size_t i = 0; i < msg->name.size(); ++i) {
@@ -319,7 +321,8 @@ double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
 
     // Apply reverse and offset to leader position for comparison
     if (std::find(params_.reverse_joints.begin(), params_.reverse_joints.end(), joint_name) !=
-        params_.reverse_joints.end()) {
+      params_.reverse_joints.end())
+    {
       leader_pos = -leader_pos;
     }
 
@@ -368,12 +371,14 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
   if (first_publish_) {
     joints_synced_ = false;
     first_publish_ = false;
-    RCLCPP_INFO(get_node()->get_logger(), "First publish - using adaptive time_from_start based on error");
+    RCLCPP_INFO(get_node()->get_logger(),
+        "First publish - using adaptive time_from_start based on error");
   } else {
     // Once synced, stay synced permanently
     if (!joints_synced_ && current_synced) {
       joints_synced_ = true;
-      RCLCPP_INFO(get_node()->get_logger(), "Joints synced for the first time - switching to immediate time_from_start permanently");
+      RCLCPP_INFO(get_node()->get_logger(),
+          "Joints synced for the first time - switching to immediate time_from_start permanently");
     }
   }
 
@@ -419,7 +424,8 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
 
       double error_ratio = std::min(mean_error / params_.max_error, 1.0);
       // Corrected logic: small error -> small delay, large error -> large delay
-      double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) * error_ratio;
+      double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) *
+        error_ratio;
 
       // Convert to nanoseconds
       int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
