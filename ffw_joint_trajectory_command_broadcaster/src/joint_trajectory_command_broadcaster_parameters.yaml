@@ -56,3 +56,13 @@ joint_trajectory_command_broadcaster:
     If true, the broadcaster will publish the data of the joints present in the URDF alone.
     If false, the broadcaster will publish the data of any interface that has type ``position``, ``velocity``, or ``effort``."
   }
+  follower_joint_states_topic: {
+    type: string,
+    default_value: "/joint_states",
+    description: "Topic name for subscribing to follower's joint states to check synchronization."
+  }
+  sync_threshold: {
+    type: double,
+    default_value: 0.01,
+    description: "Threshold value (in radians) to determine if follower joints are synced with leader joints."
+  }
