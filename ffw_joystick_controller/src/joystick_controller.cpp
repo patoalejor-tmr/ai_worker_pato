@@ -106,7 +106,7 @@ std::vector<double> JoystickController::read_and_normalize_sensor_values(size_t 
     
     // Apply reverse if needed
     const auto & interface_name = state_interface_types_[j];
-    const auto & reverse_interfaces = sensor_reverse_interfaces_[sensorxel_joy_names_[sensor_idx]];
+    const auto & reverse_interfaces = sensor_reverse_interfaces_.at(sensorxel_joy_names_[sensor_idx]);
     if (std::find(reverse_interfaces.begin(), reverse_interfaces.end(), interface_name) != reverse_interfaces.end()) {
       normalized_value = -normalized_value;
     }
@@ -186,7 +186,7 @@ std::vector<double> JoystickController::calculate_joint_positions(
         sensorxel_joy_value = (state_interface_types_.size() > 1 && i == 1) ? normalized_values[1] : normalized_values[0];
       }
       
-      double new_position = current_position + sensorxel_joy_value * sensor_jog_scale_[sensor_name];
+      double new_position = current_position + sensorxel_joy_value * sensor_jog_scale_.at(sensor_name);
       positions.push_back(new_position);
     }
   }
