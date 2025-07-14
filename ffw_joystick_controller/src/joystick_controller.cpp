@@ -91,7 +91,7 @@ controller_interface::return_type JoystickController::update(
   bool swerve_mode = (current_mode_ == "swerve");
 
   double left_x = 0.0, left_y = 0.0;
-  double right_y = 0.0;
+  double right_x = 0.0, right_y = 0.0;
   // Add variables to store tact switch states
   bool left_tact_switch_pressed = false;
   bool right_tact_switch_pressed = false;
@@ -168,6 +168,7 @@ controller_interface::return_type JoystickController::update(
         left_tact_switch_pressed = (normalized_values[2] > 0.5);
       }
     } else if (sensor_name == "sensorxel_r_joy") {
+      right_x = normalized_values[0];
       right_y = normalized_values[1];
       // Save right tact switch state
       if (normalized_values.size() > 2) {
@@ -199,8 +200,22 @@ controller_interface::return_type JoystickController::update(
       point.time_from_start = rclcpp::Duration(0, 0);
 
       if (swerve_mode) {
-        // swerve mode, maintain last active positions instead of zero
-        point.positions = last_active_positions;
+        // swerve mode: use right joystick X-axis for lift control
+        for (size_t i = 0; i < controlled_joints.size(); ++i) {
+          const auto & joint_name = controlled_joints[i];
+          auto it = std::find(current_joint_states_.name.begin(),
+              current_joint_states_.name.end(), joint_name);
+          if (it != current_joint_states_.name.end()) {
+            size_t index = std::distance(current_joint_states_.name.begin(), it);
+            double current_position = current_joint_states_.position[index];
+            // Use right joystick X-axis for lift control in swerve mode
+            double sensorxel_joy_value = (sensor_name == "sensorxel_r_joy") ? right_x : 0.0;
+            double new_position = current_position + sensorxel_joy_value *
+              sensor_jog_scale_[sensor_name];
+            point.positions.push_back(new_position);
+            last_active_positions[i] = new_position;
+          }
+        }
       } else if (any_sensorxel_joy_active) {
         for (size_t i = 0; i < controlled_joints.size(); ++i) {
           const auto & joint_name = controlled_joints[i];
