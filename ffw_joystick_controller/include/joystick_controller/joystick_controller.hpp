@@ -95,22 +95,24 @@ protected:
   // Helper methods for better code organization
   double normalize_joystick_value(double raw_adc, bool is_tact_switch) const;
   std::vector<double> read_and_normalize_sensor_values(size_t sensor_idx) const;
-  void update_joystick_values(const std::string& sensor_name, 
-                             const std::vector<double>& normalized_values,
-                             JoystickValues& joystick_values,
-                             bool& left_tact_pressed, 
-                             bool& right_tact_pressed) const;
-  void update_last_active_positions(const std::vector<std::string>& controlled_joints);
+  void update_joystick_values(
+    const std::string & sensor_name,
+    const std::vector<double> & normalized_values,
+    JoystickValues & joystick_values,
+    bool & left_tact_pressed,
+    bool & right_tact_pressed) const;
+  void update_last_active_positions(const std::vector<std::string> & controlled_joints);
   std::vector<double> calculate_joint_positions(
-      const std::vector<std::string>& controlled_joints,
-      const std::vector<double>& normalized_values,
-      const std::string& sensor_name,
-      bool swerve_mode,
-      const JoystickValues& joystick_values) const;
-  void publish_joint_trajectory(const std::vector<std::string>& controlled_joints,
-                               const std::vector<double>& positions,
-                               const std::string& sensor_name);
-  void publish_cmd_vel(bool swerve_mode, const JoystickValues& joystick_values);
+    const std::vector<std::string> & controlled_joints,
+    const std::vector<double> & normalized_values,
+    const std::string & sensor_name,
+    bool swerve_mode,
+    const JoystickValues & joystick_values) const;
+  void publish_joint_trajectory(
+    const std::vector<std::string> & controlled_joints,
+    const std::vector<double> & positions,
+    const std::string & sensor_name);
+  void publish_cmd_vel(bool swerve_mode, const JoystickValues & joystick_values);
   void publish_joystick_values();
   void handle_mode_switching(bool left_tact_pressed, bool right_tact_pressed);
 
