@@ -40,12 +40,12 @@ constexpr double LINEAR_Y_SCALE = 3.0;
 constexpr double ANGULAR_Z_SCALE = 2.0;
 
   // Sensor names
-constexpr std::string LEFT_JOYSTICK_NAME = "sensorxel_l_joy";
-constexpr std::string RIGHT_JOYSTICK_NAME = "sensorxel_r_joy";
+const char LEFT_JOYSTICK_NAME[] = "sensorxel_l_joy";
+const char RIGHT_JOYSTICK_NAME[] = "sensorxel_r_joy";
 
   // Mode names
-constexpr std::string SWERVE_MODE = "swerve";
-constexpr std::string ARM_CONTROL_MODE = "arm_control";
+const char SWERVE_MODE[] = "swerve";
+const char ARM_CONTROL_MODE[] = "arm_control";
 }  // namespace constants
 
 JoystickController::JoystickController()
