@@ -4,7 +4,8 @@ Changelog for package ffw
 
 1.1.8 (2025-07-14)
 ------------------
-* Modified joystick controller to support multiple sensors
+* Modified joystick controller to enable lift control while in swerve mode
+* Refactored joystick controller
 * Contributors: Wonho Yun
 
 1.1.7 (2025-07-11)
