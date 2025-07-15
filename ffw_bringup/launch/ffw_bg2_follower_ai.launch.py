@@ -132,7 +132,8 @@ def generate_launch_description():
             'arm_l_controller',
             'arm_r_controller',
             'head_controller',
-            'lift_controller'
+            'lift_controller',
+            'ffw_robot_manager'
         ],
         parameters=[robot_description],
     )

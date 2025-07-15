@@ -22,6 +22,9 @@
       swerve_drive_controller:
         type: ffw_swerve_drive_controller/SwerveDriveController
 
+      ffw_robot_manager:
+        type: ffw_robot_manager/FfwRobotManager
+
 /**:
   arm_l_controller:
     ros__parameters:

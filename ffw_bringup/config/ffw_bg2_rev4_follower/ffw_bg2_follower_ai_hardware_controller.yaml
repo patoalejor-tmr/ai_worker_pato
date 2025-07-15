@@ -19,6 +19,9 @@
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
 
+      ffw_robot_manager:
+        type: ffw_robot_manager/FfwRobotManager
+
 /**:
   arm_l_controller:
     ros__parameters:
