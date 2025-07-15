@@ -133,6 +133,8 @@ controller_interface::return_type FfwRobotManager::update(const rclcpp::Time & /
 
 void FfwRobotManager::disable_all_torque()
 {
+  RCLCPP_WARN_STREAM(get_node()->get_logger(), "Disabling torque for all Dynamixels.");
+
   if (!torque_client_) {
     RCLCPP_ERROR(get_node()->get_logger(), "Torque service client not available");
     return;
@@ -147,13 +149,13 @@ void FfwRobotManager::disable_all_torque()
   if (future.wait_for(std::chrono::seconds(2)) == std::future_status::ready) {
     auto response = future.get();
     if (response->success) {
-      RCLCPP_WARN(get_node()->get_logger(), "Successfully disabled torque for all Dynamixels due to errors");
+      RCLCPP_WARN(get_node()->get_logger(), "Successfully disabled torque for all Dynamixels. %s", response->message.c_str());
       torque_disabled_ = true;
     } else {
-      RCLCPP_ERROR(get_node()->get_logger(), "Failed to disable torque for all Dynamixels: %s", response->message.c_str());
+      RCLCPP_ERROR(get_node()->get_logger(), "Failed to disable torque for all Dynamixels. %s", response->message.c_str());
     }
   } else {
-    RCLCPP_ERROR(get_node()->get_logger(), "Timeout while trying to disable torque for all Dynamixels");
+    RCLCPP_ERROR(get_node()->get_logger(), "Timeout while trying to disable torque for all Dynamixels.");
   }
 }
 
