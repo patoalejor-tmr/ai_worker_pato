@@ -12,12 +12,18 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   pluginlib
   std_srvs
   dynamixel_hardware_interface
+  dynamixel_interfaces
+  generate_parameter_library
 )
 
 find_package(ament_cmake REQUIRED)
 foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
 endforeach()
+
+generate_parameter_library(ffw_robot_manager_parameters
+  src/ffw_robot_manager_parameters.yaml
+)
 
 add_library(ffw_robot_manager SHARED
   src/ffw_robot_manager.cpp
@@ -28,8 +34,14 @@ target_include_directories(ffw_robot_manager PUBLIC
   $<INSTALL_INTERFACE:include/ffw_robot_manager>
 )
 
-ament_target_dependencies(ffw_robot_manager
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+target_link_libraries(ffw_robot_manager PUBLIC
+  controller_interface::controller_interface
+  ffw_robot_manager_parameters
+  pluginlib::pluginlib
+  rclcpp::rclcpp
+  dynamixel_hardware_interface::dynamixel_hardware_interface
+  ${std_srvs_TARGETS}
+  ${dynamixel_interfaces_TARGETS}
 )
 
 pluginlib_export_plugin_description_file(controller_interface ffw_robot_manager_plugin.xml)
@@ -48,6 +60,7 @@ install(
 install(
   TARGETS
     ffw_robot_manager
+    ffw_robot_manager_parameters
   EXPORT export_ffw_robot_manager
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib

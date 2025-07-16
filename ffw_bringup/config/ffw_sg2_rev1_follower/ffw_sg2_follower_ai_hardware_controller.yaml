@@ -178,3 +178,9 @@
           max_acceleration       : 1.5  # rad/s^2
           has_jerk_limits        : true
           max_jerk               : 3.0  # rad/s^3
+
+/**:
+  ffw_robot_manager:
+    ros__parameters:
+      disable_torque_on_error: false
+      set_led_error_on_error: true
