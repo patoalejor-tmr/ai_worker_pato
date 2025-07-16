@@ -69,7 +69,7 @@ def generate_launch_description():
                 ]
              )
 
-    robot_desc = Command([
+    robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name='xacro')]),
         ' ',
         PathJoinSubstitution([FindPackageShare('ffw_description'),
@@ -82,20 +82,20 @@ def generate_launch_description():
         'use_sim:=true',
     ])
 
-    params = {'robot_description': robot_desc}
+    robot_description = {'robot_description': robot_description_content}
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[params]
+        parameters=[robot_description]
     )
 
     gz_spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
         output='screen',
-        arguments=['-string', robot_desc,
+        arguments=['-topic', 'robot_description',
                    '-x', '0.0',
                    '-y', '0.0',
                    '-z', '0.0',
@@ -107,34 +107,28 @@ def generate_launch_description():
                    '-use_sim', 'true'],
     )
 
-    load_joint_state_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_state_broadcaster'],
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster'],
         output='screen'
     )
 
-    load_arm_l_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'arm_l_controller'],
-        output='screen'
-    )
-
-    load_arm_r_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'arm_r_controller'],
-        output='screen'
-    )
-
-    load_head_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'head_controller'],
-        output='screen'
-    )
-
-    load_lift_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'lift_controller'],
-        output='screen'
+    robot_controller_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=[
+            '--controller-ros-args', '-r /arm_l_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
+            '--controller-ros-args', '-r /arm_r_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_right/joint_trajectory',
+            '--controller-ros-args', '-r /head_controller/joint_trajectory:=/leader/joystick_controller_left/joint_trajectory',
+            '--controller-ros-args', '-r /lift_controller/joint_trajectory:=/leader/joystick_controller_right/joint_trajectory',
+            'arm_l_controller',
+            'arm_r_controller',
+            'head_controller',
+            'lift_controller',
+            'swerve_drive_controller',
+        ],
+        parameters=[robot_description],
     )
 
     bridge = Node(
@@ -159,16 +153,13 @@ def generate_launch_description():
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=gz_spawn_entity,
-                on_exit=[load_joint_state_controller],
+                on_exit=[joint_state_broadcaster_spawner],
             )
         ),
         RegisterEventHandler(
             event_handler=OnProcessExit(
-               target_action=load_joint_state_controller,
-               on_exit=[load_arm_l_controller,
-                        load_arm_r_controller,
-                        load_head_controller,
-                        load_lift_controller],
+               target_action=joint_state_broadcaster_spawner,
+               on_exit=[robot_controller_spawner],
             )
         ),
         bridge,
