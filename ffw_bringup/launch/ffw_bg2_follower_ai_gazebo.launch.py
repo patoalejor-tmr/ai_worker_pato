@@ -84,11 +84,11 @@ def generate_launch_description():
 
     robot_description = {'robot_description': robot_description_content}
 
-    node_robot_state_publisher = Node(
+    robot_state_pub_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        output='screen',
-        parameters=[robot_description]
+        parameters=[robot_description, {'use_sim_time': True}],
+        output='screen'
     )
 
     gz_spawn_entity = Node(
@@ -164,7 +164,7 @@ def generate_launch_description():
         bridge,
         gazebo_resource_path,
         gazebo,
-        node_robot_state_publisher,
+        robot_state_pub_node,
         gz_spawn_entity,
         rviz,
     ])

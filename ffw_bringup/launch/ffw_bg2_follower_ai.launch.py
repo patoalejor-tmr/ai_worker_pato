@@ -29,7 +29,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     declared_arguments = [
-        DeclareLaunchArgument('start_rviz', default_value='true',
+        DeclareLaunchArgument('start_rviz', default_value='false',
                               description='Whether to execute rviz2'),
         DeclareLaunchArgument('use_sim', default_value='false',
                               description='Start robot in Gazebo simulation.'),
@@ -91,16 +91,6 @@ def generate_launch_description():
         parameters=[robot_description, controller_manager_config],
         output='both',
         condition=UnlessCondition(use_sim),
-        remappings=[
-            ('/arm_l_controller/joint_trajectory',
-             '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory'),
-            ('/arm_r_controller/joint_trajectory',
-             '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory'),
-            ('/head_controller/joint_trajectory',
-             '/leader/joystick_controller_left/joint_trajectory'),
-            ('/lift_controller/joint_trajectory',
-             '/leader/joystick_controller_right/joint_trajectory')
-        ]
     )
 
     robot_state_pub_node = Node(
@@ -121,7 +111,7 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        arguments=['joint_state_broadcaster'],
         output='screen'
     )
 
@@ -129,11 +119,14 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=[
+            '--controller-ros-args', '-r /arm_l_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
+            '--controller-ros-args', '-r /arm_r_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_right/joint_trajectory',
+            '--controller-ros-args', '-r /head_controller/joint_trajectory:=/leader/joystick_controller_left/joint_trajectory',
+            '--controller-ros-args', '-r /lift_controller/joint_trajectory:=/leader/joystick_controller_right/joint_trajectory',
             'arm_l_controller',
             'arm_r_controller',
             'head_controller',
             'lift_controller',
-            'ffw_robot_manager'
         ],
         parameters=[robot_description],
     )

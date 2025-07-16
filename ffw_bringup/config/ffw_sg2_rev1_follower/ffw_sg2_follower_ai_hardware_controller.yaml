@@ -25,6 +25,9 @@
       ffw_robot_manager:
         type: ffw_robot_manager/FfwRobotManager
 
+      swerve_steering_initial_position_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
 /**:
   arm_l_controller:
     ros__parameters:
@@ -88,6 +91,21 @@
         - position
         - velocity
       allow_nonzero_velocity_at_trajectory_end: true
+
+/**:
+  swerve_steering_initial_position_controller:
+    ros__parameters:
+      joints:
+        - left_wheel_steer
+        - right_wheel_steer
+        - rear_wheel_steer
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+        - velocity
+      allow_nonzero_velocity_at_trajectory_end: true
+      allow_partial_joints_goal: true
 
 /**:
   swerve_drive_controller:

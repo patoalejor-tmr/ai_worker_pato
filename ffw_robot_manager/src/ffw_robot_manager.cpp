@@ -94,9 +94,6 @@ controller_interface::CallbackReturn FfwRobotManager::on_deactivate(const rclcpp
   gpio_names_.clear();
   gpio_interface_indices_.clear();
 
-  // Set LED to cyan with RGB breathe mode when deactivated
-  set_led_color(0, 255, 255, LedMode::RGB_BREATHE);
-
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
@@ -297,7 +294,7 @@ void FfwRobotManager::setup_watchdogs()
   dxl_state_watchdog_ = std::make_unique<TopicWatchdog<dynamixel_interfaces::msg::DynamixelState>>(
     get_node().get(),
     "/ffw_follower/dxl_state",
-    std::chrono::milliseconds(500),
+    std::chrono::milliseconds(250),
     [this]() {
       // Set LED to red (solid) on timeout
       set_led_color(255, 0, 0, LedMode::RGB_BLINK);
