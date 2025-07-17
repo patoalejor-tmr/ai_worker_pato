@@ -138,7 +138,7 @@ def generate_launch_description():
         output='screen'
     )
 
-    rviz_config_file = os.path.join(ffw_description_path, 'rviz', 'ffw_bg2.rviz')
+    rviz_config_file = os.path.join(ffw_description_path, 'rviz', 'ffw_sg2.rviz')
 
     rviz = Node(
         package='rviz2',
