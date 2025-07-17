@@ -21,7 +21,7 @@ from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.actions import RegisterEventHandler, SetEnvironmentVariable
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -118,10 +118,18 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=[
-            '--controller-ros-args', '-r /arm_l_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
-            '--controller-ros-args', '-r /arm_r_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_right/joint_trajectory',
-            '--controller-ros-args', '-r /head_controller/joint_trajectory:=/leader/joystick_controller_left/joint_trajectory',
-            '--controller-ros-args', '-r /lift_controller/joint_trajectory:=/leader/joystick_controller_right/joint_trajectory',
+            '--controller-ros-args',
+            '-r /arm_l_controller/joint_trajectory:='
+            '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
+            '--controller-ros-args',
+            '-r /arm_r_controller/joint_trajectory:='
+            '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory',
+            '--controller-ros-args',
+            '-r /head_controller/joint_trajectory:='
+            '/leader/joystick_controller_left/joint_trajectory',
+            '--controller-ros-args',
+            '-r /lift_controller/joint_trajectory:='
+            '/leader/joystick_controller_right/joint_trajectory',
             'arm_l_controller',
             'arm_r_controller',
             'head_controller',

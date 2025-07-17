@@ -119,10 +119,18 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=[
-            '--controller-ros-args', '-r /arm_l_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
-            '--controller-ros-args', '-r /arm_r_controller/joint_trajectory:=/leader/joint_trajectory_command_broadcaster_right/joint_trajectory',
-            '--controller-ros-args', '-r /head_controller/joint_trajectory:=/leader/joystick_controller_left/joint_trajectory',
-            '--controller-ros-args', '-r /lift_controller/joint_trajectory:=/leader/joystick_controller_right/joint_trajectory',
+            '--controller-ros-args',
+            '-r /arm_l_controller/joint_trajectory:='
+            '/leader/joint_trajectory_command_broadcaster_left/joint_trajectory',
+            '--controller-ros-args',
+            '-r /arm_r_controller/joint_trajectory:='
+            '/leader/joint_trajectory_command_broadcaster_right/joint_trajectory',
+            '--controller-ros-args',
+            '-r /head_controller/joint_trajectory:='
+            '/leader/joystick_controller_left/joint_trajectory',
+            '--controller-ros-args',
+            '-r /lift_controller/joint_trajectory:='
+            '/leader/joystick_controller_right/joint_trajectory',
             'arm_l_controller',
             'arm_r_controller',
             'head_controller',
@@ -221,7 +229,8 @@ def generate_launch_description():
         condition=IfCondition(init_position)
     )
 
-    # Event handler to unspawn swerve_steering_initial_position_controller and spawn swerve_drive_controller
+    # Event handler to unspawn swerve_steering_initial_position_controller and
+    # spawn swerve_drive_controller
     # when joint_trajectory_executor_swerve_steering is done
     swerve_controller_switch_event_handler = RegisterEventHandler(
         event_handler=OnProcessExit(
