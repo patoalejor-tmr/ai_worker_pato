@@ -1,11 +1,29 @@
+// Copyright 2025 ROBOTIS CO., LTD.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Author: Woojin Wie
+
 #ifndef FFW_ROBOT_MANAGER__FFW_ROBOT_MANAGER_HPP_
 #define FFW_ROBOT_MANAGER__FFW_ROBOT_MANAGER_HPP_
 
-#include <memory>
+
+#include <algorithm>
 #include <string>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
 #include <unordered_set>
+#include <memory>
 
 #include "controller_interface/controller_interface.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -23,10 +41,10 @@ namespace ffw_robot_manager
 // Enum for LED modes
 enum class LedMode : uint32_t
 {
-  OFF = 0,        // LED off
-  RGB = 1,        // RGB solid color
-  RGB_BLINK = 2,  // RGB blinking
-  RGB_BREATHE = 3 // RGB breathing effect
+  OFF = 0,         // LED off
+  RGB = 1,         // RGB solid color
+  RGB_BLINK = 2,   // RGB blinking
+  RGB_BREATHE = 3  // RGB breathing effect
 };
 
 // Struct to hold LED values for both heads
@@ -50,30 +68,32 @@ struct LedValues
   LedValues() = default;
 
   // Constructor with all values using uint32_t for backward compatibility
-  LedValues(uint32_t lr, uint32_t lg, uint32_t lb, uint32_t rr, uint32_t rg, uint32_t rb,
-            uint32_t lm = 1, uint32_t rm = 1)
-    : left_red(lr), left_green(lg), left_blue(lb),
-      right_red(rr), right_green(rg), right_blue(rb),
-      left_mode(static_cast<LedMode>(lm)), right_mode(static_cast<LedMode>(rm)) {}
+  LedValues(
+    uint32_t lr, uint32_t lg, uint32_t lb, uint32_t rr, uint32_t rg, uint32_t rb,
+    uint32_t lm = 1, uint32_t rm = 1)
+  : left_red(lr), left_green(lg), left_blue(lb),
+    right_red(rr), right_green(rg), right_blue(rb),
+    left_mode(static_cast<LedMode>(lm)), right_mode(static_cast<LedMode>(rm)) {}
 
   // Constructor with all values using LedMode enum
-  LedValues(uint32_t lr, uint32_t lg, uint32_t lb, uint32_t rr, uint32_t rg, uint32_t rb,
-            LedMode lm, LedMode rm)
-    : left_red(lr), left_green(lg), left_blue(lb),
-      right_red(rr), right_green(rg), right_blue(rb),
-      left_mode(lm), right_mode(rm) {}
+  LedValues(
+    uint32_t lr, uint32_t lg, uint32_t lb, uint32_t rr, uint32_t rg, uint32_t rb,
+    LedMode lm, LedMode rm)
+  : left_red(lr), left_green(lg), left_blue(lb),
+    right_red(rr), right_green(rg), right_blue(rb),
+    left_mode(lm), right_mode(rm) {}
 
   // Constructor for single color on both heads using uint32_t mode
   LedValues(uint32_t red, uint32_t green, uint32_t blue, uint32_t mode = 1)
-    : left_red(red), left_green(green), left_blue(blue),
-      right_red(red), right_green(green), right_blue(blue),
-      left_mode(static_cast<LedMode>(mode)), right_mode(static_cast<LedMode>(mode)) {}
+  : left_red(red), left_green(green), left_blue(blue),
+    right_red(red), right_green(green), right_blue(blue),
+    left_mode(static_cast<LedMode>(mode)), right_mode(static_cast<LedMode>(mode)) {}
 
   // Constructor for single color on both heads using LedMode enum
   LedValues(uint32_t red, uint32_t green, uint32_t blue, LedMode mode)
-    : left_red(red), left_green(green), left_blue(blue),
-      right_red(red), right_green(green), right_blue(blue),
-      left_mode(mode), right_mode(mode) {}
+  : left_red(red), left_green(green), left_blue(blue),
+    right_red(red), right_green(green), right_blue(blue),
+    left_mode(mode), right_mode(mode) {}
 };
 
 class FfwRobotManager : public controller_interface::ControllerInterface
@@ -84,10 +104,15 @@ public:
   controller_interface::InterfaceConfiguration command_interface_configuration() const override;
   controller_interface::InterfaceConfiguration state_interface_configuration() const override;
   controller_interface::CallbackReturn on_init() override;
-  controller_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state) override;
-  controller_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state) override;
-  controller_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
-  controller_interface::return_type update(const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  controller_interface::CallbackReturn on_configure(
+    const rclcpp_lifecycle::State & previous_state) override;
+  controller_interface::CallbackReturn on_activate(
+    const rclcpp_lifecycle::State & previous_state) override;
+  controller_interface::CallbackReturn on_deactivate(
+    const rclcpp_lifecycle::State & previous_state) override;
+  controller_interface::return_type update(
+    const rclcpp::Time & time,
+    const rclcpp::Duration & period) override;
 
 protected:
   std::vector<std::string> gpio_names_;
@@ -122,20 +147,22 @@ protected:
   void reset_led_state();
 
   // Set LED values (internal helper method) - original vector-based version
-  bool set_led_values(const std::vector<uint32_t>& values);
+  bool set_led_values(const std::vector<uint32_t> & values);
 
   // Set LED values using struct - more readable version
-  bool set_led_values(const LedValues& led_values);
+  bool set_led_values(const LedValues & led_values);
 
-  // Set LED values with individual arguments - most flexible version (uint32_t modes for backward compatibility)
-  bool set_led_values(uint32_t left_red, uint32_t left_green, uint32_t left_blue,
-                     uint32_t right_red, uint32_t right_green, uint32_t right_blue,
-                     uint32_t left_mode = 1, uint32_t right_mode = 1);
+  // Set LED values with individual arguments - most flexible version
+  bool set_led_values(
+    uint32_t left_red, uint32_t left_green, uint32_t left_blue,
+    uint32_t right_red, uint32_t right_green, uint32_t right_blue,
+    uint32_t left_mode = 1, uint32_t right_mode = 1);
 
   // Set LED values with individual arguments using LedMode enum
-  bool set_led_values(uint32_t left_red, uint32_t left_green, uint32_t left_blue,
-                     uint32_t right_red, uint32_t right_green, uint32_t right_blue,
-                     LedMode left_mode, LedMode right_mode);
+  bool set_led_values(
+    uint32_t left_red, uint32_t left_green, uint32_t left_blue,
+    uint32_t right_red, uint32_t right_green, uint32_t right_blue,
+    LedMode left_mode, LedMode right_mode);
 
   // Set both heads to the same color (uint32_t mode for backward compatibility)
   bool set_led_color(uint32_t red, uint32_t green, uint32_t blue, uint32_t mode = 1);
