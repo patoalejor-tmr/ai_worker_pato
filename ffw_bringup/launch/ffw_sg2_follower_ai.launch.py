@@ -80,7 +80,7 @@ def generate_launch_description():
         'ffw_sg2_follower_ai_hardware_controller.yaml'
     ])
     rviz_config_file = PathJoinSubstitution([
-        FindPackageShare('ffw_description'), 'rviz', 'ffw.rviz'
+        FindPackageShare('ffw_description'), 'rviz', 'ffw_sg2.rviz'
     ])
 
     robot_description = {'robot_description': robot_description_content}
