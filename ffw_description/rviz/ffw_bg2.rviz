@@ -224,41 +224,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        left_wheel_drive_link:
+        world:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        left_wheel_steer_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        lift_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_wheel_drive_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_wheel_steer_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_wheel_drive_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_wheel_steer_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
@@ -286,7 +255,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
