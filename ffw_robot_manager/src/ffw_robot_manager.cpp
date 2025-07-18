@@ -320,7 +320,7 @@ void FfwRobotManager::setup_watchdogs()
   dxl_state_watchdog_ = std::make_unique<TopicWatchdog<dynamixel_interfaces::msg::DynamixelState>>(
     get_node().get(),
     "/ffw_follower/dxl_state",
-    std::chrono::milliseconds(250),
+    std::chrono::milliseconds(500),
     [this]() {
       // Set LED to red (solid) on timeout
       set_led_color(255, 0, 0, LedMode::RGB_BLINK);
