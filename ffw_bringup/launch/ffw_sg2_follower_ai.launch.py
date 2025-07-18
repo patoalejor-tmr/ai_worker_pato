@@ -165,6 +165,12 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Add a TimerAction to delay swerve_drive_spawner by 5 seconds after unspawning
+    swerve_drive_spawner_delayed = TimerAction(
+        period=5.0,
+        actions=[swerve_drive_spawner],
+    )
+
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
@@ -237,7 +243,7 @@ def generate_launch_description():
             target_action=joint_trajectory_executor_swerve_steering,
             on_exit=[
                 swerve_steering_initial_position_unspawner,
-                swerve_drive_spawner
+                swerve_drive_spawner_delayed
             ]
         ),
         condition=IfCondition(init_position)
