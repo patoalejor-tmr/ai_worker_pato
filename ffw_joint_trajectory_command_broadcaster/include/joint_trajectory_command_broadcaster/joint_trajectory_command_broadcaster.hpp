@@ -143,6 +143,7 @@ protected:
   rclcpp::Duration trigger_duration_ = rclcpp::Duration::from_seconds(3.0);  // 3초
   bool trigger_active_ = false;
   bool trigger_counting_ = false;
+  bool mode_changed_in_this_trigger_ = false;  // 이번 트리거 세션에서 모드가 이미 바뀌었는지 추적
 };
 
 }  // namespace joint_trajectory_command_broadcaster

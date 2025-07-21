@@ -415,19 +415,25 @@ void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time 
   bool current_trigger_active = check_trigger_active();
   
   if (current_trigger_active && !trigger_counting_) {
-    // 트리거 시작
-    trigger_counting_ = true;
-    trigger_start_time_ = current_time;
-    RCLCPP_INFO(get_node()->get_logger(), "Trigger activated - counting started");
-  } else if (!current_trigger_active && trigger_counting_) {
-    // 트리거 해제
-    trigger_counting_ = false;
-    RCLCPP_INFO(get_node()->get_logger(), "Trigger released - counting stopped");
+    // 트리거 시작 (이전에 모드가 바뀌지 않았을 때만)
+    if (!mode_changed_in_this_trigger_) {
+      trigger_counting_ = true;
+      trigger_start_time_ = current_time;
+      RCLCPP_INFO(get_node()->get_logger(), "Trigger activated - counting started");
+    }
+  } else if (!current_trigger_active) {
+    // 트리거 해제 - 모든 상태 초기화
+    if (trigger_counting_) {
+      trigger_counting_ = false;
+      RCLCPP_INFO(get_node()->get_logger(), "Trigger released - counting stopped");
+    }
+    // 트리거를 완전히 놓으면 다음 트리거 세션을 위해 초기화
+    mode_changed_in_this_trigger_ = false;
   }
   
-  // 3초간 트리거가 유지되었는지 확인
-  if (trigger_counting_ && (current_time - trigger_start_time_) >= trigger_duration_) {
-    trigger_counting_ = false;
+  // 3초간 트리거가 유지되었고, 아직 이번 세션에서 모드가 바뀌지 않았다면
+  if (trigger_counting_ && !mode_changed_in_this_trigger_ && 
+      (current_time - trigger_start_time_) >= trigger_duration_) {
     
     // 자동 모드 상태 전환 (토글)
     if (auto_mode_ == AutoMode::STOPPED) {
@@ -440,6 +446,10 @@ void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time 
       auto_mode_ = AutoMode::STOPPED;
       RCLCPP_INFO(get_node()->get_logger(), "Auto mode STOPPED - follower paused");
     }
+    
+    // 이번 트리거 세션에서 모드가 바뀌었음을 표시
+    mode_changed_in_this_trigger_ = true;
+    trigger_counting_ = false;  // 카운팅 중지
   }
 }
 
