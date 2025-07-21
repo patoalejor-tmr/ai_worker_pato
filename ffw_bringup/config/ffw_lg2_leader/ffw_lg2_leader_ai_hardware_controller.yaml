@@ -63,7 +63,6 @@
         - 0.0
         - 0.3
       action_monitor_rate: 20.0
-      use_local_topics: true
 
 /**:
   spring_actuator_controller_left:
