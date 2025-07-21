@@ -139,8 +139,14 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
         group_joint_offsets_[group_name] = params_.right_offsets;
       }
       
-      // Default topic name
-      std::string topic_name = topic_name_prefix + "joint_trajectory";
+      // Create topic name with group-specific namespace
+      std::string topic_name;
+      if (params_.use_local_topics) {
+        // Use group-specific namespace: ~/joint_trajectory -> ~_left/joint_trajectory or ~_right/joint_trajectory
+        topic_name = "~_" + group_name + "/joint_trajectory";
+      } else {
+        topic_name = "joint_trajectory_command_broadcaster_" + group_name + "/joint_trajectory";
+      }
       group_topic_names_[group_name] = topic_name;
       
       // Create publisher for this group
