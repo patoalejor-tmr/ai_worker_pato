@@ -108,3 +108,13 @@ joint_trajectory_command_broadcaster:
     default_value: [],
     description: "Offsets for right arm joints."
   }
+  trigger_threshold: {
+    type: double,
+    default_value: 0.7,
+    description: "Threshold value for gripper trigger joints to activate auto mode. Both gripper triggers must exceed this value."
+  }
+  trigger_duration: {
+    type: double,
+    default_value: 3.0,
+    description: "Duration (in seconds) that triggers must be held above threshold to toggle auto mode."
+  }

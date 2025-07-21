@@ -406,8 +406,8 @@ bool JointTrajectoryCommandBroadcaster::check_trigger_active() const
   double gripper_l_pos = get_value(name_if_value_mapping_, "gripper_l_joint1", HW_IF_POSITION);
   
   // Return true if both grippers are above threshold
-  return (!std::isnan(gripper_r_pos) && gripper_r_pos >= trigger_threshold_) &&
-         (!std::isnan(gripper_l_pos) && gripper_l_pos >= trigger_threshold_);
+  return (!std::isnan(gripper_r_pos) && gripper_r_pos >= params_.trigger_threshold) &&
+         (!std::isnan(gripper_l_pos) && gripper_l_pos >= params_.trigger_threshold);
 }
 
 void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time & current_time)
@@ -415,30 +415,30 @@ void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time 
   bool current_trigger_active = check_trigger_active();
   
   if (current_trigger_active && !trigger_counting_) {
-    // 트리거 시작 (이전에 모드가 바뀌지 않았을 때만)
+    // Start trigger counting (only if mode hasn't changed in this trigger session)
     if (!mode_changed_in_this_trigger_) {
       trigger_counting_ = true;
       trigger_start_time_ = current_time;
       RCLCPP_INFO(get_node()->get_logger(), "Trigger activated - counting started");
     }
   } else if (!current_trigger_active) {
-    // 트리거 해제 - 모든 상태 초기화
+    // Trigger released - reset all states
     if (trigger_counting_) {
       trigger_counting_ = false;
       RCLCPP_INFO(get_node()->get_logger(), "Trigger released - counting stopped");
     }
-    // 트리거를 완전히 놓으면 다음 트리거 세션을 위해 초기화
+    // Reset for next trigger session when trigger is completely released
     mode_changed_in_this_trigger_ = false;
   }
   
-  // 3초간 트리거가 유지되었고, 아직 이번 세션에서 모드가 바뀌지 않았다면
+  // Check if trigger has been held for specified duration and mode hasn't changed in this session
   if (trigger_counting_ && !mode_changed_in_this_trigger_ && 
-      (current_time - trigger_start_time_) >= trigger_duration_) {
+      (current_time - trigger_start_time_) >= rclcpp::Duration::from_seconds(params_.trigger_duration)) {
     
-    // 자동 모드 상태 전환 (토글)
+    // Toggle auto mode state
     if (auto_mode_ == AutoMode::STOPPED) {
       auto_mode_ = AutoMode::ACTIVE;
-      // 자동 모드 시작시 동기화 상태 초기화
+      // Reset sync state when starting auto mode
       joints_synced_ = false;
       first_publish_ = true;
       RCLCPP_INFO(get_node()->get_logger(), "Auto mode ACTIVATED - follower will slowly follow leader");
@@ -447,9 +447,9 @@ void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time 
       RCLCPP_INFO(get_node()->get_logger(), "Auto mode STOPPED - follower paused");
     }
     
-    // 이번 트리거 세션에서 모드가 바뀌었음을 표시
+    // Mark that mode has changed in this trigger session
     mode_changed_in_this_trigger_ = true;
-    trigger_counting_ = false;  // 카운팅 중지
+    trigger_counting_ = false;  // Stop counting
   }
 }
 

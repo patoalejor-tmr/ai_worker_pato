@@ -133,17 +133,14 @@ protected:
 
   // Trigger-based auto mode control
   enum class AutoMode {
-    STOPPED,     // 정지 모드 (발행 안함)
-    ACTIVE       // 움직임 모드 (천천히 따라가기)
+    STOPPED,     // pause mode
+    ACTIVE       // follow mode (slowly following)
   };
   
   AutoMode auto_mode_ = AutoMode::STOPPED;
-  rclcpp::Time trigger_start_time_;
-  double trigger_threshold_ = 0.7;  // 트리거 임계값
-  rclcpp::Duration trigger_duration_ = rclcpp::Duration::from_seconds(3.0);  // 3초
-  bool trigger_active_ = false;
+  rclcpp::Time trigger_start_time_{0, 0, RCL_ROS_TIME};  // Initialize to zero time
   bool trigger_counting_ = false;
-  bool mode_changed_in_this_trigger_ = false;  // 이번 트리거 세션에서 모드가 이미 바뀌었는지 추적
+  bool mode_changed_in_this_trigger_ = false;
 };
 
 }  // namespace joint_trajectory_command_broadcaster
