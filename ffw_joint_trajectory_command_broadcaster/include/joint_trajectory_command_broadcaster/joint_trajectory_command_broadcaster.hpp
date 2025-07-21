@@ -133,12 +133,11 @@ protected:
 
   // Trigger-based auto mode control
   enum class AutoMode {
-    DISABLED,    // 자동 모드 비활성
-    ACTIVE,      // 자동 모드 활성 (천천히 따라가기)
-    PAUSED       // 자동 모드 일시정지
+    STOPPED,     // 정지 모드 (발행 안함)
+    ACTIVE       // 움직임 모드 (천천히 따라가기)
   };
   
-  AutoMode auto_mode_ = AutoMode::DISABLED;
+  AutoMode auto_mode_ = AutoMode::STOPPED;
   rclcpp::Time trigger_start_time_;
   double trigger_threshold_ = 0.7;  // 트리거 임계값
   rclcpp::Duration trigger_duration_ = rclcpp::Duration::from_seconds(3.0);  // 3초

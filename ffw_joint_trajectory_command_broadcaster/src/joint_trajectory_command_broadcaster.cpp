@@ -429,20 +429,13 @@ void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time 
   if (trigger_counting_ && (current_time - trigger_start_time_) >= trigger_duration_) {
     trigger_counting_ = false;
     
-    // 자동 모드 상태 전환
-    switch (auto_mode_) {
-      case AutoMode::DISABLED:
-        auto_mode_ = AutoMode::ACTIVE;
-        RCLCPP_INFO(get_node()->get_logger(), "Auto mode ACTIVATED - follower will slowly follow leader");
-        break;
-      case AutoMode::ACTIVE:
-        auto_mode_ = AutoMode::PAUSED;
-        RCLCPP_INFO(get_node()->get_logger(), "Auto mode PAUSED - follower stopped");
-        break;
-      case AutoMode::PAUSED:
-        auto_mode_ = AutoMode::ACTIVE;
-        RCLCPP_INFO(get_node()->get_logger(), "Auto mode RESUMED - follower will slowly follow leader");
-        break;
+    // 자동 모드 상태 전환 (토글)
+    if (auto_mode_ == AutoMode::STOPPED) {
+      auto_mode_ = AutoMode::ACTIVE;
+      RCLCPP_INFO(get_node()->get_logger(), "Auto mode ACTIVATED - follower will slowly follow leader");
+    } else {
+      auto_mode_ = AutoMode::STOPPED;
+      RCLCPP_INFO(get_node()->get_logger(), "Auto mode STOPPED - follower paused");
     }
   }
 }
@@ -471,8 +464,8 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
   // Update trigger state for auto mode control
   update_trigger_state(time);
 
-  // Skip publishing if auto mode is PAUSED
-  if (auto_mode_ == AutoMode::PAUSED) {
+  // Skip publishing if auto mode is STOPPED
+  if (auto_mode_ == AutoMode::STOPPED) {
     return controller_interface::return_type::OK;
   }
 
