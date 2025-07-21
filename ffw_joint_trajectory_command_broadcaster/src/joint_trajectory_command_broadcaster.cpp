@@ -113,14 +113,53 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
 
   try {
     const std::string topic_name_prefix = params_.use_local_topics ? "~/" : "";
-    // Create publisher for JointTrajectory
-    joint_trajectory_publisher_ =
-      get_node()->create_publisher<trajectory_msgs::msg::JointTrajectory>(
-      topic_name_prefix + "joint_trajectory", rclcpp::SystemDefaultsQoS());
+    
+    // Create publishers for left and right groups
+    std::vector<std::string> groups = {"left", "right"};
+    
+    for (const auto & group_name : groups) {
+      // Get joints for this group
+      std::vector<std::string> group_joints;
+      if (group_name == "left" && !params_.left_joints.empty()) {
+        group_joints = params_.left_joints;
+      } else if (group_name == "right" && !params_.right_joints.empty()) {
+        group_joints = params_.right_joints;
+      }
+      
+      if (group_joints.empty()) {
+        continue; // Skip empty groups
+      }
+      
+      group_joint_names_[group_name] = group_joints;
+      
+      // Get offsets for this group
+      if (group_name == "left" && !params_.left_offsets.empty()) {
+        group_joint_offsets_[group_name] = params_.left_offsets;
+      } else if (group_name == "right" && !params_.right_offsets.empty()) {
+        group_joint_offsets_[group_name] = params_.right_offsets;
+      }
+      
+      // Default topic name
+      std::string topic_name = topic_name_prefix + "joint_trajectory";
+      group_topic_names_[group_name] = topic_name;
+      
+      // Create publisher for this group
+      joint_trajectory_publishers_[group_name] =
+        get_node()->create_publisher<trajectory_msgs::msg::JointTrajectory>(
+        topic_name, rclcpp::SystemDefaultsQoS());
 
-    realtime_joint_trajectory_publisher_ =
-      std::make_shared<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>(
-      joint_trajectory_publisher_);
+      realtime_joint_trajectory_publishers_[group_name] =
+        std::make_shared<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>(
+        joint_trajectory_publishers_[group_name]);
+        
+      RCLCPP_INFO(
+        get_node()->get_logger(),
+        "Created joint trajectory publisher for group '%s' on topic: %s with %zu joints",
+        group_name.c_str(), topic_name.c_str(), group_joints.size());
+    }
+    
+    // Store the groups for later use
+    trajectory_groups_ = groups;
 
     // Create subscriber for follower joint states
     joint_states_subscriber_ = get_node()->create_subscription<sensor_msgs::msg::JointState>(
@@ -158,20 +197,26 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_activ
     return CallbackReturn::ERROR;
   }
 
-  // Check offsets
-  const size_t num_joints = joint_names_.size();
-  if (params_.offsets.empty()) {
-    // If no offsets provided, use zeros
-    joint_offsets_.assign(num_joints, 0.0);
-  } else if (params_.offsets.size() != num_joints) {
-    RCLCPP_ERROR(
+  // Check offsets for each group
+  for (const auto & group_name : trajectory_groups_) {
+    const auto & group_joints = group_joint_names_[group_name];
+    const size_t num_joints = group_joints.size();
+    
+    if (group_joint_offsets_[group_name].empty()) {
+      // If no offsets provided, use zeros
+      group_joint_offsets_[group_name].assign(num_joints, 0.0);
+    } else if (group_joint_offsets_[group_name].size() != num_joints) {
+      RCLCPP_ERROR(
+        get_node()->get_logger(),
+        "The number of provided offsets (%zu) for group '%s' does not match the number of joints (%zu).",
+        group_joint_offsets_[group_name].size(), group_name.c_str(), num_joints);
+      return CallbackReturn::ERROR;
+    }
+    
+    RCLCPP_INFO(
       get_node()->get_logger(),
-      "The number of provided offsets (%zu) does not match the number of joints (%zu).",
-      params_.offsets.size(), num_joints);
-    return CallbackReturn::ERROR;
-  } else {
-    // Use provided offsets
-    joint_offsets_ = params_.offsets;
+      "Group '%s' configured with %zu joints and %zu offsets",
+      group_name.c_str(), num_joints, group_joint_offsets_[group_name].size());
   }
 
   // No need to init JointState or DynamicJointState messages, only JointTrajectory
@@ -196,6 +241,9 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_deact
 {
   joint_names_.clear();
   name_if_value_mapping_.clear();
+  group_joint_names_.clear();
+  group_joint_offsets_.clear();
+  group_topic_names_.clear();
 
   return CallbackReturn::SUCCESS;
 }
@@ -307,36 +355,39 @@ double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
   double total_error = 0.0;
   int valid_joints = 0;
 
-  // Calculate mean error across all joints
-  for (const auto & joint_name : joint_names_) {
-    auto follower_it = follower_joint_positions_.find(joint_name);
-    if (follower_it == follower_joint_positions_.end()) {
-      continue;  // Skip joints not available in follower
-    }
-
-    double leader_pos = get_value(name_if_value_mapping_, joint_name, HW_IF_POSITION);
-    if (std::isnan(leader_pos)) {
-      continue;  // Skip joints without valid leader position
-    }
-
-    // Apply reverse and offset to leader position for comparison
-    if (std::find(params_.reverse_joints.begin(), params_.reverse_joints.end(), joint_name) !=
-      params_.reverse_joints.end())
-    {
-      leader_pos = -leader_pos;
-    }
-
-    // Find the offset for this joint
-    auto joint_it = std::find(joint_names_.begin(), joint_names_.end(), joint_name);
-    if (joint_it != joint_names_.end()) {
-      size_t joint_index = std::distance(joint_names_.begin(), joint_it);
-      if (joint_index < joint_offsets_.size()) {
-        leader_pos += joint_offsets_[joint_index];
+  // Calculate mean error across all joints in all groups
+  for (const auto & group_pair : group_joint_names_) {
+    const auto & group_name = group_pair.first;
+    const auto & group_joints = group_pair.second;
+    const auto & group_offsets = group_joint_offsets_.at(group_name);
+    
+    for (size_t i = 0; i < group_joints.size(); ++i) {
+      const auto & joint_name = group_joints[i];
+      auto follower_it = follower_joint_positions_.find(joint_name);
+      if (follower_it == follower_joint_positions_.end()) {
+        continue;  // Skip joints not available in follower
       }
-    }
 
-    total_error += std::abs(leader_pos - follower_it->second);
-    valid_joints++;
+      double leader_pos = get_value(name_if_value_mapping_, joint_name, HW_IF_POSITION);
+      if (std::isnan(leader_pos)) {
+        continue;  // Skip joints without valid leader position
+      }
+
+      // Apply reverse and offset to leader position for comparison
+      if (std::find(params_.reverse_joints.begin(), params_.reverse_joints.end(), joint_name) !=
+        params_.reverse_joints.end())
+      {
+        leader_pos = -leader_pos;
+      }
+
+      // Apply group offset
+      if (i < group_offsets.size()) {
+        leader_pos += group_offsets[i];
+      }
+
+      total_error += std::abs(leader_pos - follower_it->second);
+      valid_joints++;
+    }
   }
 
   return valid_joints > 0 ? total_error / valid_joints : std::numeric_limits<double>::max();
@@ -382,57 +433,69 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
     }
   }
 
-  // Publish JointTrajectory message with current positions
-  if (realtime_joint_trajectory_publisher_ && realtime_joint_trajectory_publisher_->trylock()) {
-    auto & traj_msg = realtime_joint_trajectory_publisher_->msg_;
-    traj_msg.header.stamp = rclcpp::Time(0, 0);
-    traj_msg.joint_names = joint_names_;
+  // Publish JointTrajectory messages for each group with current positions
+  for (const auto & group_name : trajectory_groups_) {
+    const auto & group_joints = group_joint_names_[group_name];
+    const auto & group_offsets = group_joint_offsets_[group_name];
+    
+    if (group_joints.empty()) {
+      continue; // Skip empty groups
+    }
+    
+    auto & realtime_publisher = realtime_joint_trajectory_publishers_[group_name];
+    if (realtime_publisher && realtime_publisher->trylock()) {
+      auto & traj_msg = realtime_publisher->msg_;
+      traj_msg.header.stamp = rclcpp::Time(0, 0);
+      traj_msg.joint_names = group_joints;
 
-    const size_t num_joints = joint_names_.size();
-    traj_msg.points.clear();
-    traj_msg.points.resize(1);
-    traj_msg.points[0].positions.resize(num_joints, kUninitializedValue);
+      const size_t num_joints = group_joints.size();
+      traj_msg.points.clear();
+      traj_msg.points.resize(1);
+      traj_msg.points[0].positions.resize(num_joints, kUninitializedValue);
 
-    for (size_t i = 0; i < num_joints; ++i) {
-      double pos_value =
-        get_value(name_if_value_mapping_, joint_names_[i], HW_IF_POSITION);
+      for (size_t i = 0; i < num_joints; ++i) {
+        double pos_value =
+          get_value(name_if_value_mapping_, group_joints[i], HW_IF_POSITION);
 
-      // Check if the current joint is in the reverse_joints parameter
-      if (
-        std::find(
-          params_.reverse_joints.begin(),
-          params_.reverse_joints.end(),
-          joint_names_[i]) != params_.reverse_joints.end())
-      {
-        pos_value = -pos_value;
+        // Check if the current joint is in the reverse_joints parameter
+        if (
+          std::find(
+            params_.reverse_joints.begin(),
+            params_.reverse_joints.end(),
+            group_joints[i]) != params_.reverse_joints.end())
+        {
+          pos_value = -pos_value;
+        }
+
+        // Apply offset
+        if (i < group_offsets.size()) {
+          pos_value += group_offsets[i];
+        }
+
+        traj_msg.points[0].positions[i] = pos_value;
       }
 
-      // Apply offset
-      pos_value += joint_offsets_[i];
+      // Set time_from_start based on sync status and mean error
+      if (joints_synced_) {
+        traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate when synced
+      } else {
+        // Adaptive timing based on mean error using parameters
+        if(mean_error < params_.min_error) {
+          mean_error = 0;
+        }
 
-      traj_msg.points[0].positions[i] = pos_value;
-    }
+        double error_ratio = std::min(mean_error / params_.max_error, 1.0);
+        // Corrected logic: small error -> small delay, large error -> large delay
+        double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) *
+          error_ratio;
 
-    // Set time_from_start based on sync status and mean error
-    if (joints_synced_) {
-      traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate when synced
-    } else {
-      // Adaptive timing based on mean error using parameters
-      if(mean_error < params_.min_error) {
-        mean_error = 0;
+        // Convert to nanoseconds
+        int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
+        traj_msg.points[0].time_from_start = rclcpp::Duration(0, delay_ns);
       }
 
-      double error_ratio = std::min(mean_error / params_.max_error, 1.0);
-      // Corrected logic: small error -> small delay, large error -> large delay
-      double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) *
-        error_ratio;
-
-      // Convert to nanoseconds
-      int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
-      traj_msg.points[0].time_from_start = rclcpp::Duration(0, delay_ns);
+      realtime_publisher->unlockAndPublish();
     }
-
-    realtime_joint_trajectory_publisher_->unlockAndPublish();
   }
 
   return controller_interface::return_type::OK;

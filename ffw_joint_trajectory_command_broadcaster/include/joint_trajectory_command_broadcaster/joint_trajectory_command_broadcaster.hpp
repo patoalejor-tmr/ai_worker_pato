@@ -105,10 +105,18 @@ protected:
 
   std::vector<std::string> joint_names_;
   std::vector<double> joint_offsets_;
-  std::shared_ptr<rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>>
-  joint_trajectory_publisher_;
-  std::shared_ptr<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>
-  realtime_joint_trajectory_publisher_;
+  
+  // Multiple publishers for different joint groups (left/right)
+  std::unordered_map<std::string, std::shared_ptr<rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>>> 
+    joint_trajectory_publishers_;
+  std::unordered_map<std::string, std::shared_ptr<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>> 
+    realtime_joint_trajectory_publishers_;
+  
+  // Joint groups configuration
+  std::unordered_map<std::string, std::vector<std::string>> group_joint_names_;
+  std::unordered_map<std::string, std::vector<double>> group_joint_offsets_;
+  std::unordered_map<std::string, std::string> group_topic_names_;
+  std::vector<std::string> trajectory_groups_;
 
   std::unordered_map<std::string, std::unordered_map<std::string, double>> name_if_value_mapping_;
 
