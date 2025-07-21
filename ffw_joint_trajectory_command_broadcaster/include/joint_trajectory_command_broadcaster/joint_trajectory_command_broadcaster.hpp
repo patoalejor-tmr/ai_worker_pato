@@ -107,13 +107,15 @@ protected:
 
   std::vector<std::string> joint_names_;
   std::vector<double> joint_offsets_;
-  
+
   // Multiple publishers for different joint groups (left/right)
-  std::unordered_map<std::string, std::shared_ptr<rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>>> 
-    joint_trajectory_publishers_;
-  std::unordered_map<std::string, std::shared_ptr<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>> 
-    realtime_joint_trajectory_publishers_;
-  
+  std::unordered_map<std::string,
+    std::shared_ptr<rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>>>
+  joint_trajectory_publishers_;
+  std::unordered_map<std::string,
+    std::shared_ptr<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>>
+  realtime_joint_trajectory_publishers_;
+
   // Joint groups configuration
   std::unordered_map<std::string, std::vector<std::string>> group_joint_names_;
   std::unordered_map<std::string, std::vector<double>> group_joint_offsets_;
@@ -132,11 +134,12 @@ protected:
   bool first_publish_ = true;
 
   // Trigger-based auto mode control
-  enum class AutoMode {
+  enum class AutoMode
+  {
     STOPPED,     // pause mode
     ACTIVE       // follow mode (slowly following)
   };
-  
+
   AutoMode auto_mode_ = AutoMode::STOPPED;
   rclcpp::Time trigger_start_time_{0, 0, RCL_ROS_TIME};  // Initialize to zero time
   bool trigger_counting_ = false;

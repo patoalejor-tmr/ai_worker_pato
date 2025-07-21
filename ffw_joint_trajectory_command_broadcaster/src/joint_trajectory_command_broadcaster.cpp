@@ -113,10 +113,10 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
 
   try {
     const std::string topic_name_prefix = params_.use_local_topics ? "~/" : "";
-    
+
     // Create publishers for left and right groups
     std::vector<std::string> groups = {"left", "right"};
-    
+
     for (const auto & group_name : groups) {
       // Get joints for this group
       std::vector<std::string> group_joints;
@@ -125,30 +125,29 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
       } else if (group_name == "right" && !params_.right_joints.empty()) {
         group_joints = params_.right_joints;
       }
-      
+
       if (group_joints.empty()) {
-        continue; // Skip empty groups
+        continue;  // Skip empty groups
       }
-      
+
       group_joint_names_[group_name] = group_joints;
-      
+
       // Get offsets for this group
       if (group_name == "left" && !params_.left_offsets.empty()) {
         group_joint_offsets_[group_name] = params_.left_offsets;
       } else if (group_name == "right" && !params_.right_offsets.empty()) {
         group_joint_offsets_[group_name] = params_.right_offsets;
       }
-      
+
       // Create topic name with group-specific namespace
       std::string topic_name;
       if (params_.use_local_topics) {
-        // Use group-specific namespace: ~/joint_trajectory -> ~_left/joint_trajectory or ~_right/joint_trajectory
         topic_name = "~_" + group_name + "/joint_trajectory";
       } else {
         topic_name = "joint_trajectory_command_broadcaster_" + group_name + "/joint_trajectory";
       }
       group_topic_names_[group_name] = topic_name;
-      
+
       // Create publisher for this group
       joint_trajectory_publishers_[group_name] =
         get_node()->create_publisher<trajectory_msgs::msg::JointTrajectory>(
@@ -157,13 +156,13 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
       realtime_joint_trajectory_publishers_[group_name] =
         std::make_shared<realtime_tools::RealtimePublisher<trajectory_msgs::msg::JointTrajectory>>(
         joint_trajectory_publishers_[group_name]);
-        
+
       RCLCPP_INFO(
         get_node()->get_logger(),
         "Created joint trajectory publisher for group '%s' on topic: %s with %zu joints",
         group_name.c_str(), topic_name.c_str(), group_joints.size());
     }
-    
+
     // Store the groups for later use
     trajectory_groups_ = groups;
 
@@ -207,18 +206,19 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_activ
   for (const auto & group_name : trajectory_groups_) {
     const auto & group_joints = group_joint_names_[group_name];
     const size_t num_joints = group_joints.size();
-    
+
     if (group_joint_offsets_[group_name].empty()) {
       // If no offsets provided, use zeros
       group_joint_offsets_[group_name].assign(num_joints, 0.0);
     } else if (group_joint_offsets_[group_name].size() != num_joints) {
       RCLCPP_ERROR(
         get_node()->get_logger(),
-        "The number of provided offsets (%zu) for group '%s' does not match the number of joints (%zu).",
+        "The number of provided offsets (%zu) for group '%s' does not match the number of "
+        "joints (%zu).",
         group_joint_offsets_[group_name].size(), group_name.c_str(), num_joints);
       return CallbackReturn::ERROR;
     }
-    
+
     RCLCPP_INFO(
       get_node()->get_logger(),
       "Group '%s' configured with %zu joints and %zu offsets",
@@ -366,7 +366,7 @@ double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
     const auto & group_name = group_pair.first;
     const auto & group_joints = group_pair.second;
     const auto & group_offsets = group_joint_offsets_.at(group_name);
-    
+
     for (size_t i = 0; i < group_joints.size(); ++i) {
       const auto & joint_name = group_joints[i];
       auto follower_it = follower_joint_positions_.find(joint_name);
@@ -404,7 +404,7 @@ bool JointTrajectoryCommandBroadcaster::check_trigger_active() const
   // Check if gripper trigger joints are above threshold
   double gripper_r_pos = get_value(name_if_value_mapping_, "gripper_r_joint1", HW_IF_POSITION);
   double gripper_l_pos = get_value(name_if_value_mapping_, "gripper_l_joint1", HW_IF_POSITION);
-  
+
   // Return true if both grippers are above threshold
   return (!std::isnan(gripper_r_pos) && gripper_r_pos >= params_.trigger_threshold) &&
          (!std::isnan(gripper_l_pos) && gripper_l_pos >= params_.trigger_threshold);
@@ -413,7 +413,7 @@ bool JointTrajectoryCommandBroadcaster::check_trigger_active() const
 void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time & current_time)
 {
   bool current_trigger_active = check_trigger_active();
-  
+
   if (current_trigger_active && !trigger_counting_) {
     // Start trigger counting (only if mode hasn't changed in this trigger session)
     if (!mode_changed_in_this_trigger_) {
@@ -430,23 +430,25 @@ void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time 
     // Reset for next trigger session when trigger is completely released
     mode_changed_in_this_trigger_ = false;
   }
-  
+
   // Check if trigger has been held for specified duration and mode hasn't changed in this session
-  if (trigger_counting_ && !mode_changed_in_this_trigger_ && 
-      (current_time - trigger_start_time_) >= rclcpp::Duration::from_seconds(params_.trigger_duration)) {
-    
+  if (trigger_counting_ && !mode_changed_in_this_trigger_ &&
+    (current_time - trigger_start_time_) >=
+    rclcpp::Duration::from_seconds(params_.trigger_duration))
+  {
     // Toggle auto mode state
     if (auto_mode_ == AutoMode::STOPPED) {
       auto_mode_ = AutoMode::ACTIVE;
       // Reset sync state when starting auto mode
       joints_synced_ = false;
       first_publish_ = true;
-      RCLCPP_INFO(get_node()->get_logger(), "Auto mode ACTIVATED - follower will slowly follow leader");
+      RCLCPP_INFO(get_node()->get_logger(),
+          "Auto mode ACTIVATED - follower will slowly follow leader");
     } else {
       auto_mode_ = AutoMode::STOPPED;
       RCLCPP_INFO(get_node()->get_logger(), "Auto mode STOPPED - follower paused");
     }
-    
+
     // Mark that mode has changed in this trigger session
     mode_changed_in_this_trigger_ = true;
     trigger_counting_ = false;  // Stop counting
@@ -505,11 +507,11 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
   for (const auto & group_name : trajectory_groups_) {
     const auto & group_joints = group_joint_names_[group_name];
     const auto & group_offsets = group_joint_offsets_[group_name];
-    
+
     if (group_joints.empty()) {
-      continue; // Skip empty groups
+      continue;  // Skip empty groups
     }
-    
+
     auto & realtime_publisher = realtime_joint_trajectory_publishers_[group_name];
     if (realtime_publisher && realtime_publisher->trylock()) {
       auto & traj_msg = realtime_publisher->msg_;
