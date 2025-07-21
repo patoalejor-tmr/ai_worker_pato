@@ -530,13 +530,8 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
         traj_msg.points[0].positions[i] = pos_value;
       }
 
-      // Set time_from_start based on auto mode, sync status and mean error
-      if (auto_mode_ == AutoMode::ACTIVE) {
-        // Auto mode: use slower movement for safety
-        double slow_delay = 2.0;  // 자동 모드에서는 2초 지연으로 천천히 움직임
-        int32_t delay_ns = static_cast<int32_t>(slow_delay * 1e9);
-        traj_msg.points[0].time_from_start = rclcpp::Duration(0, delay_ns);
-      } else if (joints_synced_) {
+      // Set time_from_start based on sync status and mean error
+      if (joints_synced_) {
         traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate when synced
       } else {
         // Adaptive timing based on mean error using parameters
@@ -548,6 +543,11 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
         // Corrected logic: small error -> small delay, large error -> large delay
         double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) *
           error_ratio;
+
+        // In auto mode, add extra delay for safety
+        if (auto_mode_ == AutoMode::ACTIVE) {
+          adaptive_delay = std::max(adaptive_delay, 1.0);  // 최소 1초 지연으로 안전성 확보
+        }
 
         // Convert to nanoseconds
         int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
