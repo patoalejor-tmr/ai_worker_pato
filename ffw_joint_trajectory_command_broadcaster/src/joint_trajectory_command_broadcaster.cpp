@@ -399,6 +399,54 @@ double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
   return valid_joints > 0 ? total_error / valid_joints : std::numeric_limits<double>::max();
 }
 
+bool JointTrajectoryCommandBroadcaster::check_trigger_active() const
+{
+  // Check if gripper trigger joints are above threshold
+  double gripper_r_pos = get_value(name_if_value_mapping_, "gripper_r_joint1", HW_IF_POSITION);
+  double gripper_l_pos = get_value(name_if_value_mapping_, "gripper_l_joint1", HW_IF_POSITION);
+  
+  // Return true if both grippers are above threshold
+  return (!std::isnan(gripper_r_pos) && gripper_r_pos >= trigger_threshold_) ||
+         (!std::isnan(gripper_l_pos) && gripper_l_pos >= trigger_threshold_);
+}
+
+void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time & current_time)
+{
+  bool current_trigger_active = check_trigger_active();
+  
+  if (current_trigger_active && !trigger_counting_) {
+    // 트리거 시작
+    trigger_counting_ = true;
+    trigger_start_time_ = current_time;
+    RCLCPP_INFO(get_node()->get_logger(), "Trigger activated - counting started");
+  } else if (!current_trigger_active && trigger_counting_) {
+    // 트리거 해제
+    trigger_counting_ = false;
+    RCLCPP_INFO(get_node()->get_logger(), "Trigger released - counting stopped");
+  }
+  
+  // 3초간 트리거가 유지되었는지 확인
+  if (trigger_counting_ && (current_time - trigger_start_time_) >= trigger_duration_) {
+    trigger_counting_ = false;
+    
+    // 자동 모드 상태 전환
+    switch (auto_mode_) {
+      case AutoMode::DISABLED:
+        auto_mode_ = AutoMode::ACTIVE;
+        RCLCPP_INFO(get_node()->get_logger(), "Auto mode ACTIVATED - follower will slowly follow leader");
+        break;
+      case AutoMode::ACTIVE:
+        auto_mode_ = AutoMode::PAUSED;
+        RCLCPP_INFO(get_node()->get_logger(), "Auto mode PAUSED - follower stopped");
+        break;
+      case AutoMode::PAUSED:
+        auto_mode_ = AutoMode::ACTIVE;
+        RCLCPP_INFO(get_node()->get_logger(), "Auto mode RESUMED - follower will slowly follow leader");
+        break;
+    }
+  }
+}
+
 bool JointTrajectoryCommandBroadcaster::check_joints_synced() const
 {
   double mean_error = calculate_mean_error();
@@ -406,7 +454,7 @@ bool JointTrajectoryCommandBroadcaster::check_joints_synced() const
 }
 
 controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+  const rclcpp::Time & time, const rclcpp::Duration & /*period*/)
 {
   // Update stored values
   for (const auto & state_interface : state_interfaces_) {
@@ -418,6 +466,14 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
     if (value) {
       name_if_value_mapping_[state_interface.get_prefix_name()][interface_name] = *value;
     }
+  }
+
+  // Update trigger state for auto mode control
+  update_trigger_state(time);
+
+  // Skip publishing if auto mode is PAUSED
+  if (auto_mode_ == AutoMode::PAUSED) {
+    return controller_interface::return_type::OK;
   }
 
   // Calculate mean error and check if joints are synced
@@ -481,8 +537,13 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
         traj_msg.points[0].positions[i] = pos_value;
       }
 
-      // Set time_from_start based on sync status and mean error
-      if (joints_synced_) {
+      // Set time_from_start based on auto mode, sync status and mean error
+      if (auto_mode_ == AutoMode::ACTIVE) {
+        // Auto mode: use slower movement for safety
+        double slow_delay = 2.0;  // 자동 모드에서는 2초 지연으로 천천히 움직임
+        int32_t delay_ns = static_cast<int32_t>(slow_delay * 1e9);
+        traj_msg.points[0].time_from_start = rclcpp::Duration(0, delay_ns);
+      } else if (joints_synced_) {
         traj_msg.points[0].time_from_start = rclcpp::Duration(0, 0);  // immediate when synced
       } else {
         // Adaptive timing based on mean error using parameters

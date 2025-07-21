@@ -96,6 +96,8 @@ protected:
   void joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   bool check_joints_synced() const;
   double calculate_mean_error() const;
+  void update_trigger_state(const rclcpp::Time & current_time);
+  bool check_trigger_active() const;
 
 protected:
   // Optional parameters
@@ -128,6 +130,20 @@ protected:
   std::unordered_map<std::string, double> follower_joint_positions_;
   bool joints_synced_ = false;
   bool first_publish_ = true;
+
+  // Trigger-based auto mode control
+  enum class AutoMode {
+    DISABLED,    // 자동 모드 비활성
+    ACTIVE,      // 자동 모드 활성 (천천히 따라가기)
+    PAUSED       // 자동 모드 일시정지
+  };
+  
+  AutoMode auto_mode_ = AutoMode::DISABLED;
+  rclcpp::Time trigger_start_time_;
+  double trigger_threshold_ = 0.7;  // 트리거 임계값
+  rclcpp::Duration trigger_duration_ = rclcpp::Duration::from_seconds(3.0);  // 3초
+  bool trigger_active_ = false;
+  bool trigger_counting_ = false;
 };
 
 }  // namespace joint_trajectory_command_broadcaster
