@@ -406,7 +406,7 @@ bool JointTrajectoryCommandBroadcaster::check_trigger_active() const
   double gripper_l_pos = get_value(name_if_value_mapping_, "gripper_l_joint1", HW_IF_POSITION);
   
   // Return true if both grippers are above threshold
-  return (!std::isnan(gripper_r_pos) && gripper_r_pos >= trigger_threshold_) ||
+  return (!std::isnan(gripper_r_pos) && gripper_r_pos >= trigger_threshold_) &&
          (!std::isnan(gripper_l_pos) && gripper_l_pos >= trigger_threshold_);
 }
 
@@ -432,6 +432,9 @@ void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time 
     // 자동 모드 상태 전환 (토글)
     if (auto_mode_ == AutoMode::STOPPED) {
       auto_mode_ = AutoMode::ACTIVE;
+      // 자동 모드 시작시 동기화 상태 초기화
+      joints_synced_ = false;
+      first_publish_ = true;
       RCLCPP_INFO(get_node()->get_logger(), "Auto mode ACTIVATED - follower will slowly follow leader");
     } else {
       auto_mode_ = AutoMode::STOPPED;
@@ -544,10 +547,6 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
         double adaptive_delay = params_.min_delay + (params_.max_delay - params_.min_delay) *
           error_ratio;
 
-        // In auto mode, add extra delay for safety
-        if (auto_mode_ == AutoMode::ACTIVE) {
-          adaptive_delay = std::max(adaptive_delay, 1.0);  // 최소 1초 지연으로 안전성 확보
-        }
 
         // Convert to nanoseconds
         int32_t delay_ns = static_cast<int32_t>(adaptive_delay * 1e9);
