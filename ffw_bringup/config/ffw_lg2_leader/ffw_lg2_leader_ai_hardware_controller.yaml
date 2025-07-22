@@ -31,8 +31,6 @@
         - arm_l_joint6
         - arm_l_joint7
         - gripper_l_joint1
-      left_interfaces:
-        - position
       left_offsets:
         - 0.0
         - 0.0
@@ -51,8 +49,6 @@
         - arm_r_joint6
         - arm_r_joint7
         - gripper_r_joint1
-      right_interfaces:
-        - position
       right_offsets:
         - 0.0
         - 0.0
@@ -62,7 +58,6 @@
         - 0.0
         - 0.0
         - 0.3
-      action_monitor_rate: 20.0
 
 /**:
   spring_actuator_controller_left:
