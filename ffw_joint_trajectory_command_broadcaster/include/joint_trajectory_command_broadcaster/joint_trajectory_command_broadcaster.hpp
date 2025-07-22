@@ -91,8 +91,6 @@ public:
 
 protected:
   bool init_joint_data();
-  void init_joint_trajectory_msg();
-  bool use_all_available_interfaces() const;
   void joint_states_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   bool check_joints_synced() const;
   double calculate_mean_error() const;
@@ -120,6 +118,7 @@ protected:
   std::unordered_map<std::string, std::vector<std::string>> group_joint_names_;
   std::unordered_map<std::string, std::vector<double>> group_joint_offsets_;
   std::unordered_map<std::string, std::string> group_topic_names_;
+  std::unordered_map<std::string, std::vector<std::string>> group_reverse_joints_;
   std::vector<std::string> trajectory_groups_;
 
   std::unordered_map<std::string, std::unordered_map<std::string, double>> name_if_value_mapping_;

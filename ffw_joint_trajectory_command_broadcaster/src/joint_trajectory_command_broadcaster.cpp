@@ -71,17 +71,13 @@ const
 {
   controller_interface::InterfaceConfiguration state_interfaces_config;
 
-  if (use_all_available_interfaces()) {
-    state_interfaces_config.type = controller_interface::interface_configuration_type::ALL;
-  } else {
-    state_interfaces_config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
-    for (const auto & joint : params_.joints) {
-      for (const auto & interface : params_.interfaces) {
-        state_interfaces_config.names.push_back(joint + "/" + interface);
-      }
-    }
+  state_interfaces_config.type = controller_interface::interface_configuration_type::INDIVIDUAL;
+  for (const auto & joint : params_.left_joints) {
+    state_interfaces_config.names.push_back(joint + "/" + HW_IF_POSITION);
   }
-
+  for (const auto & joint : params_.right_joints) {
+    state_interfaces_config.names.push_back(joint + "/" + HW_IF_POSITION);
+  }
   return state_interfaces_config;
 }
 
@@ -94,26 +90,11 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
   }
   params_ = param_listener_->get_params();
 
-  if (use_all_available_interfaces()) {
-    RCLCPP_INFO(
-      get_node()->get_logger(),
-      "'joints' or 'interfaces' parameter is empty. "
-      "All available state interfaces will be considered.");
-    params_.joints.clear();
-    params_.interfaces.clear();
-  } else {
-    RCLCPP_INFO(
-      get_node()->get_logger(),
-      "Publishing trajectory states for the defined 'joints' and 'interfaces' parameters.");
-  }
-
   // Map interface if needed
   map_interface_to_joint_state_.clear();
   map_interface_to_joint_state_[HW_IF_POSITION] = params_.map_interface_to_joint_state.position;
 
   try {
-    const std::string topic_name_prefix = params_.use_local_topics ? "~/" : "";
-
     // Create publishers for left and right groups
     std::vector<std::string> groups = {"left", "right"};
 
@@ -139,13 +120,16 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
         group_joint_offsets_[group_name] = params_.right_offsets;
       }
 
+      // Get reverse joints for this group
+      if (group_name == "left" && !params_.left_reverse_joints.empty()) {
+        group_reverse_joints_[group_name] = params_.left_reverse_joints;
+      } else if (group_name == "right" && !params_.right_reverse_joints.empty()) {
+        group_reverse_joints_[group_name] = params_.right_reverse_joints;
+      }
+
       // Create topic name with group-specific namespace
       std::string topic_name;
-      if (params_.use_local_topics) {
-        topic_name = "~_" + group_name + "/joint_trajectory";
-      } else {
-        topic_name = "joint_trajectory_command_broadcaster_" + group_name + "/joint_trajectory";
-      }
+      topic_name = "~/joint_trajectory_command_broadcaster_" + group_name + "/joint_trajectory";
       group_topic_names_[group_name] = topic_name;
 
       // Create publisher for this group
@@ -228,16 +212,6 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_activ
   // No need to init JointState or DynamicJointState messages, only JointTrajectory
   // will be published. We'll construct it on-the-fly in update()
 
-  if (
-    !use_all_available_interfaces() &&
-    state_interfaces_.size() != (params_.joints.size() * params_.interfaces.size()))
-  {
-    RCLCPP_WARN(
-      get_node()->get_logger(),
-      "Not all requested interfaces exist. "
-      "Check ControllerManager output for more detailed information.");
-  }
-
   return CallbackReturn::SUCCESS;
 }
 
@@ -250,6 +224,7 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_deact
   group_joint_names_.clear();
   group_joint_offsets_.clear();
   group_topic_names_.clear();
+  group_reverse_joints_.clear();
 
   return CallbackReturn::SUCCESS;
 }
@@ -291,7 +266,7 @@ bool JointTrajectoryCommandBroadcaster::init_joint_data()
     const auto & interfaces_and_values = name_ifv.second;
     if (has_any_key(interfaces_and_values, {HW_IF_POSITION})) {
       if (
-        !params_.use_urdf_to_filter || !params_.joints.empty() || !is_model_loaded_ ||
+        !params_.use_urdf_to_filter || !is_model_loaded_ ||
         model_.getJoint(name_ifv.first))
       {
         joint_names_.push_back(name_ifv.first);
@@ -299,25 +274,7 @@ bool JointTrajectoryCommandBroadcaster::init_joint_data()
     }
   }
 
-  // Add extra joints if needed
-  rclcpp::Parameter extra_joints;
-  if (get_node()->get_parameter("extra_joints", extra_joints)) {
-    const std::vector<std::string> & extra_joints_names = extra_joints.as_string_array();
-    for (const auto & extra_joint_name : extra_joints_names) {
-      if (name_if_value_mapping_.count(extra_joint_name) == 0) {
-        name_if_value_mapping_[extra_joint_name] = {
-          {HW_IF_POSITION, 0.0}};
-        joint_names_.push_back(extra_joint_name);
-      }
-    }
-  }
-
   return true;
-}
-
-bool JointTrajectoryCommandBroadcaster::use_all_available_interfaces() const
-{
-  return params_.joints.empty() || params_.interfaces.empty();
 }
 
 double get_value(
@@ -366,6 +323,7 @@ double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
     const auto & group_name = group_pair.first;
     const auto & group_joints = group_pair.second;
     const auto & group_offsets = group_joint_offsets_.at(group_name);
+    const auto & group_reverse_joints = group_reverse_joints_.at(group_name);
 
     for (size_t i = 0; i < group_joints.size(); ++i) {
       const auto & joint_name = group_joints[i];
@@ -380,8 +338,8 @@ double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
       }
 
       // Apply reverse and offset to leader position for comparison
-      if (std::find(params_.reverse_joints.begin(), params_.reverse_joints.end(), joint_name) !=
-        params_.reverse_joints.end())
+      if (std::find(group_reverse_joints.begin(), group_reverse_joints.end(), joint_name) !=
+        group_reverse_joints.end())
       {
         leader_pos = -leader_pos;
       }
@@ -406,8 +364,8 @@ bool JointTrajectoryCommandBroadcaster::check_trigger_active() const
   double gripper_l_pos = get_value(name_if_value_mapping_, "gripper_l_joint1", HW_IF_POSITION);
 
   // Return true if both grippers are above threshold
-  return (!std::isnan(gripper_r_pos) && gripper_r_pos >= params_.trigger_threshold) &&
-         (!std::isnan(gripper_l_pos) && gripper_l_pos >= params_.trigger_threshold);
+  return (!std::isnan(gripper_r_pos) && gripper_r_pos * params_.trigger_sign >= params_.trigger_threshold * params_.trigger_sign) &&
+         (!std::isnan(gripper_l_pos) && gripper_l_pos * params_.trigger_sign >= params_.trigger_threshold * params_.trigger_sign);
 }
 
 void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time & current_time)
@@ -507,6 +465,7 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
   for (const auto & group_name : trajectory_groups_) {
     const auto & group_joints = group_joint_names_[group_name];
     const auto & group_offsets = group_joint_offsets_[group_name];
+    const auto & group_reverse_joints = group_reverse_joints_[group_name];
 
     if (group_joints.empty()) {
       continue;  // Skip empty groups
@@ -530,9 +489,9 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
         // Check if the current joint is in the reverse_joints parameter
         if (
           std::find(
-            params_.reverse_joints.begin(),
-            params_.reverse_joints.end(),
-            group_joints[i]) != params_.reverse_joints.end())
+            group_reverse_joints.begin(),
+            group_reverse_joints.end(),
+            group_joints[i]) != group_reverse_joints.end())
         {
           pos_value = -pos_value;
         }
