@@ -2,6 +2,10 @@
 Changelog for package ffw_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.10 (2025-07-22)
+------------------
+* None
+
 1.1.9 (2025-07-18)
 ------------------
 * Fixed file path for rviz config file
