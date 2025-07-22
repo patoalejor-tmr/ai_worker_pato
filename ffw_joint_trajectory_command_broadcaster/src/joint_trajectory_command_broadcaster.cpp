@@ -364,8 +364,11 @@ bool JointTrajectoryCommandBroadcaster::check_trigger_active() const
   double gripper_l_pos = get_value(name_if_value_mapping_, "gripper_l_joint1", HW_IF_POSITION);
 
   // Return true if both grippers are above threshold
-  return (!std::isnan(gripper_r_pos) && gripper_r_pos * params_.trigger_sign >= params_.trigger_threshold * params_.trigger_sign) &&
-         (!std::isnan(gripper_l_pos) && gripper_l_pos * params_.trigger_sign >= params_.trigger_threshold * params_.trigger_sign);
+  return (!std::isnan(gripper_r_pos) &&
+         gripper_r_pos * params_.trigger_sign >=
+         params_.trigger_threshold * params_.trigger_sign) &&
+         (!std::isnan(gripper_l_pos) &&
+         gripper_l_pos * params_.trigger_sign >= params_.trigger_threshold * params_.trigger_sign);
 }
 
 void JointTrajectoryCommandBroadcaster::update_trigger_state(const rclcpp::Time & current_time)
