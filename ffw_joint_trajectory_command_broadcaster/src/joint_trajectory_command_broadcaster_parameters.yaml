@@ -73,7 +73,7 @@ joint_trajectory_command_broadcaster:
   }
   trigger_threshold: {
     type: double,
-    default_value: 0.7,
+    default_value: -0.2,
     description: "Threshold value for gripper trigger joints to activate auto mode. Both gripper triggers must exceed this value."
   }
   trigger_duration: {
@@ -83,6 +83,6 @@ joint_trajectory_command_broadcaster:
   }
   trigger_sign: {
     type: double,
-    default_value: 1.0,
+    default_value: -1.0,
     description: "Sign of the trigger joints. 1.0 for positive sign, -1.0 for negative sign."
   }
