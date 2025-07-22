@@ -46,11 +46,6 @@ joint_trajectory_command_broadcaster:
     default_value: [],
     description: "Joint names for left arm group."
   }
-  left_interfaces: {
-    type: string_array,
-    default_value: [],
-    description: "Interface names for left arm group."
-  }
   left_offsets: {
     type: double_array,
     default_value: [],
@@ -65,11 +60,6 @@ joint_trajectory_command_broadcaster:
     type: string_array,
     default_value: [],
     description: "Joint names for right arm group."
-  }
-  right_interfaces: {
-    type: string_array,
-    default_value: [],
-    description: "Interface names for right arm group."
   }
   right_offsets: {
     type: double_array,
