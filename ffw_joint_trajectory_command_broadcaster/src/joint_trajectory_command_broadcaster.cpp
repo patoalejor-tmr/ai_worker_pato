@@ -331,12 +331,12 @@ double JointTrajectoryCommandBroadcaster::calculate_mean_error() const
     // Safely get group offsets and reverse joints
     std::vector<double> group_offsets;
     std::vector<std::string> group_reverse_joints;
-    
+
     auto offsets_it = group_joint_offsets_.find(group_name);
     if (offsets_it != group_joint_offsets_.end()) {
       group_offsets = offsets_it->second;
     }
-    
+
     auto reverse_it = group_reverse_joints_.find(group_name);
     if (reverse_it != group_reverse_joints_.end()) {
       group_reverse_joints = reverse_it->second;
@@ -487,12 +487,12 @@ controller_interface::return_type JointTrajectoryCommandBroadcaster::update(
     // Safely get group offsets and reverse joints
     std::vector<double> group_offsets;
     std::vector<std::string> group_reverse_joints;
-    
+
     auto offsets_it = group_joint_offsets_.find(group_name);
     if (offsets_it != group_joint_offsets_.end()) {
       group_offsets = offsets_it->second;
     }
-    
+
     auto reverse_it = group_reverse_joints_.find(group_name);
     if (reverse_it != group_reverse_joints_.end()) {
       group_reverse_joints = reverse_it->second;
