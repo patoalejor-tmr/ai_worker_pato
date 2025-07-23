@@ -129,7 +129,7 @@ controller_interface::CallbackReturn JointTrajectoryCommandBroadcaster::on_confi
 
       // Create topic name with group-specific namespace
       std::string topic_name;
-      topic_name = "~/joint_trajectory_command_broadcaster_" + group_name + "/joint_trajectory";
+      topic_name = "joint_trajectory_command_broadcaster_" + group_name + "/joint_trajectory";
       group_topic_names_[group_name] = topic_name;
 
       // Create publisher for this group
