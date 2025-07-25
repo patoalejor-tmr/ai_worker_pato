@@ -23,8 +23,6 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
 from launch.substitutions import (
-    Command,
-    FindExecutable,
     LaunchConfiguration,
     PathJoinSubstitution,
 )
@@ -61,21 +59,8 @@ def generate_launch_description():
     warehouse_sqlite_path = LaunchConfiguration('warehouse_sqlite_path')
     publish_robot_description_semantic = LaunchConfiguration('publish_robot_description_semantic')
 
-    # Generate robot description content from xacro
-    robot_description_content = Command([
-        PathJoinSubstitution([FindExecutable(name='xacro')]),
-        ' ',
-        PathJoinSubstitution([FindPackageShare('ffw_description'),
-                              'urdf',
-                              'ffw_bg2_rev4_follower',
-                              'ffw_bg2_follower.urdf.xacro']),
-        ' ',
-        'model:=ffw_bg2_rev4_follower',
-    ])
-
     moveit_config = (
         MoveItConfigsBuilder(robot_name='ffw_bg2_follower', package_name='ffw_moveit_config')
-        .robot_description(robot_description_content)
         .robot_description_semantic(Path('config') / 'ffw_bg2_follower' / 'ffw_bg2_follower.srdf')
         .joint_limits(Path('config') / 'ffw_bg2_follower' / 'joint_limits.yaml')
         .trajectory_execution(Path('config') / 'ffw_bg2_follower' / 'moveit_controllers.yaml')
