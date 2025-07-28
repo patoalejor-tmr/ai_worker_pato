@@ -60,10 +60,8 @@ def generate_launch_description():
     publish_robot_description_semantic = LaunchConfiguration('publish_robot_description_semantic')
 
     moveit_config = (
-        MoveItConfigsBuilder(robot_name='ffw_bg2_follower', package_name='ffw_moveit_config')
-        .robot_description_semantic(Path('config') / 'ffw_bg2_follower' / 'ffw_bg2_follower.srdf')
-        .joint_limits(Path('config') / 'ffw_bg2_follower' / 'joint_limits.yaml')
-        .trajectory_execution(Path('config') / 'ffw_bg2_follower' / 'moveit_controllers.yaml')
+        MoveItConfigsBuilder(robot_name="ffw", package_name='ffw_moveit_config')
+        .robot_description_semantic(Path('config') / 'ffw.srdf')
         .to_moveit_configs()
     )
 
