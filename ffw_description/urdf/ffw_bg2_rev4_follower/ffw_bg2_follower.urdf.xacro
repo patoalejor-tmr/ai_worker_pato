@@ -53,7 +53,7 @@
   </xacro:ffw_follower_body>
 
   <xacro:rh_p12_rn_a parent="$(arg prefix)arm_l_link7" prefix="$(arg prefix)gripper_l_">
-    <origin xyz="0 0 -0.078" rpy="0 3.14159265359 0"/>
+    <origin xyz="0 0 -0.078" rpy="0 3.14159265359 3.14159265359"/>
   </xacro:rh_p12_rn_a>
 
   <joint name="$(arg prefix)end_effector_l_joint" type="fixed">
@@ -75,7 +75,7 @@
   </link>
 
   <xacro:rh_p12_rn_a parent="$(arg prefix)arm_r_link7" prefix="$(arg prefix)gripper_r_">
-    <origin xyz="0 0 -0.078" rpy="0 3.14159265359 0"/>
+    <origin xyz="0 0 -0.078" rpy="0 3.14159265359 3.14159265359"/>
   </xacro:rh_p12_rn_a>
 
   <joint name="$(arg prefix)end_effector_r_joint" type="fixed">
