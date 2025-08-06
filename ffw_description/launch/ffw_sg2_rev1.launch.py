@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Author: Wonho Yoon, Sungho Woo
+# Author: Wonho Yun, Sungho Woo
 
 import os
 
@@ -55,7 +55,7 @@ def generate_launch_description():
                     FindPackageShare('ffw_description'),
                     'urdf',
                     model,
-                    'ffw_bg2_follower.urdf.xacro'
+                    'ffw_sg2_follower.urdf.xacro'
                 ]
             ),
             ' ',
@@ -68,7 +68,7 @@ def generate_launch_description():
         [
             FindPackageShare('ffw_description'),
             'rviz',
-            'ffw_bg2.rviz'
+            'ffw_sg2.rviz'
         ]
     )
 
@@ -80,7 +80,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'model',
-            default_value='ffw_bg2_rev4_follower',
+            default_value='ffw_sg2_rev1_follower',
             description='Robot model name.'),
 
         Node(
