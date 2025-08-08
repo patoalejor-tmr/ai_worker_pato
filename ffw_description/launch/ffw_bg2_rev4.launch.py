@@ -30,19 +30,7 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
-def is_valid_to_launch():
-    path = '/sys/firmware/devicetree/base/model'
-    if os.path.exists(path):
-        return False
-    else:
-        return True
-
-
 def generate_launch_description():
-    if not is_valid_to_launch():
-        print('Can not launch fake robot')
-        return LaunchDescription([])
-
     use_gui = LaunchConfiguration('use_gui')
     model = LaunchConfiguration('model')
 
