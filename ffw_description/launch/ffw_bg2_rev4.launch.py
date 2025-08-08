@@ -14,9 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Author: Wonho Yun, Sungho Woo
+# Author: Wonho Yun, Sungho Woo, Woojin Wie
 
-import os
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
